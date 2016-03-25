@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
+    <!--<color name="colorPrimary">#3F51B5</color>-->
+    <color name="colorPrimary">#768082</color>
+    <!--<color name="colorPrimaryDark">#303F9F</color>-->
+    <color name="colorPrimaryDark">#5e6669</color>
     <color name="colorAccent">#FF4081</color>
+
+    <color name="transparent">#00000000</color>
+    <color name="white">#FFFFFF</color>
+
+    <color name="toolbar">#768082</color>
+
+    <color name="firstQuadrant">#e97868</color>
+    <color name="secondQuadrant">#5ec4b6</color>
+    <color name="thirdQuadrant">#f5d564</color>
+    <color name="fourthQuadrant">#bcc8cd</color>
+
+    <color name="gray">#6a7275</color>
+    <color name="list_item_txt">#c9e3dc</color>
 </resources>

@@ -4,22 +4,41 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/card_view"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     card_view:cardUseCompatPadding="false"
-    card_view:cardCornerRadius="1dp"
-    android:layout_marginBottom="16dp"
-    android:layout_gravity="center"
+    card_view:cardCornerRadius="0dp"
+    card_view:cardElevation="0dp"
+    card_view:cardMaxElevation="0dp"
+    android:layout_marginLeft="1dp"
+    android:layout_marginRight="1dp"
+    card_view:cardBackgroundColor="@color/transparent"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?android:selectableItemBackground"
     >
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="7dp"
+        android:layout_height="wrap_content"
+        android:background="@color/transparent"
         >
+        <ImageView
+            android:id="@+id/list_img"
+            android:layout_width="15dp"
+            android:layout_height="30dp"
+            android:src="@drawable/list_img"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            />
         <TextView
             android:id="@+id/t"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/list_img"
+            android:text="some text"
+            android:layout_centerVertical="true"
+            android:textColor="@color/white"
+            android:singleLine="true"
             />
 
     </RelativeLayout>

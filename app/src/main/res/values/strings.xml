@@ -5,4 +5,9 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+
+    <string name="quadrantOne">Do It Now</string>
+    <string name="quadrantTwo">Plan It</string>
+    <string name="quadrantTree">Delegate It</string>
+    <string name="quadrantFour">Drop It</string>
 </resources>

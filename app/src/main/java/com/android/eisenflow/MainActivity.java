@@ -3,7 +3,6 @@ package com.android.eisenflow;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -27,9 +26,18 @@ public class MainActivity extends AppCompatActivity
     private DrawerLayout drawer;
     private ActionBarDrawerToggle toggle;
     private NavigationView navigationView;
-    private RecyclerView urgentImportant;
-    private LinearLayoutManager layoutManager;
-    private EisenBoxAdapter eisenAdapter;
+    private RecyclerView quadrantOneView;
+    private RecyclerView quadrantTwoView;
+    private RecyclerView quadrantTreeView;
+    private RecyclerView quadrantFourView;
+    private LinearLayoutManager quadrantOneManager;
+    private LinearLayoutManager quadrantTwoManager;
+    private LinearLayoutManager quadrantTreeManager;
+    private LinearLayoutManager quadrantFourManager;
+    private TasksAdapter quadrantOneAdapter;
+    private TasksAdapter quadrantTwoAdapter;
+    private TasksAdapter quadrantTreeAdapter;
+    private TasksAdapter quadrantFourAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +45,8 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         initLayout();
+        feedTaskQuadrants();
+
     }
 
     private void initLayout() {
@@ -56,19 +66,93 @@ public class MainActivity extends AppCompatActivity
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         // RecyclerView init
-        urgentImportant = (RecyclerView) findViewById(R.id.urgent_important);
-        layoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
-        urgentImportant.setLayoutManager(layoutManager);
+        quadrantOneView = (RecyclerView) findViewById(R.id.urgent_important);
+        quadrantTwoView = (RecyclerView) findViewById(R.id.important_notUrgent);
+        quadrantTreeView = (RecyclerView) findViewById(R.id.urgent_notImportant);
+        quadrantFourView = (RecyclerView) findViewById(R.id.notUrgent_notImportant);
 
-        List<String> rowListItem = new ArrayList<>();
-        rowListItem.add("Task1");
-        rowListItem.add("Task2");
-        rowListItem.add("Task3");
-        rowListItem.add("Task4");
-
-        eisenAdapter = new EisenBoxAdapter(getApplicationContext(), rowListItem);
-        urgentImportant.setAdapter(eisenAdapter);
+        quadrantOneView.setHasFixedSize(true);
+        quadrantTwoView.setHasFixedSize(true);
+        quadrantTreeView.setHasFixedSize(true);
+        quadrantFourView.setHasFixedSize(true);
     }
+
+    private void feedTaskQuadrants() {
+        initLayoutManagers();
+        setLayoutManagers();
+
+        initTaskAdapters();
+        setTasksLists();
+        setTaskAdapters();
+    }
+
+    private void initLayoutManagers() {
+        quadrantOneManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
+        quadrantTwoManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
+        quadrantTreeManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
+        quadrantFourManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
+    }
+
+    private void setLayoutManagers() {
+        quadrantOneView.setLayoutManager(quadrantOneManager);
+        quadrantTwoView.setLayoutManager(quadrantTwoManager);
+        quadrantTreeView.setLayoutManager(quadrantTreeManager);
+        quadrantFourView.setLayoutManager(quadrantFourManager);
+    }
+
+    private void initTaskAdapters() {
+        quadrantOneAdapter = new TasksAdapter(getApplicationContext());
+        quadrantTwoAdapter = new TasksAdapter(getApplicationContext());
+        quadrantTreeAdapter = new TasksAdapter(getApplicationContext());
+        quadrantFourAdapter = new TasksAdapter(getApplicationContext());
+    }
+
+    private void setTasksLists() {
+        List<String> rowListItem = new ArrayList<>();
+        rowListItem.add("Finalize logo mock up");
+        rowListItem.add("Make a list of urgent tasks");
+        rowListItem.add("Spend 30 mins brainstorming");
+        rowListItem.add("Email Jay and Rob to schedule lunch meeting");
+        quadrantOneAdapter.setList(rowListItem);
+
+        List<String> rowListItem1 = new ArrayList<>();
+        rowListItem1.add("Write Blue Mongo Blog");
+        rowListItem1.add("Blue mongo meeting");
+        rowListItem1.add("Book tickets for teambuilding");
+        rowListItem1.add("Task4");
+        rowListItem1.add("Task5");
+        quadrantTwoAdapter.setList(rowListItem1);
+
+        List<String> rowListItem2 = new ArrayList<>();
+        rowListItem2.add("Pick up strawberries");
+        rowListItem2.add("Ask Adam about Salsa lessons");
+        rowListItem2.add("Find free Flicker photo");
+        rowListItem2.add("Shushi night wth friends");
+        rowListItem2.add("Task5");
+        rowListItem2.add("Task6");
+        quadrantTreeAdapter.setList(rowListItem2);
+
+        List<String> rowListItem3 = new ArrayList<>();
+        rowListItem3.add("Call Jess, ask about Susan");
+        rowListItem3.add("Compare flights from San Francisco with Oakland");
+        rowListItem3.add("Think about holiday vacation in Alaska");
+        rowListItem3.add("Organize team dinner");
+        rowListItem3.add("Take a deep breath after today");
+        rowListItem3.add("Task6");
+        rowListItem3.add("Task7");
+        rowListItem3.add("Task8");
+        rowListItem3.add("Task9");
+        rowListItem3.add("Task10");
+        quadrantFourAdapter.setList(rowListItem3);
+    }
+
+    private void setTaskAdapters() {
+        quadrantOneView.setAdapter(quadrantOneAdapter);
+        quadrantTwoView.setAdapter(quadrantTwoAdapter);
+        quadrantTreeView.setAdapter(quadrantTreeAdapter);
+        quadrantFourView.setAdapter(quadrantFourAdapter);
+    }
+
 
     @Override
     public void onBackPressed() {
