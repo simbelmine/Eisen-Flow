@@ -11,108 +11,11 @@
     android:weightSum="2"
     >
 
-    <LinearLayout
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/urgent_important"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="2"
-        >
-        <TextView
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/quadrantOne"
-            android:background="@color/firstQuadrant"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:textColor="@color/gray"
-            android:textAllCaps="true"
-            />
-        <TextView
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/quadrantTwo"
-            android:background="@color/secondQuadrant"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:textColor="@color/gray"
-            android:textAllCaps="true"
-            />
-    </LinearLayout>
-    <LinearLayout
-        android:id="@+id/l1"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:orientation="horizontal"
+        android:layout_height="match_parent"
         android:layout_weight="1"
-        android:weightSum="2"
-        >
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/urgent_important"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@color/firstQuadrant"
-            />
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/important_notUrgent"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@color/secondQuadrant"
-            />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="2"
-        >
-        <TextView
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/quadrantTree"
-            android:background="@color/thirdQuadrant"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:textColor="@color/gray"
-            android:textAllCaps="true"
-            />
-        <TextView
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/quadrantFour"
-            android:background="@color/fourthQuadrant"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:textColor="@color/gray"
-            android:textAllCaps="true"
-            />
-    </LinearLayout>
-    <LinearLayout
-        android:id="@+id/l2"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:orientation="horizontal"
-        android:layout_weight="1"
-        android:weightSum="2"
-        >
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/urgent_notImportant"
-            android:layout_weight="1"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/thirdQuadrant"
-            />
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/notUrgent_notImportant"
-            android:layout_weight="1"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/fourthQuadrant"
-            />
-    </LinearLayout>
-
+        android:background="@color/white"
+        />
 </LinearLayout>

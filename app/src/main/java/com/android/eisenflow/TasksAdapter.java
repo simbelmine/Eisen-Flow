@@ -2,12 +2,9 @@ package com.android.eisenflow;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -33,7 +30,8 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksHolder> {
     @Override
     public void onBindViewHolder(TasksHolder holder, int position) {
         // set values to variables from the Holder class
-        holder.t.setText(tasks.get(position));
+        holder.text.setText(tasks.get(position));
+        holder.text.setTextColor(context.getResources().getColor(R.color.firstQuadrant));
     }
 
     @Override

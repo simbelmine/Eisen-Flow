@@ -31,13 +31,7 @@ public class MainActivity extends AppCompatActivity
     private RecyclerView quadrantTreeView;
     private RecyclerView quadrantFourView;
     private LinearLayoutManager quadrantOneManager;
-    private LinearLayoutManager quadrantTwoManager;
-    private LinearLayoutManager quadrantTreeManager;
-    private LinearLayoutManager quadrantFourManager;
     private TasksAdapter quadrantOneAdapter;
-    private TasksAdapter quadrantTwoAdapter;
-    private TasksAdapter quadrantTreeAdapter;
-    private TasksAdapter quadrantFourAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +47,8 @@ public class MainActivity extends AppCompatActivity
         // Toolbar init
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        // init toolbar
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         // FAB init
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(this);
@@ -67,14 +63,8 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         // RecyclerView init
         quadrantOneView = (RecyclerView) findViewById(R.id.urgent_important);
-        quadrantTwoView = (RecyclerView) findViewById(R.id.important_notUrgent);
-        quadrantTreeView = (RecyclerView) findViewById(R.id.urgent_notImportant);
-        quadrantFourView = (RecyclerView) findViewById(R.id.notUrgent_notImportant);
 
         quadrantOneView.setHasFixedSize(true);
-        quadrantTwoView.setHasFixedSize(true);
-        quadrantTreeView.setHasFixedSize(true);
-        quadrantFourView.setHasFixedSize(true);
     }
 
     private void feedTaskQuadrants() {
@@ -88,23 +78,14 @@ public class MainActivity extends AppCompatActivity
 
     private void initLayoutManagers() {
         quadrantOneManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
-        quadrantTwoManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
-        quadrantTreeManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
-        quadrantFourManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
     }
 
     private void setLayoutManagers() {
         quadrantOneView.setLayoutManager(quadrantOneManager);
-        quadrantTwoView.setLayoutManager(quadrantTwoManager);
-        quadrantTreeView.setLayoutManager(quadrantTreeManager);
-        quadrantFourView.setLayoutManager(quadrantFourManager);
     }
 
     private void initTaskAdapters() {
         quadrantOneAdapter = new TasksAdapter(getApplicationContext());
-        quadrantTwoAdapter = new TasksAdapter(getApplicationContext());
-        quadrantTreeAdapter = new TasksAdapter(getApplicationContext());
-        quadrantFourAdapter = new TasksAdapter(getApplicationContext());
     }
 
     private void setTasksLists() {
@@ -113,44 +94,65 @@ public class MainActivity extends AppCompatActivity
         rowListItem.add("Make a list of urgent tasks");
         rowListItem.add("Spend 30 mins brainstorming");
         rowListItem.add("Email Jay and Rob to schedule lunch meeting");
+        rowListItem.add("Finalize logo mock up");
+        rowListItem.add("Make a list of urgent tasks");
+        rowListItem.add("Spend 30 mins brainstorming");
+        rowListItem.add("Email Jay and Rob to schedule lunch meeting");
+        rowListItem.add("Finalize logo mock up");
+        rowListItem.add("Make a list of urgent tasks");
+        rowListItem.add("Spend 30 mins brainstorming");
+        rowListItem.add("Email Jay and Rob to schedule lunch meeting");
+        rowListItem.add("Finalize logo mock up");
+        rowListItem.add("Make a list of urgent tasks");
+        rowListItem.add("Spend 30 mins brainstorming");
+        rowListItem.add("Email Jay and Rob to schedule lunch meeting");
+        rowListItem.add("Finalize logo mock up");
+        rowListItem.add("Make a list of urgent tasks");
+        rowListItem.add("Spend 30 mins brainstorming");
+        rowListItem.add("Email Jay and Rob to schedule lunch meeting");
+        rowListItem.add("Finalize logo mock up");
+        rowListItem.add("Make a list of urgent tasks");
+        rowListItem.add("Spend 30 mins brainstorming");
+        rowListItem.add("Email Jay and Rob to schedule lunch meeting");
+        rowListItem.add("Finalize logo mock up");
+        rowListItem.add("Make a list of urgent tasks");
+        rowListItem.add("Spend 30 mins brainstorming");
+        rowListItem.add("Email Jay and Rob to schedule lunch meeting");
         quadrantOneAdapter.setList(rowListItem);
 
-        List<String> rowListItem1 = new ArrayList<>();
-        rowListItem1.add("Write Blue Mongo Blog");
-        rowListItem1.add("Blue mongo meeting");
-        rowListItem1.add("Book tickets for teambuilding");
-        rowListItem1.add("Task4");
-        rowListItem1.add("Task5");
-        quadrantTwoAdapter.setList(rowListItem1);
-
-        List<String> rowListItem2 = new ArrayList<>();
-        rowListItem2.add("Pick up strawberries");
-        rowListItem2.add("Ask Adam about Salsa lessons");
-        rowListItem2.add("Find free Flicker photo");
-        rowListItem2.add("Shushi night wth friends");
-        rowListItem2.add("Task5");
-        rowListItem2.add("Task6");
-        quadrantTreeAdapter.setList(rowListItem2);
-
-        List<String> rowListItem3 = new ArrayList<>();
-        rowListItem3.add("Call Jess, ask about Susan");
-        rowListItem3.add("Compare flights from San Francisco with Oakland");
-        rowListItem3.add("Think about holiday vacation in Alaska");
-        rowListItem3.add("Organize team dinner");
-        rowListItem3.add("Take a deep breath after today");
-        rowListItem3.add("Task6");
-        rowListItem3.add("Task7");
-        rowListItem3.add("Task8");
-        rowListItem3.add("Task9");
-        rowListItem3.add("Task10");
-        quadrantFourAdapter.setList(rowListItem3);
+//        List<String> rowListItem1 = new ArrayList<>();
+//        rowListItem1.add("Write Blue Mongo Blog");
+//        rowListItem1.add("Blue mongo meeting");
+//        rowListItem1.add("Book tickets for teambuilding");
+//        rowListItem1.add("Task4");
+//        rowListItem1.add("Task5");
+//        quadrantTwoAdapter.setList(rowListItem1);
+//
+//        List<String> rowListItem2 = new ArrayList<>();
+//        rowListItem2.add("Pick up strawberries");
+//        rowListItem2.add("Ask Adam about Salsa lessons");
+//        rowListItem2.add("Find free Flicker photo");
+//        rowListItem2.add("Shushi night wth friends");
+//        rowListItem2.add("Task5");
+//        rowListItem2.add("Task6");
+//        quadrantTreeAdapter.setList(rowListItem2);
+//
+//        List<String> rowListItem3 = new ArrayList<>();
+//        rowListItem3.add("Call Jess, ask about Susan");
+//        rowListItem3.add("Compare flights from San Francisco with Oakland");
+//        rowListItem3.add("Think about holiday vacation in Alaska");
+//        rowListItem3.add("Organize team dinner");
+//        rowListItem3.add("Take a deep breath after today");
+//        rowListItem3.add("Task6");
+//        rowListItem3.add("Task7");
+//        rowListItem3.add("Task8");
+//        rowListItem3.add("Task9");
+//        rowListItem3.add("Task10");
+//        quadrantFourAdapter.setList(rowListItem3);
     }
 
     private void setTaskAdapters() {
         quadrantOneView.setAdapter(quadrantOneAdapter);
-        quadrantTwoView.setAdapter(quadrantTwoAdapter);
-        quadrantTreeView.setAdapter(quadrantTreeAdapter);
-        quadrantFourView.setAdapter(quadrantFourAdapter);
     }
 
 

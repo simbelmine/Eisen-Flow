@@ -15,7 +15,7 @@ import android.widget.Toast;
 public class TasksHolder extends RecyclerView.ViewHolder implements
         View.OnLongClickListener, View.OnTouchListener {
     private Context context;
-    public TextView t;
+    public TextView text;
     private CardView cardView;
 
     public TasksHolder(Context context, View itemView) {
@@ -23,9 +23,9 @@ public class TasksHolder extends RecyclerView.ViewHolder implements
 
         cardView = (CardView)itemView;
         this.context = context;
-        t = (TextView) itemView.findViewById(R.id.t);
-        // t.setOnLongClickListener(this);
-        t.setOnTouchListener(this);
+        text = (TextView) itemView.findViewById(R.id.list_text);
+        // text.setOnLongClickListener(this);
+        text.setOnTouchListener(this);
     }
 
 
