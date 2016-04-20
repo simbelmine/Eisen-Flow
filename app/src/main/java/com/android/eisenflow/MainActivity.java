@@ -43,14 +43,10 @@ public class MainActivity extends AppCompatActivity
     private ActionBarDrawerToggle toggle;
     private NavigationView navigationView;
     private RecyclerView quadrantOneView;
-    private RecyclerView quadrantTwoView;
-    private RecyclerView quadrantTreeView;
-    private RecyclerView quadrantFourView;
     private LinearLayoutManager quadrantOneManager;
     private TasksAdapter quadrantOneAdapter;
     private TextView month;
     private CalendarView calendar;
-    private static int firstVisiblePosition;
     private SlidingUpPanelLayout slidingLayout;
 
     @Override
@@ -59,9 +55,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         initLayout();
-        setRecyclerViewListener();
         feedTaskQuadrants();
-        firstVisiblePosition = quadrantOneManager.findFirstVisibleItemPosition();
     }
 
     private void initLayout() {
@@ -89,27 +83,10 @@ public class MainActivity extends AppCompatActivity
         // RecyclerView init
         quadrantOneView = (RecyclerView) findViewById(R.id.urgent_important);
         quadrantOneView.setHasFixedSize(true);
-
-
         // Calendar View
         calendar = (CalendarView) findViewById(R.id.expandable_calendar);
-//        calendar.setVisibility(View.GONE);
-
+        // Sliding Layout
         slidingLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-//        int height_ = getWindowManager().getDefaultDisplay().getHeight()/2;
-//        Log.v("eisen", "H == " + height_);
-//        int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, height_, getResources().getDisplayMetrics());
-//        LinearLayout layout = (LinearLayout)findViewById(R.id.dragView);
-//        ViewGroup.LayoutParams params = layout.getLayoutParams();
-//        params.height = height;
-//        layout.setLayoutParams(params);
-
     }
 
     private String getMonthName() {
@@ -169,36 +146,6 @@ public class MainActivity extends AppCompatActivity
         rowListItem.add("Spend 30 mins brainstorming");
         rowListItem.add("Email Jay and Rob to schedule lunch meeting");
         quadrantOneAdapter.setList(rowListItem);
-
-//        List<String> rowListItem1 = new ArrayList<>();
-//        rowListItem1.add("Write Blue Mongo Blog");
-//        rowListItem1.add("Blue mongo meeting");
-//        rowListItem1.add("Book tickets for teambuilding");
-//        rowListItem1.add("Task4");
-//        rowListItem1.add("Task5");
-//        quadrantTwoAdapter.setList(rowListItem1);
-//
-//        List<String> rowListItem2 = new ArrayList<>();
-//        rowListItem2.add("Pick up strawberries");
-//        rowListItem2.add("Ask Adam about Salsa lessons");
-//        rowListItem2.add("Find free Flicker photo");
-//        rowListItem2.add("Shushi night wth friends");
-//        rowListItem2.add("Task5");
-//        rowListItem2.add("Task6");
-//        quadrantTreeAdapter.setList(rowListItem2);
-//
-//        List<String> rowListItem3 = new ArrayList<>();
-//        rowListItem3.add("Call Jess, ask about Susan");
-//        rowListItem3.add("Compare flights from San Francisco with Oakland");
-//        rowListItem3.add("Think about holiday vacation in Alaska");
-//        rowListItem3.add("Organize team dinner");
-//        rowListItem3.add("Take a deep breath after today");
-//        rowListItem3.add("Task6");
-//        rowListItem3.add("Task7");
-//        rowListItem3.add("Task8");
-//        rowListItem3.add("Task9");
-//        rowListItem3.add("Task10");
-//        quadrantFourAdapter.setList(rowListItem3);
     }
 
     private void setTaskAdapters() {
@@ -271,88 +218,6 @@ public class MainActivity extends AppCompatActivity
                         .setAction("Action", null).show();
                 break;
             }
-//            case R.id.toolbar_month: {
-//                if(calendar.getVisibility() == View.GONE) {
-//                    expand();
-//                }
-//                else {
-//                    collapse();
-//                }
-//            }
         }
-    }
-
-    private ValueAnimator animator;
-    private void expand() {
-        calendar.setVisibility(View.VISIBLE);
-        setCalendarNewMeasures();
-
-        animator = slideAnimator(0, calendar.getMeasuredHeight());
-        animator.start();
-    }
-
-    private void setCalendarNewMeasures() {
-        int widthSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
-        int heightSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
-        calendar.measure(widthSpec, heightSpec);
-    }
-
-    private void collapse() {
-        int finalHeight = calendar.getHeight();
-        animator = slideAnimator(finalHeight, 0);
-        animator.addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animator) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animator) {
-                calendar.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animator) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animator) {
-
-            }
-        });
-        animator.start();
-    }
-
-    private ValueAnimator slideAnimator(int start, int end) {
-        ValueAnimator localAnimator = ValueAnimator.ofInt(start, end);
-        localAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                // Update Height
-                int value = (Integer) valueAnimator.getAnimatedValue();
-                ViewGroup.LayoutParams layoutParams = calendar.getLayoutParams();
-                layoutParams.height = value;
-                calendar.setLayoutParams(layoutParams);
-            }
-        });
-
-        return localAnimator;
-    }
-
-    private void setRecyclerViewListener() {
-//        quadrantOneView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-//            @Override
-//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-//                super.onScrolled(recyclerView, dx, dy);
-//
-//                int currentFirstVisiblePosition = quadrantOneManager.findFirstVisibleItemPosition();
-//                if(currentFirstVisiblePosition > firstVisiblePosition) {
-//                    collapse();
-//                }
-//
-//                firstVisiblePosition = currentFirstVisiblePosition;
-//            }
-//        });
     }
 }
