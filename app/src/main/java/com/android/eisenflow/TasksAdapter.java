@@ -31,7 +31,7 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksHolder> {
     public void onBindViewHolder(TasksHolder holder, int position) {
         // set values to variables from the Holder class
         holder.text.setText(tasks.get(position));
-        holder.text.setTextColor(context.getResources().getColor(R.color.firstQuadrant));
+        holder.text.setTextColor(context.getResources().getColor(R.color.gray));
     }
 
     @Override

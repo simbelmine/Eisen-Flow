@@ -15,30 +15,31 @@
     android:clickable="true"
     android:focusable="true"
     android:foreground="?android:selectableItemBackground"
+    card_view:contentPaddingTop="2dp"
+    card_view:contentPaddingBottom="2dp"
     >
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/list_item_txt"
+        android:layout_height="30dp"
         >
         <ImageView
             android:id="@+id/list_img"
-            android:layout_width="15dp"
-            android:layout_height="30dp"
-            android:src="@drawable/list_img"
+            android:layout_width="5dp"
+            android:layout_height="match_parent"
+            android:background="@color/firstQuadrant"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             />
         <TextView
             android:id="@+id/list_text"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_toRightOf="@+id/list_img"
             android:text="some text"
             android:layout_centerVertical="true"
-            android:textColor="@color/white"
             android:singleLine="true"
+            android:gravity="center_vertical"
             />
 
     </RelativeLayout>
