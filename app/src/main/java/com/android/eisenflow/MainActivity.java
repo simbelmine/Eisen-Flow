@@ -1,6 +1,10 @@
 package com.android.eisenflow;
 
+import android.animation.Animator;
+import android.animation.ValueAnimator;
+import android.content.res.TypedArray;
 import android.os.Bundle;
+import android.support.annotation.IntegerRes;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,9 +18,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
+import android.widget.CalendarView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
@@ -32,6 +42,8 @@ public class MainActivity extends AppCompatActivity
     private RecyclerView quadrantFourView;
     private LinearLayoutManager quadrantOneManager;
     private TasksAdapter quadrantOneAdapter;
+    private TextView month;
+    private CalendarView calendar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +59,12 @@ public class MainActivity extends AppCompatActivity
         // Toolbar init
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        // init toolbar
+        // Init Toolbar
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+        // Toolbar Month Name
+        month = (TextView)findViewById(R.id.toolbar_month);
+        month.setText(getMonthName());
+        month.setOnClickListener(this);
         // FAB init
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(this);
@@ -63,8 +79,15 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         // RecyclerView init
         quadrantOneView = (RecyclerView) findViewById(R.id.urgent_important);
-
         quadrantOneView.setHasFixedSize(true);
+        // Calendar View
+        calendar = (CalendarView) findViewById(R.id.expandable_calendar);
+        calendar.setVisibility(View.GONE);
+    }
+
+    private String getMonthName() {
+        Calendar cal = Calendar.getInstance();
+        return cal.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault());
     }
 
     private void feedTaskQuadrants() {
@@ -221,6 +244,72 @@ public class MainActivity extends AppCompatActivity
                         .setAction("Action", null).show();
                 break;
             }
+            case R.id.toolbar_month: {
+                if(calendar.getVisibility() == View.GONE) {
+                    expand();
+                }
+                else {
+                    collapse();
+                }
+            }
         }
+    }
+
+    private ValueAnimator animator;
+    private void expand() {
+        calendar.setVisibility(View.VISIBLE);
+        setCalendarNewMeasures();
+
+        animator = slideAnimator(0, calendar.getMeasuredHeight());
+        animator.start();
+    }
+
+    private void setCalendarNewMeasures() {
+        int widthSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+        int heightSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+        calendar.measure(widthSpec, heightSpec);
+    }
+
+    private void collapse() {
+        int finalHeight = calendar.getHeight();
+        animator = slideAnimator(finalHeight, 0);
+        animator.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                calendar.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
+            }
+        });
+        animator.start();
+    }
+
+    private ValueAnimator slideAnimator(int start, int end) {
+        ValueAnimator localAnimator = ValueAnimator.ofInt(start, end);
+        localAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                // Update Height
+                int value = (Integer) valueAnimator.getAnimatedValue();
+                ViewGroup.LayoutParams layoutParams = calendar.getLayoutParams();
+                layoutParams.height = value;
+                calendar.setLayoutParams(layoutParams);
+            }
+        });
+
+        return localAnimator;
     }
 }
