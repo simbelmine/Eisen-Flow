@@ -104,7 +104,6 @@
                     android:layout_toRightOf="@+id/day_date_txt"
                     android:layout_alignParentBottom="true"
                     />
-
             </RelativeLayout>
 
         </LinearLayout>
