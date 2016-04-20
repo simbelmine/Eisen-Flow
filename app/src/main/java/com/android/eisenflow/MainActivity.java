@@ -21,12 +21,12 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.StringTokenizer;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
+        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, CalendarView.OnDateChangeListener {
 
     private Toolbar toolbar;
     private FloatingActionButton fab;
@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity
     private CalendarView calendar;
     private SlidingUpPanelLayout slidingLayout;
     private TextView dateSlideTxt;
+    private Date date;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,11 +77,14 @@ public class MainActivity extends AppCompatActivity
         quadrantOneView.setHasFixedSize(true);
         // Calendar View
         calendar = (CalendarView) findViewById(R.id.expandable_calendar);
+        calendar.setOnDateChangeListener(this);
         // Sliding Layout
         slidingLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
+        // Current Date
+        date = new Date(calendar.getDate());
         // Date Day Txt on slide
         dateSlideTxt = (TextView) findViewById(R.id.day_date_txt);
-        dateSlideTxt.setText(getDateTxt());
+        dateSlideTxt.setText(getDateTxt(date));
     }
 
     private String getMonthName() {
@@ -88,8 +92,9 @@ public class MainActivity extends AppCompatActivity
         return cal.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault());
     }
 
-    private String getDateTxt() {
+    private String getDateTxt(Date date) {
         Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
         String weekDay = cal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault());
         int day = cal.get(Calendar.DAY_OF_MONTH);
         return weekDay + " " + day;
@@ -220,5 +225,38 @@ public class MainActivity extends AppCompatActivity
                 break;
             }
         }
+    }
+
+    @Override
+    public void onSelectedDayChange(CalendarView calendarView, int year, int month, int day_of_month) {
+
+        int date_day = getDayOfMonth(date);
+
+        if(day_of_month != date_day) {
+            // Update Slide Date Text
+            dateSlideTxt.setText(getDateTxt(sequenceToDate(year, month, day_of_month)));
+            dateSlideTxt.setTextColor(getResources().getColor(R.color.gray));
+
+            // Update Main Container
+                // # To Do .....
+        }
+        else {
+            // Update Slide Date Text
+            dateSlideTxt.setText(getDateTxt(date));
+            dateSlideTxt.setTextColor(getResources().getColor(R.color.firstQuadrant));
+        }
+    }
+
+    private int getDayOfMonth(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+
+        return cal.get(Calendar.DAY_OF_MONTH);
+    }
+
+    private Date sequenceToDate(int year, int month, int day_of_month) {
+        Calendar cal = Calendar.getInstance();
+        cal.set(year, month, day_of_month);
+        return cal.getTime();
     }
 }
