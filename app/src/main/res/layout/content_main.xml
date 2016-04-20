@@ -8,18 +8,11 @@
     tools:context="com.android.eisenflow.MainActivity"
     tools:showIn="@layout/app_bar_main"
     android:orientation="vertical"
-    android:weightSum="2"
     >
-    <CalendarView
-        android:id="@+id/expandable_calendar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/urgent_important"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"
         android:background="@color/white"
         />
 </LinearLayout>

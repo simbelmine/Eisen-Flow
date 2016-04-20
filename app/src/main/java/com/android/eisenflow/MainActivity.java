@@ -2,6 +2,7 @@ package com.android.eisenflow;
 
 import android.animation.Animator;
 import android.animation.ValueAnimator;
+import android.app.Activity;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.annotation.IntegerRes;
@@ -9,6 +10,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -20,8 +23,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.CalendarView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -45,6 +51,7 @@ public class MainActivity extends AppCompatActivity
     private TextView month;
     private CalendarView calendar;
     private static int firstVisiblePosition;
+    private SlidingUpPanelLayout slidingLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,9 +89,27 @@ public class MainActivity extends AppCompatActivity
         // RecyclerView init
         quadrantOneView = (RecyclerView) findViewById(R.id.urgent_important);
         quadrantOneView.setHasFixedSize(true);
+
+
         // Calendar View
         calendar = (CalendarView) findViewById(R.id.expandable_calendar);
-        calendar.setVisibility(View.GONE);
+//        calendar.setVisibility(View.GONE);
+
+        slidingLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+//        int height_ = getWindowManager().getDefaultDisplay().getHeight()/2;
+//        Log.v("eisen", "H == " + height_);
+//        int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, height_, getResources().getDisplayMetrics());
+//        LinearLayout layout = (LinearLayout)findViewById(R.id.dragView);
+//        ViewGroup.LayoutParams params = layout.getLayoutParams();
+//        params.height = height;
+//        layout.setLayoutParams(params);
+
     }
 
     private String getMonthName() {
@@ -246,14 +271,14 @@ public class MainActivity extends AppCompatActivity
                         .setAction("Action", null).show();
                 break;
             }
-            case R.id.toolbar_month: {
-                if(calendar.getVisibility() == View.GONE) {
-                    expand();
-                }
-                else {
-                    collapse();
-                }
-            }
+//            case R.id.toolbar_month: {
+//                if(calendar.getVisibility() == View.GONE) {
+//                    expand();
+//                }
+//                else {
+//                    collapse();
+//                }
+//            }
         }
     }
 
@@ -316,18 +341,18 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void setRecyclerViewListener() {
-        quadrantOneView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-
-                int currentFirstVisiblePosition = quadrantOneManager.findFirstVisibleItemPosition();
-                if(currentFirstVisiblePosition > firstVisiblePosition) {
-                    collapse();
-                }
-
-                firstVisiblePosition = currentFirstVisiblePosition;
-            }
-        });
+//        quadrantOneView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//            @Override
+//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+//                super.onScrolled(recyclerView, dx, dy);
+//
+//                int currentFirstVisiblePosition = quadrantOneManager.findFirstVisibleItemPosition();
+//                if(currentFirstVisiblePosition > firstVisiblePosition) {
+//                    collapse();
+//                }
+//
+//                firstVisiblePosition = currentFirstVisiblePosition;
+//            }
+//        });
     }
 }
