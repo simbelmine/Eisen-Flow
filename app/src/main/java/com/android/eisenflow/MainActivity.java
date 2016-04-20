@@ -60,6 +60,7 @@ public class MainActivity extends AppCompatActivity
         // Toolbar Month Name
         month = (TextView)findViewById(R.id.toolbar_month);
         month.setText(getMonthName());
+        month.setOnClickListener(this);
         // FAB init
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(this);
@@ -224,26 +225,29 @@ public class MainActivity extends AppCompatActivity
                         .setAction("Action", null).show();
                 break;
             }
+            case R.id.toolbar_month: {
+                // Return Calendar to Current Date
+                calendar.setDate(date.getTime());
+                updateSlideText(date, R.color.firstQuadrant);
+                break;
+            }
         }
     }
 
     @Override
     public void onSelectedDayChange(CalendarView calendarView, int year, int month, int day_of_month) {
-
         int date_day = getDayOfMonth(date);
 
         if(day_of_month != date_day) {
             // Update Slide Date Text
-            dateSlideTxt.setText(getDateTxt(sequenceToDate(year, month, day_of_month)));
-            dateSlideTxt.setTextColor(getResources().getColor(R.color.gray));
+            updateSlideText(sequenceToDate(year, month, day_of_month), R.color.gray);
 
             // Update Main Container
                 // # To Do .....
         }
         else {
             // Update Slide Date Text
-            dateSlideTxt.setText(getDateTxt(date));
-            dateSlideTxt.setTextColor(getResources().getColor(R.color.firstQuadrant));
+            updateSlideText(date, R.color.firstQuadrant);
         }
     }
 
@@ -258,5 +262,10 @@ public class MainActivity extends AppCompatActivity
         Calendar cal = Calendar.getInstance();
         cal.set(year, month, day_of_month);
         return cal.getTime();
+    }
+
+    private void updateSlideText(Date date, int color) {
+        dateSlideTxt.setText(getDateTxt(date));
+        dateSlideTxt.setTextColor(getResources().getColor(color));
     }
 }
