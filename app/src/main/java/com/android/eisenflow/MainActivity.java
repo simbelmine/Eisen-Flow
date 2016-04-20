@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity
     private TasksAdapter quadrantOneAdapter;
     private TextView month;
     private CalendarView calendar;
+    private static int firstVisiblePosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,8 +52,9 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         initLayout();
+        setRecyclerViewListener();
         feedTaskQuadrants();
-
+        firstVisiblePosition = quadrantOneManager.findFirstVisibleItemPosition();
     }
 
     private void initLayout() {
@@ -311,5 +313,21 @@ public class MainActivity extends AppCompatActivity
         });
 
         return localAnimator;
+    }
+
+    private void setRecyclerViewListener() {
+        quadrantOneView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                int currentFirstVisiblePosition = quadrantOneManager.findFirstVisibleItemPosition();
+                if(currentFirstVisiblePosition > firstVisiblePosition) {
+                    collapse();
+                }
+
+                firstVisiblePosition = currentFirstVisiblePosition;
+            }
+        });
     }
 }
