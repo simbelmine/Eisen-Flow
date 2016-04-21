@@ -53,7 +53,6 @@
         sothree:umanoDragView="@+id/dragView"
         sothree:umanoOverlay="false"
         android:layout_marginTop="?attr/actionBarSize"
-        sothree:umanoInitialState="anchored"
         sothree:umanoAnchorPoint="0.55"
         >
 
