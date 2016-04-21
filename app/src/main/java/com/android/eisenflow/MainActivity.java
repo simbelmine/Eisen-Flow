@@ -1,6 +1,8 @@
 package com.android.eisenflow;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -221,8 +223,9 @@ public class MainActivity extends AppCompatActivity
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.fab: {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+                startAddTaskActivity();
                 break;
             }
             case R.id.toolbar_month: {
@@ -268,4 +271,19 @@ public class MainActivity extends AppCompatActivity
         dateSlideTxt.setText(getDateTxt(date));
         dateSlideTxt.setTextColor(getResources().getColor(color));
     }
+
+    private void startAddTaskActivity() {
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//
+//            }
+//        }, 200);
+
+        Intent intent = new Intent(MainActivity.this, AddTask.class);
+        startActivity(intent);
+        overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
+    }
+
+
 }
