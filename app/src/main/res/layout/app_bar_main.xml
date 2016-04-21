@@ -48,7 +48,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="top"
-        sothree:umanoPanelHeight="20dp"
+        sothree:umanoPanelHeight="30dp"
         sothree:umanoShadowHeight="4dp"
         sothree:umanoDragView="@+id/dragView"
         sothree:umanoOverlay="false"
@@ -76,14 +76,14 @@
             />
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="20dp"
+                android:layout_height="30dp"
                 android:gravity="center"
                 android:paddingBottom="3dp"
                 >
                 <ImageView
                     android:id="@+id/icon_1"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="15dp"
                     android:src="@mipmap/menu"
                     android:layout_alignParentBottom="true"
                     />
@@ -92,7 +92,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Monday 25"
-                    android:textColor="@color/firstQuadrant"
+                    android:textColor="@color/colorAccent"
                     android:layout_toRightOf="@+id/icon_1"
                     android:layout_alignParentBottom="true"
                     android:gravity="center"
@@ -100,7 +100,7 @@
                     />
                 <ImageView
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="15dp"
                     android:src="@mipmap/menu"
                     android:layout_toRightOf="@+id/day_date_txt"
                     android:layout_alignParentBottom="true"
