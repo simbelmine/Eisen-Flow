@@ -10,4 +10,8 @@
     <string name="quadrantTwo">Plan It</string>
     <string name="quadrantTree">Delegate It</string>
     <string name="quadrantFour">Drop It</string>
+
+    <!-- Add Task Activity -->
+    <string name="save_btn">Save</string>
+    <string name="enter_task_hint">Enter task name...</string>
 </resources>

@@ -6,4 +6,12 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+
+    <!-- Add Task Activity -->
+    <dimen name="task_name_margin_plus_status_bar">124dp</dimen> <!-- status bar is 24dp -->
+    <dimen name="task_name_buttons_height">25dp</dimen>
+    <dimen name="task_name_buttons_margin">30dp</dimen>
+    <dimen name="task_name_font_size">20sp</dimen>
+    <dimen name="task_standard_margin">16dp</dimen>
+
 </resources>
