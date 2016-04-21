@@ -228,7 +228,7 @@ public class MainActivity extends AppCompatActivity
             case R.id.toolbar_month: {
                 // Return Calendar to Current Date
                 calendar.setDate(date.getTime());
-                updateSlideText(date, R.color.firstQuadrant);
+                updateSlideText(date, R.color.colorAccent);
                 break;
             }
         }
@@ -247,7 +247,7 @@ public class MainActivity extends AppCompatActivity
         }
         else {
             // Update Slide Date Text
-            updateSlideText(date, R.color.firstQuadrant);
+            updateSlideText(date, R.color.colorAccent);
         }
     }
 
