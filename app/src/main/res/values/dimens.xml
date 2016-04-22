@@ -13,7 +13,8 @@
     <dimen name="task_name_buttons_margin">30dp</dimen>
     <dimen name="task_name_font_size">18sp</dimen>
     <dimen name="task_standard_margin">16dp</dimen>
-    <dimen name="task_font_size">18dp</dimen>
-    <dimen name="task_layout_height">25dp</dimen>
+    <dimen name="task_font_size">16dp</dimen>
+    <dimen name="task_layout_height">30dp</dimen>
+    <dimen name="task_icon_size">20dp</dimen>
 
 </resources>
