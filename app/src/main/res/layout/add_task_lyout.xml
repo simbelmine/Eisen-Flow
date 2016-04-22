@@ -67,6 +67,7 @@
             android:layout_marginTop="@dimen/task_standard_margin"
             android:layout_marginLeft="@dimen/task_standard_margin"
             android:gravity="center_vertical"
+            android:clickable="true"
             >
             <ImageView
                 android:layout_width="@dimen/task_icon_size"

@@ -14,6 +14,18 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="MyAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <!--&lt;!&ndash; Used for the buttons &ndash;&gt;-->
+        <!--<item name="colorAccent">#FFC107</item>-->
+        <!--<item name="android:textColorPrimary">#FFFFFF</item>-->
+        <!--<item name="android:background">#4CAF50</item>-->
+        <!--<item name="android:windowTitleStyle">@style/dialog_title_style</item>-->
+    </style>
+
+    <style name="dialog_title_style" parent="android:Widget.TextView">
+        <item name="android:background">@color/date</item>
+    </style>
+
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
