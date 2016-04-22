@@ -14,4 +14,7 @@
     <!-- Add Task Activity -->
     <string name="save_btn">Save</string>
     <string name="enter_task_hint">Enter task name...</string>
+    <string name="task_priority_txt">Task priority</string>
+    <string name="time_txt">All day</string>
+    <string name="note_txt">Add note</string>
 </resources>

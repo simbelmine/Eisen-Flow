@@ -4,11 +4,13 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:weightSum="3"
     >
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/task_name_margin_plus_status_bar"
+        android:layout_height="0dp"
         android:background="@color/date"
+        android:layout_weight="0.7"
         >
         <RelativeLayout
             android:layout_width="match_parent"
@@ -31,6 +33,7 @@
                 android:layout_centerVertical="true"
                 android:gravity="center"
                 android:textSize="@dimen/task_name_font_size"
+                android:textAllCaps="true"
                 />
         </RelativeLayout>
 
@@ -40,7 +43,7 @@
             android:layout_alignParentBottom="true"
             android:hint="@string/enter_task_hint"
             android:textColor="@color/white"
-            android:textColorHint="@color/colorPrimaryDark"
+            android:textColorHint="@color/white"
             android:textSize="@dimen/task_name_font_size"
             android:layout_marginRight="@dimen/task_standard_margin"
             android:layout_marginLeft="@dimen/task_standard_margin"
@@ -48,4 +51,103 @@
             android:background="@color/transparent"
             />
     </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2.3"
+        >
+        <LinearLayout
+            android:id="@+id/priority_layout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/task_layout_height"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/task_standard_margin"
+            android:layout_marginLeft="@dimen/task_standard_margin"
+            >
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@mipmap/flag_outline"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/task_priority_txt"
+                android:gravity="center_vertical"
+                android:textSize="@dimen/task_font_size"
+                android:layout_marginLeft="@dimen/task_standard_margin"
+                />
+        </LinearLayout>
+        <ImageView
+            android:id="@+id/priority_divider"
+            android:layout_width="match_parent"
+            android:layout_height="0.9dp"
+            android:layout_below="@+id/priority_layout"
+            android:background="#dde0e1"
+            android:layout_marginTop="@dimen/task_standard_margin"
+            />
+        <LinearLayout
+            android:id="@+id/time_layout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/task_layout_height"
+            android:orientation="horizontal"
+            android:layout_below="@+id/priority_divider"
+            android:layout_marginTop="@dimen/task_standard_margin"
+            android:layout_marginLeft="@dimen/task_standard_margin"
+            >
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@mipmap/clock"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/time_txt"
+                android:gravity="center_vertical"
+                android:textSize="@dimen/task_font_size"
+                android:layout_marginLeft="@dimen/task_standard_margin"
+                />
+        </LinearLayout>
+        <ImageView
+            android:id="@+id/time_divider"
+            android:layout_width="match_parent"
+            android:layout_height="0.9dp"
+            android:layout_below="@+id/time_layout"
+            android:background="#dde0e1"
+            android:layout_marginTop="@dimen/task_standard_margin"
+            />
+        <LinearLayout
+            android:id="@+id/note_layout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/task_layout_height"
+            android:orientation="horizontal"
+            android:layout_below="@+id/time_divider"
+            android:layout_marginTop="@dimen/task_standard_margin"
+            android:layout_marginLeft="@dimen/task_standard_margin"
+            >
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@mipmap/note_outline"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/note_txt"
+                android:gravity="center_vertical"
+                android:textSize="@dimen/task_font_size"
+                android:layout_marginLeft="@dimen/task_standard_margin"
+                />
+        </LinearLayout>
+        <ImageView
+            android:id="@+id/note_divider"
+            android:layout_width="match_parent"
+            android:layout_height="0.9dp"
+            android:layout_below="@+id/note_layout"
+            android:background="#dde0e1"
+            android:layout_marginTop="@dimen/task_standard_margin"
+            />
+    </RelativeLayout>
+
 </LinearLayout>
