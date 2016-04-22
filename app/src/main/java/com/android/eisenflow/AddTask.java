@@ -12,6 +12,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 /**
@@ -21,10 +22,11 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener {
     private ImageView closeBtn;
     private TextView saveBtn;
     private LinearLayout priorityLayout;
-    RadioButton doIt;
-    RadioButton decide;
-    RadioButton delegate;
-    RadioButton dump;
+    private RadioButton doIt;
+    private RadioButton decide;
+    private RadioButton delegate;
+    private RadioButton dump;
+    private RelativeLayout addTaskBg;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -42,6 +44,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener {
         saveBtn.setOnClickListener(this);
         priorityLayout = (LinearLayout) findViewById(R.id.priority_layout);
         priorityLayout.setOnClickListener(this);
+        addTaskBg = (RelativeLayout) findViewById(R.id.add_task_bg);
     }
 
     @Override
@@ -92,17 +95,45 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener {
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.MyAlertDialogStyle);
         builder.setTitle("Priority");
         builder.setView(dialogView);
-        builder.setPositiveButton("OK", listener);
+        builder.setPositiveButton("OK", listenerOkBtn);
         builder.show();
     }
 
-    DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+    DialogInterface.OnClickListener listenerOkBtn = new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialogInterface, int i) {
-            // Save data
-                // # To Do:
+            RadioButton checkedBtnId = getCheckedBtnId();
+            if(checkedBtnId != null) {
+                setTaskColor(checkedBtnId);
+            }
         }
     };
+
+    private void setTaskColor(RadioButton checkedBtnId) {
+        switch (checkedBtnId.getId()) {
+            case R.id.do_it:
+                addTaskBg.setBackgroundColor(getResources().getColor(R.color.firstQuadrant));
+                break;
+            case R.id.decide_it:
+                addTaskBg.setBackgroundColor(getResources().getColor(R.color.secondQuadrant));
+                break;
+            case R.id.delegate_it:
+                addTaskBg.setBackgroundColor(getResources().getColor(R.color.thirdQuadrant));
+                break;
+            case R.id.dump_it:
+                addTaskBg.setBackgroundColor(getResources().getColor(R.color.fourthQuadrant));
+                break;
+        }
+    }
+
+    private RadioButton getCheckedBtnId() {
+        if(doIt.isChecked()) return doIt;
+        if(decide.isChecked()) return decide;
+        if(delegate.isChecked()) return delegate;
+        if(dump.isChecked()) return dump;
+
+        return null;
+    }
 
     View.OnClickListener radioBtnListener = new View.OnClickListener() {
         @Override
