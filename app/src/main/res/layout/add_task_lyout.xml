@@ -20,11 +20,13 @@
             android:layout_marginTop="@dimen/task_name_buttons_margin"
             >
            <ImageView
+               android:id="@+id/task_add_close_btn"
                android:layout_width="wrap_content"
                android:layout_height="match_parent"
                android:src="@mipmap/close"
                />
             <TextView
+                android:id="@+id/task_add_save_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_alignParentRight="true"
@@ -34,6 +36,7 @@
                 android:gravity="center"
                 android:textSize="@dimen/task_name_font_size"
                 android:textAllCaps="true"
+                android:clickable="true"
                 />
         </RelativeLayout>
 
@@ -68,7 +71,7 @@
             <ImageView
                 android:layout_width="@dimen/task_icon_size"
                 android:layout_height="@dimen/task_icon_size"
-                android:src="@mipmap/flag_outline"
+                android:src="@mipmap/flag_outline_b"
                 />
             <TextView
                 android:layout_width="wrap_content"
@@ -100,7 +103,7 @@
             <ImageView
                 android:layout_width="@dimen/task_icon_size"
                 android:layout_height="@dimen/task_icon_size"
-                android:src="@mipmap/clock"
+                android:src="@mipmap/clock_b"
                 />
             <TextView
                 android:layout_width="wrap_content"
@@ -132,7 +135,7 @@
             <ImageView
                 android:layout_width="@dimen/task_icon_size"
                 android:layout_height="@dimen/task_icon_size"
-                android:src="@mipmap/note_outline"
+                android:src="@mipmap/note_outline_b"
                 />
             <TextView
                 android:layout_width="wrap_content"
