@@ -20,12 +20,12 @@
             android:layout_marginRight="@dimen/task_standard_margin"
             android:layout_marginTop="@dimen/task_name_buttons_margin"
             >
-           <ImageView
-               android:id="@+id/task_add_close_btn"
-               android:layout_width="wrap_content"
-               android:layout_height="match_parent"
-               android:src="@mipmap/close"
-               />
+            <ImageView
+                android:id="@+id/task_add_close_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@mipmap/close"
+                />
             <TextView
                 android:id="@+id/task_add_save_btn"
                 android:layout_width="wrap_content"
@@ -165,25 +165,61 @@
         <LinearLayout
             android:id="@+id/time_layout"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/task_layout_height"
-            android:orientation="horizontal"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
             android:layout_below="@+id/priority_divider"
             android:layout_marginTop="@dimen/task_standard_margin"
-            android:layout_marginLeft="@dimen/task_standard_margin"
             android:gravity="center_vertical"
             >
-            <ImageView
-                android:layout_width="@dimen/task_icon_size"
-                android:layout_height="@dimen/task_icon_size"
-                android:src="@mipmap/clock_b"
-                />
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="@string/time_txt"
-                android:gravity="center_vertical"
-                android:textSize="@dimen/task_font_size"
-                android:layout_marginLeft="@dimen/task_standard_margin"
+                android:orientation="horizontal"
+                android:weightSum="5"
+                >
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/task_icon_size"
+                    android:src="@mipmap/clock_b"
+                    android:layout_marginLeft="@dimen/task_standard_margin"
+                    android:layout_weight="0.3"
+                    android:layout_gravity="center_vertical"
+                    />
+                <TextView
+                    android:id="@+id/add_task_date_txt"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:textSize="@dimen/task_font_size"
+                    android:layout_marginLeft="@dimen/task_standard_margin"
+                    android:clickable="true"
+                    android:layout_weight="3.7"
+                    />
+                <TextView
+                    android:id="@+id/add_task_time"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/add_task_calendar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                >
+                <CalendarView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    />
+            </LinearLayout>
+            <TimePicker
+                android:id="@+id/add_task_time_picker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/task_standard_margin"
                 />
         </LinearLayout>
         <ImageView
