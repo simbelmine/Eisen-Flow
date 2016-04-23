@@ -63,26 +63,96 @@
         <LinearLayout
             android:id="@+id/priority_layout"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/task_layout_height"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="@dimen/task_standard_margin"
-            android:layout_marginLeft="@dimen/task_standard_margin"
-            android:gravity="center_vertical"
+            android:layout_marginTop="30dp"
+            android:gravity="top"
             android:clickable="true"
+            android:weightSum="4"
             >
-            <ImageView
-                android:layout_width="@dimen/task_icon_size"
-                android:layout_height="@dimen/task_icon_size"
-                android:src="@mipmap/flag_outline_b"
-                />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="@string/task_priority_txt"
-                android:gravity="center_vertical"
-                android:textSize="@dimen/task_font_size"
-                android:layout_marginLeft="@dimen/task_standard_margin"
-                />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:clickable="true"
+                android:layout_weight="1"
+                android:id="@+id/do_it_l"
+                >
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="6dp"
+                    android:background="@color/firstQuadrant"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/do_it"
+                    />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:clickable="true"
+                android:layout_weight="1"
+                android:id="@+id/decide_it_l"
+                >
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="6dp"
+                    android:background="@color/secondQuadrant"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/decide"
+                    android:gravity="center"
+                    />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:clickable="true"
+                android:layout_weight="1"
+                android:id="@+id/delegate_it_l"
+                >
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="6dp"
+                    android:background="@color/thirdQuadrant"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/delegate"
+                    />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:clickable="true"
+                android:layout_weight="1"
+                android:id="@+id/dump_it_l"
+                >
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="6dp"
+                    android:background="@color/fourthQuadrant"
+
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/dump"
+                    />
+            </LinearLayout>
+
         </LinearLayout>
         <ImageView
             android:id="@+id/priority_divider"
