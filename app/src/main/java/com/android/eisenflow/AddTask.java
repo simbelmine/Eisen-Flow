@@ -1,6 +1,7 @@
 package com.android.eisenflow;
 
 import android.animation.ValueAnimator;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -11,6 +12,8 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -38,6 +41,8 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener {
     private TimePicker timePickerView;
     private TextView dateTxt;
     private TextView timeTxt;
+    private LinearLayout noteLayout;
+    private EditText noteEditView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -76,7 +81,10 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener {
         timeTxt = (TextView) findViewById(R.id.add_task_time);
         timeTxt.setText(getCurrentTimeString());
         timeTxt.setOnClickListener(this);
-    }
+        noteLayout = (LinearLayout) findViewById(R.id.note_layout);
+        noteLayout.setOnClickListener(this);
+        noteEditView = (EditText) findViewById(R.id.add_task_note);
+     }
 
     @Override
     public void onBackPressed() {
@@ -129,6 +137,17 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener {
                     collapse(calendarView);
                     expand(timePickerView);
                 }
+                break;
+            case R.id.note_layout:
+                if(noteEditView.getVisibility() == View.VISIBLE) {
+                    hideSoftKbd(view);
+                    collapse(noteEditView);
+                }
+                else {
+                    expand(noteEditView);
+                    setFocusToView(view);
+                }
+                break;
         }
     }
 
@@ -229,6 +248,17 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener {
     private String getCurrentTimeString() {
         SimpleDateFormat postFormater = new SimpleDateFormat("kk:mm");
         return postFormater.format(Calendar.getInstance().getTime());
+    }
+
+    private void hideSoftKbd(View view) {
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    private void setFocusToView(View view) {
+        if(view.requestFocus()) {
+            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        }
     }
 }
 

@@ -20,4 +20,5 @@
 
     <color name="gray">#6a7275</color>
     <color name="list_item_txt">#c9e3dc</color>
+    <color name="divider_border">#dde0e1</color>
 </resources>
