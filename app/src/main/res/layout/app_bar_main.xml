@@ -51,7 +51,7 @@
         sothree:umanoPanelHeight="30dp"
         sothree:umanoShadowHeight="4dp"
         sothree:umanoDragView="@+id/dragView"
-        sothree:umanoOverlay="false"
+        sothree:umanoOverlay="true"
         android:layout_marginTop="?attr/actionBarSize"
         sothree:umanoAnchorPoint="0.55"
         >
@@ -66,7 +66,6 @@
             android:focusable="false"
             android:id="@+id/dragView"
             android:gravity="bottom"
-
             >
         <CalendarView
             android:id="@+id/expandable_calendar"
