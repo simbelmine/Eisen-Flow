@@ -80,8 +80,8 @@
                 android:id="@+id/do_it_l"
                 >
                 <ImageView
-                    android:layout_width="60dp"
-                    android:layout_height="6dp"
+                    android:layout_width="@dimen/task_priority_img_w"
+                    android:layout_height="@dimen/task_priority_img_h"
                     android:background="@color/firstQuadrant"
                     />
                 <TextView
@@ -100,8 +100,8 @@
                 android:id="@+id/decide_it_l"
                 >
                 <ImageView
-                    android:layout_width="60dp"
-                    android:layout_height="6dp"
+                    android:layout_width="@dimen/task_priority_img_w"
+                    android:layout_height="@dimen/task_priority_img_h"
                     android:background="@color/secondQuadrant"
                     />
                 <TextView
@@ -121,8 +121,8 @@
                 android:id="@+id/delegate_it_l"
                 >
                 <ImageView
-                    android:layout_width="60dp"
-                    android:layout_height="6dp"
+                    android:layout_width="@dimen/task_priority_img_w"
+                    android:layout_height="@dimen/task_priority_img_h"
                     android:background="@color/thirdQuadrant"
                     />
                 <TextView
@@ -141,8 +141,8 @@
                 android:id="@+id/dump_it_l"
                 >
                 <ImageView
-                    android:layout_width="60dp"
-                    android:layout_height="6dp"
+                    android:layout_width="@dimen/task_priority_img_w"
+                    android:layout_height="@dimen/task_priority_img_h"
                     android:background="@color/fourthQuadrant"
 
                     />

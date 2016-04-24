@@ -16,9 +16,7 @@
     <dimen name="task_font_size">16dp</dimen>
     <dimen name="task_layout_height">30dp</dimen>
     <dimen name="task_icon_size">20dp</dimen>
-
-    <!-- Priority Dialog -->
-    <dimen name="priority_line_height">40dp</dimen>
-    <dimen name="priority_img_width">10dp</dimen>
+    <dimen name="task_priority_img_w">60dp</dimen>
+    <dimen name="task_priority_img_h">6dp</dimen>
 
 </resources>
