@@ -15,26 +15,31 @@
         >
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/task_name_buttons_height"
+            android:layout_height="@dimen/task_name_buttons_layout_height"
             android:layout_alignParentTop="true"
-            android:layout_marginRight="@dimen/task_standard_margin"
             android:layout_marginTop="@dimen/task_name_buttons_margin"
             >
-            <ImageView
+            <LinearLayout
                 android:id="@+id/task_add_close_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:gravity="center"
+                >
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/task_name_buttons_height"
                 android:src="@mipmap/close"
                 />
+            </LinearLayout>
             <TextView
                 android:id="@+id/task_add_save_btn"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="@dimen/task_name_buttons_height"
                 android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/task_standard_margin"
                 android:text="@string/save_btn"
                 android:textColor="@color/white"
                 android:layout_centerVertical="true"
-                android:gravity="center"
                 android:textSize="@dimen/task_name_font_size"
                 android:textAllCaps="true"
                 android:clickable="true"
@@ -241,24 +246,24 @@
             android:layout_marginRight="@dimen/task_standard_margin"
             android:gravity="center_vertical"
             >
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            >
-            <ImageView
-                android:layout_width="@dimen/task_icon_size"
-                android:layout_height="@dimen/task_icon_size"
-                android:src="@mipmap/note_outline_b"
-                />
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="@string/note_txt"
-                android:gravity="center_vertical"
-                android:textSize="@dimen/task_font_size"
-                android:layout_marginLeft="@dimen/task_standard_margin"
-                />
+                android:orientation="horizontal"
+                >
+                <ImageView
+                    android:layout_width="@dimen/task_icon_size"
+                    android:layout_height="@dimen/task_icon_size"
+                    android:src="@mipmap/note_outline_b"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="@string/note_txt"
+                    android:gravity="center_vertical"
+                    android:textSize="@dimen/task_font_size"
+                    android:layout_marginLeft="@dimen/task_standard_margin"
+                    />
             </LinearLayout>
             <EditText
                 android:id="@+id/add_task_note"

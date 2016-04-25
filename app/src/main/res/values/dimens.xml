@@ -9,6 +9,7 @@
 
     <!-- Add Task Activity -->
     <dimen name="task_name_margin_plus_status_bar">124dp</dimen> <!-- status bar is 24dp -->
+    <dimen name="task_name_buttons_layout_height">40dp</dimen>
     <dimen name="task_name_buttons_height">25dp</dimen>
     <dimen name="task_name_buttons_margin">30dp</dimen>
     <dimen name="task_name_font_size">18sp</dimen>

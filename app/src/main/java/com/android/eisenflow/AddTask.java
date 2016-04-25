@@ -14,7 +14,6 @@ import android.view.animation.Animation;
 import android.view.animation.Transformation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -27,7 +26,7 @@ import java.util.Calendar;
  * Created by Sve on 4/21/16.
  */
 public class AddTask extends AppCompatActivity implements View.OnClickListener {
-    private ImageView closeBtn;
+    private LinearLayout closeBtn;
     private TextView saveBtn;
     private LinearLayout priorityLayout;
     private RelativeLayout addTaskBg;
@@ -54,7 +53,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener {
     }
 
     private void initLayout() {
-        closeBtn = (ImageView) findViewById(R.id.task_add_close_btn);
+        closeBtn = (LinearLayout) findViewById(R.id.task_add_close_btn);
         closeBtn.setOnClickListener(this);
         saveBtn = (TextView) findViewById(R.id.task_add_save_btn);
         saveBtn.setOnClickListener(this);
