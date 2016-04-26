@@ -50,6 +50,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener {
     private TextView timeTxt;
     private LinearLayout noteLayout;
     private EditText noteEditView;
+    private int priorityInt; // from 0 to 3 ; 0 is the highest priority
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -114,15 +115,19 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener {
                 break;
             case R.id.do_it_l:
                 setBackgroundWithAnimation(R.color.firstQuadrant);
+                priorityInt = 0;
                 break;
             case R.id.decide_it_l:
                 setBackgroundWithAnimation(R.color.secondQuadrant);
+                priorityInt = 1;
                 break;
             case R.id.delegate_it_l:
                 setBackgroundWithAnimation(R.color.thirdQuadrant);
+                priorityInt = 2;
                 break;
             case R.id.dump_it_l:
                 setBackgroundWithAnimation(R.color.fourthQuadrant);
+                priorityInt = 3;
                 break;
             case R.id.add_task_date_txt:
                 if(calendarView.getVisibility() == View.VISIBLE) {
@@ -156,7 +161,6 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener {
     }
 
     private void saveNewTask() {
-        // Priority, Date, Name, Note
         PermissionHelper permissionHelper = new PermissionHelper(this);
         if(permissionHelper.isBiggerOrEqualToAPI23()) {
             String[] permissions = new String[] {
@@ -174,16 +178,25 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener {
     }
 
     private void saveTaskToDB() {
-        File dbFile = new File(FILE_DIR, FILE_FOLDER + FILE_NAME);
+        File dbFile = new File(FILE_DIR, FILE_FOLDER);
         Log.e("eisen", "path = " + dbFile);
 
         if(!dbFile.exists()) {
            if(!dbFile.mkdirs()) {
                Log.e("eisen", "FAILED to create DB file");
            }
+            else {
+               writeTaskInfoToFile();
+           }
         }
 
         finish();
+    }
+
+    private void writeTaskInfoToFile() {
+        // Priority, Date, Name, Note
+        
+
     }
 
     public static void expand(final View v) {
