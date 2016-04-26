@@ -1,13 +1,17 @@
 package com.android.eisenflow;
 
+import android.Manifest;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -19,6 +23,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -26,6 +31,9 @@ import java.util.Calendar;
  * Created by Sve on 4/21/16.
  */
 public class AddTask extends AppCompatActivity implements View.OnClickListener {
+    private static final String FILE_DIR = Environment.getExternalStorageDirectory().getAbsolutePath();
+    private static final String FILE_FOLDER = ".EisenFlow";
+    private static final String FILE_NAME ="/eisenDB.txt";
     private LinearLayout closeBtn;
     private TextView saveBtn;
     private LinearLayout priorityLayout;
@@ -99,10 +107,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener {
                 overridePendingTransition(R.anim.slide_in_back, R.anim.slide_out_back);
                 break;
             case R.id.task_add_save_btn:
-                // Save data
-                // # To Do:
-
-                finish();
+                saveNewTask();
                 overridePendingTransition(R.anim.slide_in_back, R.anim.slide_out_back);
                 break;
             case R.id.priority_layout:
@@ -148,6 +153,37 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener {
                 }
                 break;
         }
+    }
+
+    private void saveNewTask() {
+        // Priority, Date, Name, Note
+        PermissionHelper permissionHelper = new PermissionHelper(this);
+        if(permissionHelper.isBiggerOrEqualToAPI23()) {
+            String[] permissions = new String[] {
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+            };
+
+            permissionHelper.checkForPermissions(permissions);
+            if(permissionHelper.isAllPermissionsGranted) {
+                saveTaskToDB();
+            }
+        }
+        else {
+            saveTaskToDB();
+        }
+    }
+
+    private void saveTaskToDB() {
+        File dbFile = new File(FILE_DIR, FILE_FOLDER + FILE_NAME);
+        Log.e("eisen", "path = " + dbFile);
+
+        if(!dbFile.exists()) {
+           if(!dbFile.mkdirs()) {
+               Log.e("eisen", "FAILED to create DB file");
+           }
+        }
+
+        finish();
     }
 
     public static void expand(final View v) {
