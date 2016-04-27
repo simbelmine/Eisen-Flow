@@ -22,6 +22,7 @@ import android.widget.CalendarView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -30,7 +31,8 @@ import java.util.Calendar;
 /**
  * Created by Sve on 4/21/16.
  */
-public class AddTask extends AppCompatActivity implements View.OnClickListener, CalendarView.OnDateChangeListener{
+public class AddTask extends AppCompatActivity implements View.OnClickListener,
+        CalendarView.OnDateChangeListener, TimePicker.OnTimeChangedListener {
     private static final String FILE_DIR = Environment.getExternalStorageDirectory().getAbsolutePath();
     private static final String FILE_FOLDER = ".EisenFlow";
     private static final String FILE_NAME ="/eisenDB.txt";
@@ -47,6 +49,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener, 
     private LinearLayout calendarLayout;
     private CalendarView calendarView;
     private LinearLayout timePickerLayout;
+    private TimePicker timePickerView;
     private TextView dateTxt;
     private TextView currDateTxt;
     private TextView timeTxt;
@@ -88,6 +91,9 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener, 
 
         timePickerLayout = (LinearLayout) findViewById(R.id.add_task_time_picker);
         timePickerLayout.setVisibility(View.GONE); // It's causing rendering problems if it's set from the XML
+        timePickerView = (TimePicker) findViewById(R.id.add_task_time_picker_view);
+        timePickerView.setOnTimeChangedListener(this);
+
         dateTxt = (TextView) findViewById(R.id.add_task_date_txt);
         dateTxt.setText(getDateString(Calendar.getInstance()));
         dateTxt.setOnClickListener(this);
@@ -95,8 +101,9 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener, 
         currDateTxt.setText(getDateString(Calendar.getInstance()));
         currDateTxt.setOnClickListener(this);
         timeTxt = (TextView) findViewById(R.id.add_task_time);
-        timeTxt.setText(getCurrentTimeString());
+        timeTxt.setText(getTimeString(Calendar.getInstance()));
         timeTxt.setOnClickListener(this);
+
         noteLayout = (LinearLayout) findViewById(R.id.note_layout);
         noteLayout.setOnClickListener(this);
         noteEditLayout = (LinearLayout) findViewById(R.id.add_task_note);
@@ -149,6 +156,13 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener, 
                 }
                 break;
             case R.id.add_task_time:
+                if(isSystem24hFormat()) {
+                    timePickerView.setIs24HourView(true);
+                }
+                else {
+                    timePickerView.setIs24HourView(false);
+                }
+
                 if(timePickerLayout.getVisibility() == View.VISIBLE) {
                     viewExpandCollapse(timePickerLayout, false);
                 }
@@ -184,6 +198,14 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener, 
         cal.set(year, month, day_of_month);
 
         dateTxt.setText(getDateString(cal));
+    }
+
+    @Override
+    public void onTimeChanged(TimePicker timePicker, int hour, int minute) {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH, hour, minute);
+
+        timeTxt.setText(getTimeString(cal));
     }
 
     private void saveNewTask() {
@@ -322,9 +344,22 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener, 
         return postFormater.format(cal.getTime());
     }
 
-    private String getCurrentTimeString() {
-        SimpleDateFormat postFormater = new SimpleDateFormat("kk:mm");
-        return postFormater.format(Calendar.getInstance().getTime());
+    private String getTimeString(Calendar cal) {
+        SimpleDateFormat postFormater;
+        if(isSystem24hFormat()) {
+            postFormater = new SimpleDateFormat("kk:mm");
+        }
+        else {
+            postFormater = new SimpleDateFormat("hh:mm a");
+        }
+        return postFormater.format(cal.getTime());
+    }
+
+    private boolean isSystem24hFormat() {
+        if(android.text.format.DateFormat.is24HourFormat(getApplicationContext()))
+            return true;
+
+        return false;
     }
 
     private void hideSoftKbd(View view) {
