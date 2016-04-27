@@ -48,6 +48,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener, 
     private CalendarView calendarView;
     private LinearLayout timePickerLayout;
     private TextView dateTxt;
+    private TextView currDateTxt;
     private TextView timeTxt;
     private LinearLayout noteLayout;
     private LinearLayout noteEditLayout;
@@ -88,8 +89,11 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener, 
         timePickerLayout = (LinearLayout) findViewById(R.id.add_task_time_picker);
         timePickerLayout.setVisibility(View.GONE); // It's causing rendering problems if it's set from the XML
         dateTxt = (TextView) findViewById(R.id.add_task_date_txt);
-        dateTxt.setText(getCurrentDateString());
+        dateTxt.setText(getDateString(Calendar.getInstance()));
         dateTxt.setOnClickListener(this);
+        currDateTxt = (TextView) findViewById(R.id.curr_date_txt);
+        currDateTxt.setText(getDateString(Calendar.getInstance()));
+        currDateTxt.setOnClickListener(this);
         timeTxt = (TextView) findViewById(R.id.add_task_time);
         timeTxt.setText(getCurrentTimeString());
         timeTxt.setOnClickListener(this);
@@ -140,6 +144,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener, 
                 else {
                     timePickerLayout.setVisibility(View.GONE);
                     noteEditLayout.setVisibility(View.GONE);
+                    currDateTxt.setVisibility(View.VISIBLE);
                     viewExpandCollapse(calendarLayout, true);
                 }
                 break;
@@ -149,11 +154,11 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener, 
                 }
                 else {
                     calendarLayout.setVisibility(View.GONE);
+                    currDateTxt.setVisibility(View.GONE);
                     noteEditLayout.setVisibility(View.GONE);
                     viewExpandCollapse(timePickerLayout, true);
                 }
                 break;
-
             case R.id.note_layout:
                 if(noteEditLayout.getVisibility() == View.VISIBLE) {
                     hideSoftKbd(view);
@@ -166,12 +171,19 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener, 
                     setFocusToView(view);
                 }
                 break;
+            case R.id.curr_date_txt:
+                calendarView.setDate(Calendar.getInstance().getTimeInMillis(), true, true);
+                dateTxt.setText(getDateString(Calendar.getInstance()));
+                break;
         }
     }
 
     @Override
-    public void onSelectedDayChange(CalendarView calendarView, int i, int i1, int i2) {
-        Log.v("eisen"," Date was Changed...");
+    public void onSelectedDayChange(CalendarView calendarView, int year, int month, int day_of_month) {
+        Calendar cal = Calendar.getInstance();
+        cal.set(year, month, day_of_month);
+
+        dateTxt.setText(getDateString(cal));
     }
 
     private void saveNewTask() {
@@ -261,6 +273,9 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener, 
                 public void onAnimationEnd(Animator animation) {
                     super.onAnimationEnd(animation);
                     view.setVisibility(View.GONE);
+                    if(view == calendarLayout) {
+                        currDateTxt.setVisibility(View.GONE);
+                    }
                 }
             });
             anim.start();
@@ -302,9 +317,9 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener, 
         return Color.rgb((int) r, (int) g, (int) b);
     }
 
-    private String getCurrentDateString() {
+    private String getDateString(Calendar cal) {
         SimpleDateFormat postFormater = new SimpleDateFormat("EEE, MMM dd, yyyy");
-        return postFormater.format(Calendar.getInstance().getTime());
+        return postFormater.format(cal.getTime());
     }
 
     private String getCurrentTimeString() {

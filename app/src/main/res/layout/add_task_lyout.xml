@@ -212,6 +212,7 @@
                 android:id="@+id/add_task_calendar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="horizontal"
                 android:visibility="gone"
                 android:clickable="true"
                 >
@@ -222,6 +223,17 @@
                     android:clickable="true"
                     />
             </LinearLayout>
+            <TextView
+                android:id="@+id/curr_date_txt"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/task_name_buttons_height"
+                android:textColor="@color/colorAccent"
+                android:gravity="center"
+                android:clickable="true"
+                android:visibility="gone"
+                android:textSize="18sp"
+                android:background="?attr/selectableItemBackground"
+                />
             <LinearLayout
                 android:id="@+id/add_task_time_picker"
                 android:layout_width="match_parent"
