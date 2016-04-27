@@ -1,6 +1,8 @@
 package com.android.eisenflow;
 
 import android.Manifest;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Color;
@@ -13,15 +15,13 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.Transformation;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
+import android.widget.CalendarView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.TimePicker;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -30,7 +30,7 @@ import java.util.Calendar;
 /**
  * Created by Sve on 4/21/16.
  */
-public class AddTask extends AppCompatActivity implements View.OnClickListener {
+public class AddTask extends AppCompatActivity implements View.OnClickListener, CalendarView.OnDateChangeListener{
     private static final String FILE_DIR = Environment.getExternalStorageDirectory().getAbsolutePath();
     private static final String FILE_FOLDER = ".EisenFlow";
     private static final String FILE_NAME ="/eisenDB.txt";
@@ -44,12 +44,13 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener {
     private LinearLayout delegateItLayout;
     private LinearLayout dumpItLayout;
 
-    private LinearLayout calendarView;
-    private TimePicker timePickerView;
+    private LinearLayout calendarLayout;
+    private CalendarView calendarView;
+    private LinearLayout timePickerLayout;
     private TextView dateTxt;
     private TextView timeTxt;
     private LinearLayout noteLayout;
-    private EditText noteEditView;
+    private LinearLayout noteEditLayout;
     private int priorityInt; // from 0 to 3 ; 0 is the highest priority
 
     @Override
@@ -80,9 +81,12 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener {
         delegateItLayout.setOnClickListener(this);
         dumpItLayout.setOnClickListener(this);
 
-        calendarView = (LinearLayout) findViewById(R.id.add_task_calendar);
-        timePickerView = (TimePicker) findViewById(R.id.add_task_time_picker);
-        timePickerView.setVisibility(View.GONE);
+        calendarLayout = (LinearLayout) findViewById(R.id.add_task_calendar);
+        calendarView = (CalendarView) findViewById(R.id.calendar_view);
+        calendarView.setOnDateChangeListener(this);
+
+        timePickerLayout = (LinearLayout) findViewById(R.id.add_task_time_picker);
+        timePickerLayout.setVisibility(View.GONE); // It's causing rendering problems if it's set from the XML
         dateTxt = (TextView) findViewById(R.id.add_task_date_txt);
         dateTxt.setText(getCurrentDateString());
         dateTxt.setOnClickListener(this);
@@ -91,8 +95,8 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener {
         timeTxt.setOnClickListener(this);
         noteLayout = (LinearLayout) findViewById(R.id.note_layout);
         noteLayout.setOnClickListener(this);
-        noteEditView = (EditText) findViewById(R.id.add_task_note);
-     }
+        noteEditLayout = (LinearLayout) findViewById(R.id.add_task_note);
+    }
 
     @Override
     public void onBackPressed() {
@@ -130,34 +134,44 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener {
                 priorityInt = 3;
                 break;
             case R.id.add_task_date_txt:
-                if(calendarView.getVisibility() == View.VISIBLE) {
-                    collapse(calendarView);
+                if(calendarLayout.getVisibility() == View.VISIBLE) {
+                    viewExpandCollapse(calendarLayout, false);
                 }
                 else {
-                    collapse(timePickerView);
-                    expand(calendarView);
+                    timePickerLayout.setVisibility(View.GONE);
+                    noteEditLayout.setVisibility(View.GONE);
+                    viewExpandCollapse(calendarLayout, true);
                 }
                 break;
             case R.id.add_task_time:
-                if(timePickerView.getVisibility() == View.VISIBLE) {
-                    collapse(timePickerView);
+                if(timePickerLayout.getVisibility() == View.VISIBLE) {
+                    viewExpandCollapse(timePickerLayout, false);
                 }
                 else {
-                    collapse(calendarView);
-                    expand(timePickerView);
+                    calendarLayout.setVisibility(View.GONE);
+                    noteEditLayout.setVisibility(View.GONE);
+                    viewExpandCollapse(timePickerLayout, true);
                 }
                 break;
+
             case R.id.note_layout:
-                if(noteEditView.getVisibility() == View.VISIBLE) {
+                if(noteEditLayout.getVisibility() == View.VISIBLE) {
                     hideSoftKbd(view);
-                    collapse(noteEditView);
+                    viewExpandCollapse(noteEditLayout, false);
                 }
                 else {
-                    expand(noteEditView);
+                    calendarLayout.setVisibility(View.GONE);
+                    timePickerLayout.setVisibility(View.GONE);
+                    viewExpandCollapse(noteEditLayout, true);
                     setFocusToView(view);
                 }
                 break;
         }
+    }
+
+    @Override
+    public void onSelectedDayChange(CalendarView calendarView, int i, int i1, int i2) {
+        Log.v("eisen"," Date was Changed...");
     }
 
     private void saveNewTask() {
@@ -182,12 +196,12 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener {
         Log.e("eisen", "path = " + dbFile);
 
         if(!dbFile.exists()) {
-           if(!dbFile.mkdirs()) {
-               Log.e("eisen", "FAILED to create DB file");
-           }
+            if(!dbFile.mkdirs()) {
+                Log.e("eisen", "FAILED to create DB file");
+            }
             else {
-               writeTaskInfoToFile();
-           }
+                writeTaskInfoToFile();
+            }
         }
 
         finish();
@@ -195,62 +209,62 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener {
 
     private void writeTaskInfoToFile() {
         // Priority, Date, Name, Note
-        
+
 
     }
 
-    public static void expand(final View v) {
-        v.measure(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        final int targetHeight = v.getMeasuredHeight();
 
-        // Older versions of android (pre API 21) cancel animations for views with a height of 0.
-        v.getLayoutParams().height = 1;
-        v.setVisibility(View.VISIBLE);
-        Animation a = new Animation()
-        {
-            @Override
-            protected void applyTransformation(float interpolatedTime, Transformation t) {
-                v.getLayoutParams().height = interpolatedTime == 1
-                        ? LinearLayout.LayoutParams.WRAP_CONTENT
-                        : (int)(targetHeight * interpolatedTime);
-                v.requestLayout();
+    private void viewExpandCollapse(View view, boolean expanded) {
+        view.measure(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        final int height = view.getMeasuredHeight();
+        final int width = view.getMeasuredWidth();
+
+        // get the center for the clipping circle
+        int cx = (view.getLeft() + view.getRight()) / 2;
+        int cy = (view.getTop() + view.getBottom()) / 2;
+
+        if(cx == 0 && cy == 0) {
+            cx = width/2;
+            cy = height/2;
+
+            // FIX over TimePicker & EditText first animation load
+            if(view == timePickerLayout || view == noteEditLayout) {
+                int tmp = cx;
+                cx = cx + cy;
+                cy = cy + tmp;
             }
+        }
 
-            @Override
-            public boolean willChangeBounds() {
-                return true;
-            }
-        };
-
-        // 1dp/ms
-        a.setDuration((int)(targetHeight / v.getContext().getResources().getDisplayMetrics().density));
-        v.startAnimation(a);
+        if(expanded) {
+            expand(view, width, height, cx, cy);
+        }
+        else {
+            collapse(view, cx, cy);
+        }
     }
 
-    public static void collapse(final View v) {
-        final int initialHeight = v.getMeasuredHeight();
+    private void expand(View view, int width, int height, int cx, int cy) {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            int finalRadius = Math.max(width, height);
+            Animator anim = ViewAnimationUtils.createCircularReveal(view, cx, cy, 0, finalRadius);
+            view.setVisibility(View.VISIBLE);
+            anim.start();
+        }
+    }
 
-        Animation a = new Animation()
-        {
-            @Override
-            protected void applyTransformation(float interpolatedTime, Transformation t) {
-                if(interpolatedTime == 1){
-                    v.setVisibility(View.GONE);
-                }else{
-                    v.getLayoutParams().height = initialHeight - (int)(initialHeight * interpolatedTime);
-                    v.requestLayout();
+    private void collapse(final View view, int cx, int cy) {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            int initialRadius = view.getWidth();
+            Animator anim = ViewAnimationUtils.createCircularReveal(view, cx, cy, initialRadius, 0);
+            anim.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                    view.setVisibility(View.GONE);
                 }
-            }
-
-            @Override
-            public boolean willChangeBounds() {
-                return true;
-            }
-        };
-
-        // 1dp/ms
-        a.setDuration((int)(initialHeight / v.getContext().getResources().getDisplayMetrics().density));
-        v.startAnimation(a);
+            });
+            anim.start();
+        }
     }
 
     private void setBackgroundWithAnimation(final int toColor) {

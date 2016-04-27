@@ -25,11 +25,11 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 >
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/task_name_buttons_height"
-                android:src="@mipmap/close"
-                />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/task_name_buttons_height"
+                    android:src="@mipmap/close"
+                    />
             </LinearLayout>
             <TextView
                 android:id="@+id/task_add_save_btn"
@@ -211,21 +211,29 @@
             <LinearLayout
                 android:id="@+id/add_task_calendar"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:visibility="gone"
+                android:clickable="true"
                 >
                 <CalendarView
+                    android:id="@+id/calendar_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:clickable="true"
                     />
             </LinearLayout>
-            <TimePicker
+            <LinearLayout
                 android:id="@+id/add_task_time_picker"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="@dimen/task_standard_margin"
-                />
+                android:clickable="true"
+                >
+                <TimePicker
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp"
+                    />
+            </LinearLayout>
         </LinearLayout>
         <ImageView
             android:id="@+id/time_divider"
@@ -265,18 +273,25 @@
                     android:layout_marginLeft="@dimen/task_standard_margin"
                     />
             </LinearLayout>
-            <EditText
+            <LinearLayout
                 android:id="@+id/add_task_note"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/task_standard_margin"
-                android:background="@drawable/edit_text_style"
-                android:lines="10"
+                android:layout_height="wrap_content"
+                android:clickable="true"
                 android:visibility="gone"
-                android:gravity="top"
-                android:padding="10dp"
-                android:inputType="textCapSentences|textMultiLine"
-                />
+                >
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="@dimen/task_standard_margin"
+                    android:background="@drawable/edit_text_style"
+                    android:lines="10"
+                    android:gravity="top"
+                    android:padding="10dp"
+                    android:inputType="textCapSentences|textMultiLine"
+                    android:textColor="@color/date"
+                    />
+            </LinearLayout>
         </LinearLayout>
         <ImageView
             android:id="@+id/note_divider"
