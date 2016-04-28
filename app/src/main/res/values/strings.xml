@@ -27,4 +27,11 @@
     <string name="delegate">Delegate it</string>
     <string name="not_i_not_u">not Important not Urgent</string>
     <string name="dump">Dump it</string>
+
+    <!-- SnackBar Messages -->
+    <string name="add_task_priority_alert">Choose task priority</string>
+    <string name="add_task_name_alert">Write some name to the task</string>
+    <string name="ok_btn">OK</string>
+
+    <string name="add_task_alert_title">Alert</string>
 </resources>

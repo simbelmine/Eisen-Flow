@@ -12,6 +12,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -26,11 +29,8 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
-import java.io.IOError;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -39,6 +39,7 @@ import java.util.Calendar;
  */
 public class AddTask extends AppCompatActivity implements View.OnClickListener,
         CalendarView.OnDateChangeListener, TimePicker.OnTimeChangedListener {
+    private static final int NEEDED_API_LEVEL = 22;
     private static final String FILE_DIR = Environment.getExternalStorageDirectory().getAbsolutePath();
     private static final String FILE_FOLDER = ".EisenFlow";
     private static final String FILE_NAME ="eisenDB.txt";
@@ -61,9 +62,10 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
     private TextView timeTxt;
     private LinearLayout noteLayout;
     private LinearLayout noteEditLayout;
-    private int priorityInt; // from 0 to 3 ; 0 is the highest priority
+    private int priorityInt = -1; // from 0 to 3 ; 0 is the highest priority
     private TextView taskName;
     private EditText noteTxt;
+    private CoordinatorLayout snakbarLayout;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -118,6 +120,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
 
         taskName = (TextView) findViewById(R.id.task_name);
         noteTxt = (EditText) findViewById(R.id.note_txt);
+        snakbarLayout = (CoordinatorLayout) findViewById(R.id.snackbarCoordinatorLayout);
     }
 
     @Override
@@ -134,8 +137,10 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
                 overridePendingTransition(R.anim.slide_in_back, R.anim.slide_out_back);
                 break;
             case R.id.task_add_save_btn:
-                saveNewTask();
-                overridePendingTransition(R.anim.slide_in_back, R.anim.slide_out_back);
+                if(isDataValid()) {
+                    saveNewTask();
+                    overridePendingTransition(R.anim.slide_in_back, R.anim.slide_out_back);
+                }
                 break;
             case R.id.priority_layout:
                 break;
@@ -236,6 +241,51 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
         }
     }
 
+    private boolean isDataValid() {
+        String name = taskName.getText().toString();
+
+        if(priorityInt == -1) {
+            showAlertMessage(getResources().getString(R.string.add_task_priority_alert));
+            return false;
+        }
+
+        if(name.length() == 0 || name == null || getResources().getString(R.string.enter_task_hint).equals(name)) {
+            showAlertMessage(getResources().getString(R.string.add_task_name_alert));
+            return false;
+        }
+
+        return true;
+    }
+
+    private void showAlertMessage(String messageToShow) {
+        if(Build.VERSION.SDK_INT >= NEEDED_API_LEVEL) {
+            showSnackbar(messageToShow);
+        }
+        else {
+            showAlertDialog(messageToShow);
+        }
+    }
+
+    private void showSnackbar(String messageToShow) {
+        Snackbar snackbar = Snackbar.make(snakbarLayout, messageToShow, Snackbar.LENGTH_INDEFINITE)
+                .setActionTextColor(Color.WHITE)
+                .setAction(getResources().getString(R.string.ok_btn), null);
+
+        View snackbarView = snackbar.getView();
+        TextView text = (TextView) snackbarView.findViewById(android.support.design.R.id.snackbar_text);
+        text.setTextColor(getResources().getColor(R.color.firstQuadrant));
+        snackbar.show();
+    }
+
+    private void showAlertDialog(String messageToShow) {
+        AlertDialog.Builder builder =
+                new AlertDialog.Builder(AddTask.this, R.style.MyAlertDialogStyle);
+        builder.setTitle(getResources().getString(R.string.add_task_alert_title));
+        builder.setMessage(messageToShow);
+        builder.setPositiveButton(getResources().getString(R.string.ok_btn), null);
+        builder.show();
+    }
+
     private void saveTaskToDB() {
         File dbFolder = new File(FILE_DIR, FILE_FOLDER);
 
@@ -310,7 +360,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
     }
 
     private void expand(View view, int width, int height, int cx, int cy) {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if(Build.VERSION.SDK_INT >= NEEDED_API_LEVEL) {
             int finalRadius = Math.max(width, height);
             Animator anim = ViewAnimationUtils.createCircularReveal(view, cx, cy, 0, finalRadius);
             view.setVisibility(View.VISIBLE);
@@ -319,7 +369,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
     }
 
     private void collapse(final View view, int cx, int cy) {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if(Build.VERSION.SDK_INT >= NEEDED_API_LEVEL) {
             int initialRadius = view.getWidth();
             Animator anim = ViewAnimationUtils.createCircularReveal(view, cx, cy, initialRadius, 0);
             anim.addListener(new AnimatorListenerAdapter() {

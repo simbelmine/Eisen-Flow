@@ -14,10 +14,10 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="MyAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
+    <style name="MyAlertDialogStyle" parent="Theme.AppCompat.Dialog.Alert">
         <!--&lt;!&ndash; Used for the buttons &ndash;&gt;-->
-        <!--<item name="colorAccent">#FFC107</item>-->
-        <!--<item name="android:textColorPrimary">#FFFFFF</item>-->
+        <item name="colorAccent">@color/white</item>
+        <item name="android:textColorPrimary">@color/firstQuadrant</item>
         <!--<item name="android:background">#4CAF50</item>-->
         <!--<item name="android:windowTitleStyle">@style/dialog_title_style</item>-->
     </style>
