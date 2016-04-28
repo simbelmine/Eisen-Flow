@@ -19,12 +19,18 @@ import android.view.ViewAnimationUtils;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CalendarView;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOError;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -35,7 +41,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
         CalendarView.OnDateChangeListener, TimePicker.OnTimeChangedListener {
     private static final String FILE_DIR = Environment.getExternalStorageDirectory().getAbsolutePath();
     private static final String FILE_FOLDER = ".EisenFlow";
-    private static final String FILE_NAME ="/eisenDB.txt";
+    private static final String FILE_NAME ="eisenDB.txt";
     private LinearLayout closeBtn;
     private TextView saveBtn;
     private LinearLayout priorityLayout;
@@ -56,6 +62,8 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
     private LinearLayout noteLayout;
     private LinearLayout noteEditLayout;
     private int priorityInt; // from 0 to 3 ; 0 is the highest priority
+    private TextView taskName;
+    private EditText noteTxt;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -107,6 +115,9 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
         noteLayout = (LinearLayout) findViewById(R.id.note_layout);
         noteLayout.setOnClickListener(this);
         noteEditLayout = (LinearLayout) findViewById(R.id.add_task_note);
+
+        taskName = (TextView) findViewById(R.id.task_name);
+        noteTxt = (EditText) findViewById(R.id.note_txt);
     }
 
     @Override
@@ -226,25 +237,46 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
     }
 
     private void saveTaskToDB() {
-        File dbFile = new File(FILE_DIR, FILE_FOLDER);
-        Log.e("eisen", "path = " + dbFile);
+        File dbFolder = new File(FILE_DIR, FILE_FOLDER);
 
-        if(!dbFile.exists()) {
-            if(!dbFile.mkdirs()) {
-                Log.e("eisen", "FAILED to create DB file");
+        if(!dbFolder.exists()) {
+            if(!dbFolder.mkdirs()) {
+                Log.e("eisen", "FAILED to create DB Folder");
             }
-            else {
-                writeTaskInfoToFile();
-            }
+        }
+        try {
+            File dbFile = new File(FILE_DIR, FILE_FOLDER + "/" + FILE_NAME);
+            dbFile.createNewFile();
+            writeTaskInfoToFile(dbFile);
+        } catch (IOException ex) {
+            Log.e("eisen", "FAILED to create DB File");
         }
 
         finish();
     }
 
-    private void writeTaskInfoToFile() {
-        // Priority, Date, Name, Note
+    private void writeTaskInfoToFile(File dbFile) {
+        try {
+            FileWriter writer = new FileWriter(dbFile, true);
+            writer.write(getWholeStringToSave());
+            writer.write("\n");
+            writer.flush();
+            writer.close();
+        }
+        catch (IOException ex) {
+            Log.e("eisen", "Exception Write dbFile : " + ex.getMessage());
+        }
+    }
 
+    private String getWholeStringToSave() {
+        // Priority, Date, Time, Name, Note
+        String date = dateTxt.getText().toString();
+        String time = timeTxt.getText().toString();
+        String name = taskName.getText().toString();
+        String note = noteTxt.getText().toString();
+        String separator = "+";
 
+        return String.valueOf(priorityInt) + separator + date + separator + time + separator + name + separator + note;
     }
 
 
