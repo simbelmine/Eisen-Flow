@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context="com.android.eisenflow.MainActivity"
     android:background="@color/white"
+    android:id="@+id/main_layout"
     >
 
     <android.support.design.widget.AppBarLayout

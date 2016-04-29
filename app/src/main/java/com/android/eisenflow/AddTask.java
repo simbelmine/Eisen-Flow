@@ -4,13 +4,14 @@ import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
-import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
@@ -20,7 +21,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -139,7 +139,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
             case R.id.task_add_save_btn:
                 if(isDataValid()) {
                     saveNewTask();
-                    overridePendingTransition(R.anim.slide_in_back, R.anim.slide_out_back);
+                    hideSoftKbd();
                 }
                 break;
             case R.id.priority_layout:
@@ -191,7 +191,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
                 break;
             case R.id.note_layout:
                 if(noteEditLayout.getVisibility() == View.VISIBLE) {
-                    hideSoftKbd(view);
+                    hideSoftKbd();
                     viewExpandCollapse(noteEditLayout, false);
                 }
                 else {
@@ -241,6 +241,17 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case PermissionHelper.REQUEST_CODE_ASK_PERMISSIONS:
+                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    saveTaskToDB();
+                }
+                break;
+        }
+    }
+
     private boolean isDataValid() {
         String name = taskName.getText().toString();
 
@@ -259,14 +270,14 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
 
     private void showAlertMessage(String messageToShow) {
         if(Build.VERSION.SDK_INT >= NEEDED_API_LEVEL) {
-            showSnackbar(messageToShow);
+            showAlertSnackbar(messageToShow);
         }
         else {
             showAlertDialog(messageToShow);
         }
     }
 
-    private void showSnackbar(String messageToShow) {
+    private void showAlertSnackbar(String messageToShow) {
         Snackbar snackbar = Snackbar.make(snakbarLayout, messageToShow, Snackbar.LENGTH_INDEFINITE)
                 .setActionTextColor(Color.WHITE)
                 .setAction(getResources().getString(R.string.ok_btn), null);
@@ -303,6 +314,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
         }
 
         finish();
+        overridePendingTransition(R.anim.slide_in_back, R.anim.slide_out_back);
     }
 
     private void writeTaskInfoToFile(File dbFile) {
@@ -317,6 +329,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
             Log.e("eisen", "Exception Write dbFile : " + ex.getMessage());
         }
     }
+
 
     private String getWholeStringToSave() {
         // Priority, Date, Time, Name, Note
@@ -444,9 +457,12 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
         return false;
     }
 
-    private void hideSoftKbd(View view) {
-        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    private void hideSoftKbd() {
+//        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+//        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
+        );
     }
 
     private void setFocusToView(View view) {

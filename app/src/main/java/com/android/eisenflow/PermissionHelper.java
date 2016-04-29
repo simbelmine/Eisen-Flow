@@ -20,7 +20,7 @@ import java.util.List;
  * Created by Sve on 4/26/16.
  */
 public class PermissionHelper {
-    private static final int REQUEST_CODE_ASK_PERMISSIONS = 0;
+    public static final int REQUEST_CODE_ASK_PERMISSIONS = 0;
     private static final String[] PERMISSIONS =
             {
                     Manifest.permission.READ_EXTERNAL_STORAGE
