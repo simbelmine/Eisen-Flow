@@ -4,6 +4,8 @@ import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
+import android.app.Activity;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -21,6 +23,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -145,22 +148,27 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
             case R.id.priority_layout:
                 break;
             case R.id.do_it_l:
+                hideSoftKbd();
                 setBackgroundWithAnimation(R.color.firstQuadrant);
                 priorityInt = 0;
                 break;
             case R.id.decide_it_l:
+                hideSoftKbd();
                 setBackgroundWithAnimation(R.color.secondQuadrant);
                 priorityInt = 1;
                 break;
             case R.id.delegate_it_l:
+                hideSoftKbd();
                 setBackgroundWithAnimation(R.color.thirdQuadrant);
                 priorityInt = 2;
                 break;
             case R.id.dump_it_l:
+                hideSoftKbd();
                 setBackgroundWithAnimation(R.color.fourthQuadrant);
                 priorityInt = 3;
                 break;
             case R.id.add_task_date_txt:
+                hideSoftKbd();
                 if(calendarLayout.getVisibility() == View.VISIBLE) {
                     viewExpandCollapse(calendarLayout, false);
                 }
@@ -172,6 +180,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
                 }
                 break;
             case R.id.add_task_time:
+                hideSoftKbd();
                 if(isSystem24hFormat()) {
                     timePickerView.setIs24HourView(true);
                 }
@@ -458,11 +467,8 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
     }
 
     private void hideSoftKbd() {
-//        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-//        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        getWindow().setSoftInputMode(
-                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
-        );
+        InputMethodManager inputManager = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputManager.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
     private void setFocusToView(View view) {
