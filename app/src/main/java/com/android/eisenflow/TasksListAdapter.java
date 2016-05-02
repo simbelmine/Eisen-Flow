@@ -48,6 +48,17 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListHolder> {
         }
     }
 
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    // # Helps listener instance not to be duplicated
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
+
     public void setList(List<String> tasks) {
         this.tasks = tasks;
     }
