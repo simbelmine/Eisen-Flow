@@ -10,7 +10,7 @@ import android.widget.RelativeLayout;
  * Created by Sve on 5/1/16.
  */
 public class SwipeDetector implements View.OnTouchListener {
-    private static final int MIN_LOCK_DISTANCE = 300; // disallow motion intercept
+    private static final int MIN_LOCK_DISTANCE = 500; // disallow motion intercept
     private boolean motionInterceptDisallowed = false;
     private float downX, upX;
     private int pos;

@@ -20,4 +20,15 @@
     <dimen name="task_priority_img_w">60dp</dimen>
     <dimen name="task_priority_img_h">6dp</dimen>
 
+    <!-- Main Activity -->
+    <dimen name="card_view_padding">2dp</dimen>
+    <dimen name="card_view_margin">1dp</dimen>
+    <dimen name="card_height">80dp</dimen>
+    <dimen name="card_padding">8dp</dimen>
+    <dimen name="card_priority_img_width">5dp</dimen>
+    <dimen name="card_priority_img_margin">5dp</dimen>
+    <dimen name="card_under_icon_size">25dp</dimen>
+    <dimen name="card_under_icon_margin">25dp</dimen>
+
+
 </resources>
