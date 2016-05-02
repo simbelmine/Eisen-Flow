@@ -16,11 +16,17 @@ public class SwipeDetector implements View.OnTouchListener {
     private int pos;
     private TasksListHolder holder;
     private RecyclerView recyclerView;
+    private int priority;
+    private RelativeLayout currentMenuLayout;
 
-    public SwipeDetector(TasksListHolder holder, RecyclerView recyclerView, int pos) {
+    public SwipeDetector(TasksListHolder holder, RecyclerView recyclerView, int priority, int pos) {
         this.pos = pos;
         this.holder = holder;
         this.recyclerView = recyclerView;
+        this.priority = priority;
+
+        currentMenuLayout = getCorrectLayout();
+        Log.v("eisen", "currentMenuLayout = " + currentMenuLayout);
     }
 
     @Override
@@ -35,7 +41,7 @@ public class SwipeDetector implements View.OnTouchListener {
                 upX = event.getX();
                 float deltaX = downX - upX;
 
-                if (deltaX < 0 && holder.shareLayout.getVisibility() == View.GONE) {
+                if (deltaX < 0 && currentMenuLayout !=null && currentMenuLayout.getVisibility() == View.GONE) {
                     return true;
                 }
 
@@ -45,11 +51,13 @@ public class SwipeDetector implements View.OnTouchListener {
                 }
 
                 if (deltaX > 0) {
-                    holder.shareLayout.setVisibility(View.VISIBLE);
+                    if(currentMenuLayout != null) {
+                        currentMenuLayout.setVisibility(View.VISIBLE);
+                    }
                 }
 
-                if (deltaX < 0 && holder.shareLayout.getVisibility() == View.VISIBLE) {
-                    holder.shareLayout.setVisibility(View.GONE);
+                if (deltaX < 0 && currentMenuLayout!= null && currentMenuLayout.getVisibility() == View.VISIBLE) {
+                        currentMenuLayout.setVisibility(View.GONE);
                 }
 
                 swipe(-(int) deltaX);
@@ -69,7 +77,7 @@ public class SwipeDetector implements View.OnTouchListener {
                     motionInterceptDisallowed = false;
                 }
 
-                if (holder.shareLayout.getVisibility() != View.VISIBLE) {
+                if (currentMenuLayout!= null && currentMenuLayout.getVisibility() != View.VISIBLE) {
                     swipe(0);
                 }
                 return true;
@@ -87,5 +95,16 @@ public class SwipeDetector implements View.OnTouchListener {
         params.rightMargin = -distance;
         params.leftMargin = distance;
         animationView.setLayoutParams(params);
+    }
+
+    private RelativeLayout getCorrectLayout() {
+        switch (priority) {
+            case 0:
+                return holder.priority_0_layout;
+            case 1:
+                return holder.priority_1_layout;
+        }
+
+        return null;
     }
 }

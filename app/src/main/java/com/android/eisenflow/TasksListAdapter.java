@@ -36,7 +36,12 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListHolder> {
         holder.text.setText(tasks.get(position));
         holder.text.setTextColor(context.getResources().getColor(R.color.gray));
 
-        holder.cardView.setOnTouchListener(new SwipeDetector(holder, recyclerView, position));
+        if(position%2 == 0) {
+            holder.cardView.setOnTouchListener(new SwipeDetector(holder, recyclerView, 0, position));
+        }
+        else {
+            holder.cardView.setOnTouchListener(new SwipeDetector(holder, recyclerView, 1, position));
+        }
     }
 
     @Override

@@ -17,7 +17,8 @@ public class TasksListHolder extends RecyclerView.ViewHolder
     public TextView text;
     public CardView cardView;
     public LinearLayout mainLayout;
-    public RelativeLayout shareLayout;
+    public RelativeLayout priority_0_layout;
+    public RelativeLayout priority_1_layout;
 
     public TasksListHolder(Context context, View itemView) {
         super(itemView);
@@ -27,6 +28,7 @@ public class TasksListHolder extends RecyclerView.ViewHolder
         text = (TextView) itemView.findViewById(R.id.list_text);
 
         mainLayout = (LinearLayout) cardView.findViewById(R.id.task_card_mainview);
-        shareLayout = (RelativeLayout) cardView.findViewById(R.id.task_card_priority_0);
+        priority_0_layout = (RelativeLayout) cardView.findViewById(R.id.task_card_priority_0);
+        priority_1_layout = (RelativeLayout) cardView.findViewById(R.id.task_card_priority_1);
     }
 }

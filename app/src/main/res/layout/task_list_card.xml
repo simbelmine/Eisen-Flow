@@ -26,6 +26,7 @@
         android:orientation="horizontal" >
 
         <include layout="@layout/priority_0_layout"/>
+        <include layout="@layout/priority_1_layout"/>
 
         <LinearLayout
             android:layout_width="match_parent"
