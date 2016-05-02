@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity
     private NavigationView navigationView;
     private RecyclerView quadrantOneView;
     private LinearLayoutManager quadrantOneManager;
-    private TasksAdapter quadrantOneAdapter;
+    private TasksListAdapter quadrantOneAdapter;
     private TextView month;
     private CalendarView calendar;
     private SlidingUpPanelLayout slidingLayout;
@@ -119,7 +119,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void initTaskAdapters() {
-        quadrantOneAdapter = new TasksAdapter(getApplicationContext());
+        quadrantOneAdapter = new TasksListAdapter(getApplicationContext());
     }
 
     private void setTasksLists() {
@@ -156,6 +156,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void setTaskAdapters() {
+        quadrantOneAdapter.setRecyclerView(quadrantOneView);
         quadrantOneView.setAdapter(quadrantOneAdapter);
     }
 
