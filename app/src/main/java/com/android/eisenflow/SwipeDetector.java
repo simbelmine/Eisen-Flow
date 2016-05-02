@@ -1,6 +1,7 @@
 package com.android.eisenflow;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -9,7 +10,7 @@ import android.widget.RelativeLayout;
  * Created by Sve on 5/1/16.
  */
 public class SwipeDetector implements View.OnTouchListener {
-    private static final int MIN_LOCK_DISTANCE = 30; // disallow motion intercept
+    private static final int MIN_LOCK_DISTANCE = 300; // disallow motion intercept
     private boolean motionInterceptDisallowed = false;
     private float downX, upX;
     private int pos;
@@ -43,11 +44,6 @@ public class SwipeDetector implements View.OnTouchListener {
                     motionInterceptDisallowed = true;
                 }
 
-
-                if (deltaX < 0 && holder.shareLayout.getVisibility() == View.GONE) {
-                    return true;
-                }
-
                 if (deltaX > 0) {
                     holder.shareLayout.setVisibility(View.VISIBLE);
                 }
@@ -61,6 +57,13 @@ public class SwipeDetector implements View.OnTouchListener {
             }
 
             case MotionEvent.ACTION_UP:
+                upX = event.getX();
+                float deltaX = upX - downX;
+
+                if (Math.abs(deltaX) < MIN_LOCK_DISTANCE) {
+                    swipe(0);
+                }
+
                 if (recyclerView != null) {
                     recyclerView.requestDisallowInterceptTouchEvent(false);
                     motionInterceptDisallowed = false;
