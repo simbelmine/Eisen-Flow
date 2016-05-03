@@ -10,7 +10,8 @@ import android.widget.RelativeLayout;
  * Created by Sve on 5/1/16.
  */
 public class SwipeDetector implements View.OnTouchListener {
-    private static final int MIN_LOCK_DISTANCE = 500; // disallow motion intercept
+    private static final int MIN_LOCK_DISTANCE = 30; // disallow motion intercept
+    private static final int MIN_DISTANCE = 550;
     private boolean motionInterceptDisallowed = false;
     private float downX, upX;
     private int pos;
@@ -26,7 +27,6 @@ public class SwipeDetector implements View.OnTouchListener {
         this.priority = priority;
 
         currentMenuLayout = getCorrectLayout();
-        Log.v("eisen", "currentMenuLayout = " + currentMenuLayout);
     }
 
     @Override
@@ -68,7 +68,7 @@ public class SwipeDetector implements View.OnTouchListener {
                 upX = event.getX();
                 float deltaX = upX - downX;
 
-                if (Math.abs(deltaX) < MIN_LOCK_DISTANCE) {
+                if (Math.abs(deltaX) < MIN_DISTANCE) {
                     swipe(0);
                 }
 
