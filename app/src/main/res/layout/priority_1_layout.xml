@@ -20,7 +20,7 @@
             android:layout_width="@dimen/card_under_icon_size"
             android:layout_height="@dimen/card_under_icon_size"
             android:layout_margin="@dimen/card_under_icon_margin"
-            android:src="@mipmap/progress_up"/>
+            android:src="@mipmap/calendar_plus"/>
     </LinearLayout>
     <LinearLayout
         android:id="@+id/edit_list_icon"
