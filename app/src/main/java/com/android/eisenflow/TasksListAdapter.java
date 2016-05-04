@@ -1,19 +1,18 @@
 package com.android.eisenflow;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 
 import java.util.List;
 
 /**
  * Created by Sve on 3/23/16.
  */
-public class TasksListAdapter extends RecyclerView.Adapter<TasksListHolder> {
+public class TasksListAdapter extends RecyclerView.Adapter<TasksListHolder> implements View.OnClickListener {
     private Context context;
     private List<String> tasks;
     private RecyclerView recyclerView;
@@ -42,6 +41,11 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListHolder> {
         else {
             holder.cardView.setOnTouchListener(new SwipeDetector(holder, recyclerView, 1, position));
         }
+
+        holder.timerIconLayout.setOnClickListener(this);
+        holder.calendarPlusIconLayout.setOnClickListener(this);
+        holder.editIconLayout.setOnClickListener(this);
+        holder.deleteIconLayout.setOnClickListener(this);
     }
 
     @Override
@@ -70,5 +74,25 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListHolder> {
 
     public void setRecyclerView(RecyclerView recyclerView) {
         this.recyclerView = recyclerView;
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.timer_list_icon:
+                Intent intent = new Intent(context, TimerActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
+                break;
+            case R.id.calendar_plus_list_icon:
+
+                break;
+            case R.id.edit_list_icon:
+
+                break;
+            case R.id.delete_list_icon:
+
+                break;
+        }
     }
 }

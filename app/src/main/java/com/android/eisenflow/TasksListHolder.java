@@ -19,6 +19,10 @@ public class TasksListHolder extends RecyclerView.ViewHolder
     public LinearLayout mainLayout;
     public RelativeLayout priority_0_layout;
     public RelativeLayout priority_1_layout;
+    public LinearLayout timerIconLayout;
+    public LinearLayout calendarPlusIconLayout;
+    public LinearLayout editIconLayout;
+    public LinearLayout deleteIconLayout;
 
     public TasksListHolder(Context context, View itemView) {
         super(itemView);
@@ -30,5 +34,10 @@ public class TasksListHolder extends RecyclerView.ViewHolder
         mainLayout = (LinearLayout) cardView.findViewById(R.id.task_card_mainview);
         priority_0_layout = (RelativeLayout) cardView.findViewById(R.id.task_card_priority_0);
         priority_1_layout = (RelativeLayout) cardView.findViewById(R.id.task_card_priority_1);
+
+        timerIconLayout = (LinearLayout) cardView.findViewById(R.id.timer_list_icon);
+        calendarPlusIconLayout = (LinearLayout) cardView.findViewById(R.id.calendar_plus_list_icon);
+        editIconLayout = (LinearLayout) cardView.findViewById(R.id.edit_list_icon);
+        deleteIconLayout = (LinearLayout) cardView.findViewById(R.id.delete_list_icon);
     }
 }

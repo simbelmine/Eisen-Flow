@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/date"
+    >
+
+    <LinearLayout
+        android:id="@+id/timer_time_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_centerInParent="true"
+        android:paddingBottom="@dimen/task_standard_margin"
+        android:gravity="center_horizontal|bottom"
+        >
+        <!-- HOUR -->
+        <EditText
+            android:id="@+id/timer_hour"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/transparent"
+            android:textColor="@color/dark_blue"
+            android:textSize="45sp"
+            android:inputType="phone"
+            android:hint="0"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/lighter_dark_blue"
+            android:textSize="20sp"
+            android:text="H"
+            />
+        <!-- MINUTES -->
+        <EditText
+            android:id="@+id/timer_minutes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/transparent"
+            android:textColor="@color/dark_blue"
+            android:textSize="45sp"
+            android:inputType="phone"
+            android:hint="00"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/lighter_dark_blue"
+            android:textSize="20sp"
+            android:text="M"
+            />
+        <!-- SECONDS -->
+        <EditText
+            android:id="@+id/timer_seconds"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/transparent"
+            android:textColor="@color/dark_blue"
+            android:textSize="45sp"
+            android:inputType="phone"
+            android:hint="00"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/lighter_dark_blue"
+            android:textSize="20sp"
+            android:text="S"
+            />
+
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/start_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="@dimen/task_standard_margin"
+        android:padding="@dimen/task_standard_margin"
+        android:layout_below="@+id/timer_time_layout"
+        android:clickable="true"
+        android:textColor="@color/white"
+        android:textSize="35sp"
+        android:text="START"
+        />
+
+
+    <ProgressBar
+        android:id="@+id/progressBar_dummy"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:max="500"
+        android:progress="0"
+        android:progressDrawable="@drawable/circular_progress_dummy"
+        />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:max="500"
+        android:progress="0"
+        android:progressDrawable="@drawable/circular_progress_bar_shape"
+        />
+
+
+
+</RelativeLayout>

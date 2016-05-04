@@ -17,6 +17,8 @@
     <color name="thirdQuadrant">#f5d564</color>
     <color name="fourthQuadrant">#bcc8cd</color>
     <color name="date">#2D93AD</color>
+    <color name="dark_blue">#154552</color>
+    <color name="lighter_dark_blue">#1D5E70</color>
 
     <color name="gray">#6a7275</color>
     <color name="gray_transparent">#036a7275</color>

@@ -8,12 +8,13 @@
     >
 
     <LinearLayout
-        android:id="@+id/stopwatch_list_icon"
+        android:id="@+id/timer_list_icon"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:background="@color/secondQuadrant"
         android:layout_alignParentRight="true"
         android:gravity="right|center_vertical"
+        android:clickable="true"
         >
         <ImageView
             android:layout_width="@dimen/card_under_icon_size"
@@ -27,7 +28,8 @@
         android:layout_height="match_parent"
         android:background="@color/thirdQuadrant"
         android:gravity="right|center_vertical"
-        android:layout_toLeftOf="@+id/stopwatch_list_icon"
+        android:layout_toLeftOf="@+id/timer_list_icon"
+        android:clickable="true"
         >
         <ImageView
             android:layout_width="@dimen/card_under_icon_size"
@@ -42,6 +44,7 @@
         android:background="@color/firstQuadrant"
         android:gravity="right|center_vertical"
         android:layout_toLeftOf="@+id/edit_list_icon"
+        android:clickable="true"
         >
         <ImageView
             android:layout_width="@dimen/card_under_icon_size"
