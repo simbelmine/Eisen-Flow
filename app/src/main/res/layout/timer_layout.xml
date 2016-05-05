@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/date"
+    android:id="@+id/timer_layout"
     >
 
     <LinearLayout
@@ -73,7 +74,6 @@
 
     </LinearLayout>
 
-
     <TextView
         android:id="@+id/start_btn"
         android:layout_width="wrap_content"
@@ -87,7 +87,6 @@
         android:textSize="35sp"
         android:text="START"
         />
-
 
     <ProgressBar
         android:id="@+id/progressBar_dummy"
@@ -106,8 +105,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
-        android:max="500"
-        android:progress="0"
         android:progressDrawable="@drawable/circular_progress_bar_shape"
         />
 

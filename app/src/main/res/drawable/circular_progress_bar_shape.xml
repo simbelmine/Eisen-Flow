@@ -7,9 +7,9 @@
     android:pivotY="50%" >
     <shape
         android:useLevel="true"
-        android:innerRadiusRatio="2.3"
+        android:innerRadiusRatio="2.32"
         android:shape="ring"
-        android:thickness="5.8sp" >
+        android:thickness="8sp" >
         <solid android:color="@color/dark_blue" />
     </shape>
 </rotate>
