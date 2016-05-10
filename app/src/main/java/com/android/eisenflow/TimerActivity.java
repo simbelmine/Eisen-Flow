@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -22,11 +23,15 @@ import java.util.concurrent.TimeUnit;
  * Created by Sve on 5/3/16.
  */
 public class TimerActivity extends AppCompatActivity implements View.OnClickListener {
+    private static final int TICKING_TIME = 20;
+    private static final int MINUTES_IN_HOUR = 60;
+    private static final int SECONDS_IN_MINUTE = 60;
     private RelativeLayout timerLayout;
     private ProgressBar timerProgressBar;
     private EditText timerHour;
     private EditText timerMinutes;
     private EditText timerSeconds;
+    private LinearLayout timerSecondsLayout;
     private TextView startBtn;
     private CountDownTimer countDownTimer;
     private long totalTimeCountInMilliseconds;
@@ -50,10 +55,9 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
         timerHour.setOnClickListener(this);
         timerMinutes = (EditText) findViewById(R.id.timer_minutes);
         timerSeconds = (EditText) findViewById(R.id.timer_seconds);
+        timerSecondsLayout = (LinearLayout) findViewById(R.id.seconds_layout);
         startBtn = (TextView) findViewById(R.id.start_btn);
         startBtn.setOnClickListener(this);
-
-
     }
 
     @Override
@@ -82,30 +86,30 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
 
     long hoursMillis;
     long minutesMillis;
-    long secondsMillis;
 
     private void setTimer() {
         String hours = timerHour.getText().toString();
         String minutes = timerMinutes.getText().toString();
-        String seconds = timerSeconds.getText().toString();
 
-        if(isTimeValid(hours, minutes, seconds)) {
+        if(isTimeValid(hours, minutes)) {
             int h = isStringEmpty(hours) ? 0 : Integer.parseInt(hours);
             int m = isStringEmpty(minutes) ? 0 : Integer.parseInt(minutes);
-            int s = isStringEmpty(seconds) ? 0 : Integer.parseInt(seconds);
-
-            if(h != 0 && m == 0 && s != 0) {
-                showSnackbarMessage("Seconds are " + s + ". Missing minutes!");
-            }
 
             hoursMillis = TimeUnit.HOURS.toMillis(h);
             minutesMillis = TimeUnit.MINUTES.toMillis(m);
-            secondsMillis = TimeUnit.SECONDS.toMillis(s);
 
-            totalTimeCountInMilliseconds = hoursMillis + minutesMillis + secondsMillis;
+            totalTimeCountInMilliseconds = hoursMillis + minutesMillis;
             timeBlinkInMilliseconds = 30 * 1000;
             timerProgressBar.setMax((int)(totalTimeCountInMilliseconds));
 
+
+            timerHour.setText(getCorrectStringValue(0));
+            timerMinutes.setText(getCorrectStringValue(0));
+            timerSecondsLayout.setVisibility(View.VISIBLE);
+            timerSeconds.setText(getCorrectStringValue(0));
+
+            timerHour.setCursorVisible(false);
+            timerMinutes.setCursorVisible(false);
         }
         else {
             showSnackbarMessage("To start, enter time!");
@@ -115,7 +119,15 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
 
 //    int oldSecond = (int)totalTimeCountInMilliseconds/1000;
     int oldSecond = 0;
-    int counter = 1;
+    int counter = 0;
+
+
+    int secondsProgress = 1;
+    int minutesProgress = 0;
+    int hoursProgress = 0;
+
+    boolean isAdditionalMinsReady = false;
+    boolean isHoursDone = false;
 
     private void startTimer() {
         countDownTimer = new CountDownTimer(totalTimeCountInMilliseconds, 50) {
@@ -126,56 +138,93 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
                 long seconds = leftTimeInMilliseconds / 1000;
 
 //
-                int progress = ((((int)totalTimeCountInMilliseconds - (int)leftTimeInMilliseconds)) + 1000);
+                int progress = ((((int)totalTimeCountInMilliseconds - (int)leftTimeInMilliseconds)) );
 //                int progress = (int)leftTimeInMilliseconds;
                 timerProgressBar.setProgress(progress);
 
 
-
-
 //                Log.v("eisen", "seconds = " + seconds);
-                Log.v("eisen", "progress = " + progress/1000); // 1, 2, 3, 4...
+//                Log.v("eisen", "progress = " + progress);
+                Log.v("eisen", "progress = " + progress/1000 + "   " + (hoursMillis + minutesMillis)); // 1, 2, 3, 4...
 //                Log.v("eisen", "oldSec = " + oldSecond);
 //                Log.v("eisen", " " );
 
 
-
-                // 0 H 1 M 11 S         // Progress 1 - 20 times
-                                        // Progress 2 - 20 times, and so on...
-
-
+                //      1h and 20 mins
+                //      00:01  00:02 00:03 .... 00:58 00:59
+                //      01:01  01:02 01:03 .... 01:19 01:20
 
 
 
                 int progressInSeconds = progress/1000;
 
-                    if(counter== 20 || oldSecond != progressInSeconds) {
-                        if(progressInSeconds < 60) {
-                            timerSeconds.setText(String.valueOf(progressInSeconds));
-                        }
-                        else if(progressInSeconds >= 60) {
-                            timerMinutes.setText(String.valueOf(progressInSeconds%60));
-                        }
-                        else if(progressInSeconds >= 60*60) {
-                            timerHour.setText(String.valueOf(progressInSeconds%(60*60)));
+//                if(counter == TICKING_TIME-1) {
+                if(oldSecond != progressInSeconds) {
+
+                    if(secondsProgress == SECONDS_IN_MINUTE-1) {
+                        if(hoursMillis == 0) {
+                            isAdditionalMinsReady = true;
                         }
 
-                        counter = 1;
+                        // check if there are some minutes to go before counting the hour
+                        if (!isAdditionalMinsReady && minutesProgress < MINUTES_IN_HOUR) {
+                            minutesProgress++;
+                            timerMinutes.setText(getCorrectStringValue(minutesProgress));
+                        }
+                        else if (!isAdditionalMinsReady) {
+                            if (hoursProgress < hoursMillis / 1000) {
+                                hoursProgress++;
+                                timerHour.setText(getCorrectStringValue(hoursProgress));
+                            }
+                            else {
+                                isAdditionalMinsReady = true;
+                                hoursProgress = 0;
+                            }
+                            minutesProgress = 0;
+                        }
+
+                        if (isAdditionalMinsReady && minutesProgress < (minutesMillis / 1000)) {
+                            minutesProgress++;
+                            timerMinutes.setText(getCorrectStringValue(minutesProgress));
+                        }
+
+                        Log.v("eisen", "MINUTE -> " + getCorrectStringValue(minutesProgress));
+
+                        secondsProgress = 1;
+                        timerSeconds.setText(getCorrectStringValue(0));
                     }
                     else {
-                        counter++;
+                        timerSeconds.setText(getCorrectStringValue(secondsProgress));
+                        secondsProgress++;
                     }
 
+                    counter = 0;
+                }
+                else {
+                    counter++;
+                }
 
                 oldSecond = (int)progressInSeconds;
-
             }
 
             @Override
             public void onFinish() {
                 timerProgressBar.setProgress(0);
+                timerSecondsLayout.setVisibility(View.GONE);
             }
         }.start();
+    }
+
+    private String getCorrectStringValue(int value) {
+        if(value == 0) {
+            return "00";
+        }
+        else if(value < 10) {
+            return String.valueOf("0"+value);
+        }
+        else {
+            return String.valueOf(value);
+        }
     }
 
     private void startAnimation() {
@@ -197,11 +246,10 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
         return false;
     }
 
-    private boolean isTimeValid(String hours, String minutes, String seconds) {
+    private boolean isTimeValid(String hours, String minutes) {
         if(
                 (isStringEmpty(hours) || isStringZeroValue(hours)) &&
-                        (isStringEmpty(minutes) || isStringZeroValue(minutes)) &&
-                        (isStringEmpty(seconds) || isStringZeroValue(seconds))
+                        (isStringEmpty(minutes) || isStringZeroValue(minutes))
                 ) {
             return false;
         }

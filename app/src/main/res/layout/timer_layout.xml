@@ -54,23 +54,32 @@
             android:text="M"
             />
         <!-- SECONDS -->
+        <LinearLayout
+            android:id="@+id/seconds_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:orientation="horizontal"
+            android:gravity="bottom"
+            android:visibility="gone"
+            >
         <EditText
             android:id="@+id/timer_seconds"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@color/transparent"
             android:textColor="@color/dark_blue"
-            android:textSize="45sp"
+            android:textSize="20sp"
             android:inputType="phone"
-            android:hint="00"
+            android:text="45"
             />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/lighter_dark_blue"
-            android:textSize="20sp"
+            android:textSize="10sp"
             android:text="S"
             />
+        </LinearLayout>
 
     </LinearLayout>
 
