@@ -7,7 +7,9 @@ import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputType;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.DecelerateInterpolator;
@@ -22,7 +24,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by Sve on 5/3/16.
  */
-public class TimerActivity extends AppCompatActivity implements View.OnClickListener {
+public class TimerActivity extends AppCompatActivity implements View.OnClickListener{
     private static final int TICKING_TIME = 20;
     private static final int MINUTES_IN_HOUR = 60;
     private static final int SECONDS_IN_MINUTE = 60;
@@ -64,25 +66,14 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.start_btn:
-
-//                int h = Integer.parseInt(timerHour.getText().toString());
-//                int m = Integer.parseInt(timerMinutes.getText().toString());
-//                int s = Integer.parseInt(timerSeconds.getText().toString());
-
                 setTimer();
                 startTimer();
 
-
-
 //                startAnimation();
-
-
-
 
                 break;
         }
     }
-
 
     long hoursMillis;
     long minutesMillis;
@@ -103,13 +94,12 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
             timerProgressBar.setMax((int)(totalTimeCountInMilliseconds));
 
 
+            timerSecondsLayout.setVisibility(View.VISIBLE);
+            timerHour.setInputType(InputType.TYPE_NULL);
+            timerMinutes.setInputType(InputType.TYPE_NULL);
+
             timerHour.setText(getCorrectStringValue(0));
             timerMinutes.setText(getCorrectStringValue(0));
-            timerSecondsLayout.setVisibility(View.VISIBLE);
-            timerSeconds.setText(getCorrectStringValue(0));
-
-            timerHour.setCursorVisible(false);
-            timerMinutes.setCursorVisible(false);
         }
         else {
             showSnackbarMessage("To start, enter time!");
@@ -117,7 +107,7 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
     }
 
 
-//    int oldSecond = (int)totalTimeCountInMilliseconds/1000;
+    //    int oldSecond = (int)totalTimeCountInMilliseconds/1000;
     int oldSecond = 0;
     int counter = 0;
 
@@ -137,22 +127,17 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
             public void onTick(long leftTimeInMilliseconds) {
                 long seconds = leftTimeInMilliseconds / 1000;
 
-//
+
+                // int progress = (int)leftTimeInMilliseconds;              // For Going Backwards
                 int progress = ((((int)totalTimeCountInMilliseconds - (int)leftTimeInMilliseconds)) );
-//                int progress = (int)leftTimeInMilliseconds;
                 timerProgressBar.setProgress(progress);
 
 
 //                Log.v("eisen", "seconds = " + seconds);
 //                Log.v("eisen", "progress = " + progress);
-                Log.v("eisen", "progress = " + progress/1000 + "   " + (hoursMillis + minutesMillis)); // 1, 2, 3, 4...
+//                Log.v("eisen", "progress = " + progress/1000 + "   " + (hoursMillis + minutesMillis)); // 1, 2, 3, 4...
 //                Log.v("eisen", "oldSec = " + oldSecond);
 //                Log.v("eisen", " " );
-
-
-                //      1h and 20 mins
-                //      00:01  00:02 00:03 .... 00:58 00:59
-                //      01:01  01:02 01:03 .... 01:19 01:20
 
 
 
@@ -188,7 +173,7 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
                             timerMinutes.setText(getCorrectStringValue(minutesProgress));
                         }
 
-                        Log.v("eisen", "MINUTE -> " + getCorrectStringValue(minutesProgress));
+//                        Log.v("eisen", "MINUTE -> " + getCorrectStringValue(minutesProgress));
 
                         secondsProgress = 1;
                         timerSeconds.setText(getCorrectStringValue(0));
@@ -211,6 +196,10 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
             public void onFinish() {
                 timerProgressBar.setProgress(0);
                 timerSecondsLayout.setVisibility(View.GONE);
+                timerHour.setCursorVisible(true);
+                timerMinutes.setCursorVisible(true);
+                timerHour.setInputType(InputType.TYPE_CLASS_PHONE);
+                timerMinutes.setInputType(InputType.TYPE_CLASS_PHONE);
             }
         }.start();
     }

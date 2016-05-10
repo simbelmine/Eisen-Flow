@@ -61,6 +61,8 @@
             android:orientation="horizontal"
             android:gravity="bottom"
             android:visibility="gone"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
             >
         <EditText
             android:id="@+id/timer_seconds"
@@ -70,7 +72,10 @@
             android:textColor="@color/dark_blue"
             android:textSize="20sp"
             android:inputType="phone"
-            android:text="45"
+            android:cursorVisible="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:hint="00"
             />
         <TextView
             android:layout_width="wrap_content"
@@ -78,6 +83,8 @@
             android:textColor="@color/lighter_dark_blue"
             android:textSize="10sp"
             android:text="S"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
             />
         </LinearLayout>
 
