@@ -90,6 +90,9 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
                 startBtn.setVisibility(View.VISIBLE);
                 pauseBtn.setVisibility(View.INVISIBLE);
                 break;
+            case R.id.close_timer_btn:
+                finish();
+                break;
         }
     }
 
@@ -169,7 +172,7 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
                 // int progress = (int)leftTimeInMilliseconds;              // For Going Backwards
                 int progress = ((((int)totalTimeCountInMilliseconds - (int)leftTimeInMilliseconds)) );
                 timerProgressBar.setProgress(progress);
-                
+
 //                Log.v("eisen", "seconds = " + seconds);
 //                Log.v("eisen", "progress = " + progress);
 //                Log.v("eisen", "progress = " + progress/1000 + "   " + (hoursMillis + minutesMillis)); // 1, 2, 3, 4...
@@ -296,5 +299,11 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
         TextView text = (TextView) snackbarView.findViewById(android.support.design.R.id.snackbar_text);
         text.setTextColor(getResources().getColor(R.color.firstQuadrant));
         snackbar.show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 }
