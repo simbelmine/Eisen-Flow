@@ -10,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.DecelerateInterpolator;
@@ -40,6 +39,11 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
     private CountDownTimer countDownTimer;
     private long totalTimeCountInMilliseconds;
     private long timeBlinkInMilliseconds;
+    private LinearLayout closeTimerBtn;
+    private TextView pauseBtn;
+    private int totalTimeLeft;
+    private boolean isPaused;
+    private boolean isTimerSet;
 
 
 
@@ -53,6 +57,9 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void initLayout() {
+        isPaused = false;
+        isTimerSet = false;
+        totalTimeLeft = -1;
         timerLayout = (RelativeLayout) findViewById(R.id.timer_layout);
         timerProgressBar = (ProgressBar) findViewById(R.id.progressBar);
         timerHour = (EditText) findViewById(R.id.timer_hour);
@@ -63,6 +70,10 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
         timerSecondsLayout = (LinearLayout) findViewById(R.id.seconds_layout);
         startBtn = (TextView) findViewById(R.id.start_btn);
         startBtn.setOnClickListener(this);
+        pauseBtn = (TextView) findViewById(R.id.pause_btn);
+        pauseBtn.setOnClickListener(this);
+        closeTimerBtn = (LinearLayout) findViewById(R.id.close_timer_btn);
+        closeTimerBtn.setOnClickListener(this);
     }
 
     @Override
@@ -71,9 +82,13 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
             case R.id.start_btn:
                 setTimer();
                 startTimer();
-
 //                startAnimation();
-
+                break;
+            case R.id.pause_btn:
+                isPaused = true;
+                countDownTimer.cancel();
+                startBtn.setVisibility(View.VISIBLE);
+                pauseBtn.setVisibility(View.INVISIBLE);
                 break;
         }
     }
@@ -94,17 +109,27 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
         String hours = timerHour.getText().toString();
         String minutes = timerMinutes.getText().toString();
 
-        if(isTimeValid(hours, minutes)) {
-            int h = isStringEmpty(hours) ? 0 : Integer.parseInt(hours);
-            int m = isStringEmpty(minutes) ? 0 : Integer.parseInt(minutes);
+        if(isTimeValid(hours, minutes) || isPaused) {
+            if(!isTimerSet) {
+                int h = isStringEmpty(hours) ? 0 : Integer.parseInt(hours);
+                int m = isStringEmpty(minutes) ? 0 : Integer.parseInt(minutes);
 
-            hoursMillis = TimeUnit.HOURS.toMillis(h);
-            minutesMillis = TimeUnit.MINUTES.toMillis(m);
+                hoursMillis = TimeUnit.HOURS.toMillis(h);
+                minutesMillis = TimeUnit.MINUTES.toMillis(m);
 
-            totalTimeCountInMilliseconds = hoursMillis + minutesMillis;
-            timeBlinkInMilliseconds = 30 * 1000;
-            timerProgressBar.setMax((int)(totalTimeCountInMilliseconds));
+                totalTimeCountInMilliseconds = hoursMillis + minutesMillis;
+                timeBlinkInMilliseconds = 30 * 1000;
+                timerProgressBar.setMax((int) (totalTimeCountInMilliseconds));
 
+                isTimerSet = true;
+            }
+
+            if(totalTimeLeft == -1) {
+                totalTimeLeft = (int) totalTimeCountInMilliseconds;
+            }
+
+            startBtn.setVisibility(View.INVISIBLE);
+            pauseBtn.setVisibility(View.VISIBLE);
 
             timerSecondsLayout.setVisibility(View.VISIBLE);
             timerHour.setInputType(InputType.TYPE_NULL);
@@ -132,19 +157,19 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
     boolean isHoursDone = false;
 
     private void startTimer() {
-        countDownTimer = new CountDownTimer(totalTimeCountInMilliseconds, 50) {
+        countDownTimer = new CountDownTimer(totalTimeLeft, 50) {
             // 500 means, onTick function will be called at every 500
             // milliseconds
             @Override
             public void onTick(long leftTimeInMilliseconds) {
                 long seconds = leftTimeInMilliseconds / 1000;
+                totalTimeLeft = (int)leftTimeInMilliseconds;
 
 
                 // int progress = (int)leftTimeInMilliseconds;              // For Going Backwards
                 int progress = ((((int)totalTimeCountInMilliseconds - (int)leftTimeInMilliseconds)) );
                 timerProgressBar.setProgress(progress);
-
-
+                
 //                Log.v("eisen", "seconds = " + seconds);
 //                Log.v("eisen", "progress = " + progress);
 //                Log.v("eisen", "progress = " + progress/1000 + "   " + (hoursMillis + minutesMillis)); // 1, 2, 3, 4...

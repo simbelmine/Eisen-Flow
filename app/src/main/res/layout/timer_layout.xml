@@ -9,6 +9,20 @@
     >
 
     <LinearLayout
+        android:id="@+id/close_timer_btn"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentRight="true"
+        android:gravity="center"
+        >
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            />
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/timer_time_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -102,6 +116,20 @@
         android:textColor="@color/white"
         android:textSize="35sp"
         android:text="START"
+        />
+    <TextView
+        android:id="@+id/pause_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="@dimen/task_standard_margin"
+        android:padding="@dimen/task_standard_margin"
+        android:layout_below="@+id/timer_time_layout"
+        android:clickable="true"
+        android:textColor="@color/white"
+        android:textSize="35sp"
+        android:text="PAUSE"
+        android:visibility="invisible"
         />
 
     <ProgressBar
