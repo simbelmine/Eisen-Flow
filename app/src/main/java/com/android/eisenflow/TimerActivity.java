@@ -9,10 +9,12 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.DecelerateInterpolator;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -24,7 +26,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by Sve on 5/3/16.
  */
-public class TimerActivity extends AppCompatActivity implements View.OnClickListener{
+public class TimerActivity extends AppCompatActivity implements View.OnClickListener, TextView.OnEditorActionListener {
     private static final int TICKING_TIME = 20;
     private static final int MINUTES_IN_HOUR = 60;
     private static final int SECONDS_IN_MINUTE = 60;
@@ -54,8 +56,9 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
         timerLayout = (RelativeLayout) findViewById(R.id.timer_layout);
         timerProgressBar = (ProgressBar) findViewById(R.id.progressBar);
         timerHour = (EditText) findViewById(R.id.timer_hour);
-        timerHour.setOnClickListener(this);
+        timerHour.setOnEditorActionListener(this);
         timerMinutes = (EditText) findViewById(R.id.timer_minutes);
+        timerMinutes.setOnEditorActionListener(this);
         timerSeconds = (EditText) findViewById(R.id.timer_seconds);
         timerSecondsLayout = (LinearLayout) findViewById(R.id.seconds_layout);
         startBtn = (TextView) findViewById(R.id.start_btn);
@@ -73,6 +76,15 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
 
                 break;
         }
+    }
+
+    @Override
+    public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+        if((keyEvent != null) || (actionId == EditorInfo.IME_ACTION_DONE)) {
+            setTimer();
+            startTimer();
+        }
+        return false;
     }
 
     long hoursMillis;
