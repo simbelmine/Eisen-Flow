@@ -32,6 +32,13 @@
     <string name="add_task_priority_alert">Choose task priority</string>
     <string name="add_task_name_alert">Write some name to the task</string>
     <string name="ok_btn">OK</string>
+    <string name="cancel_btn">Cancel</string>
+    <string name="progress_added">Good job! You added progress to your task!</string>
 
     <string name="add_task_alert_title">Alert</string>
+
+    <!-- Tip Messages -->
+    <string name="tip_title">Tip</string>
+    <string name="tip_calendar_plus_msg">From now on, you\'re going to add progress to your task like that.</string>
+
 </resources>

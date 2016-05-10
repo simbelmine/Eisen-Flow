@@ -28,6 +28,7 @@ import java.util.Locale;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, CalendarView.OnDateChangeListener {
 
+    public static final String MAIN_PREFS = "MainSharedPreferences";
     private Toolbar toolbar;
     private FloatingActionButton fab;
     private DrawerLayout drawer;
@@ -46,6 +47,7 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         initLayout();
         feedTaskQuadrants();
@@ -119,7 +121,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void initTaskAdapters() {
-        quadrantOneAdapter = new TasksListAdapter(getApplicationContext());
+        quadrantOneAdapter = new TasksListAdapter(this, getApplicationContext());
     }
 
     private void setTasksLists() {

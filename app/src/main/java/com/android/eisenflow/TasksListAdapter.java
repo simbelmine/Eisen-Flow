@@ -1,7 +1,12 @@
 package com.android.eisenflow;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,8 +21,12 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListHolder> impl
     private Context context;
     private List<String> tasks;
     private RecyclerView recyclerView;
+    private SharedPreferences mainSharedPrefs;
+    private Activity activity;
+    private String booleanStr = "isCalendarPlusTipShown";
 
-    public TasksListAdapter(Context context) {
+    public TasksListAdapter(Activity activity, Context context) {
+        this.activity = activity;
         this.context = context;
     }
 
@@ -85,6 +94,14 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListHolder> impl
                 context.startActivity(intent);
                 break;
             case R.id.calendar_plus_list_icon:
+                getSharedPrefs();
+                if(!mainSharedPrefs.contains(booleanStr) || !mainSharedPrefs.getBoolean(booleanStr, false)) {
+                    showTipMessageDialog(context.getResources().getString(R.string.tip_calendar_plus_msg));
+                }
+                else {
+                    // TO Do : add progress to the task
+                    showTipMessageSnakcbar(view, context.getResources().getString(R.string.progress_added));
+                }
 
                 break;
             case R.id.edit_list_icon:
@@ -94,5 +111,33 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListHolder> impl
 
                 break;
         }
+    }
+
+    private void showTipMessageSnakcbar(View view, String message) {
+        Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
+    }
+
+    private void getSharedPrefs() {
+        mainSharedPrefs = context.getSharedPreferences(MainActivity.MAIN_PREFS, Context.MODE_PRIVATE);
+    }
+
+    private void setBooleanToSharedPrefs(String name, boolean value) {
+        mainSharedPrefs.edit().putBoolean(name, value).commit();
+    }
+
+    private void showTipMessageDialog(String message) {
+        AlertDialog.Builder builder =
+                new AlertDialog.Builder(activity, R.style.MyTipDialogStyle);
+        builder.setTitle(context.getResources().getString(R.string.tip_title));
+        builder.setMessage(message);
+        builder.setPositiveButton(context.getResources().getString(R.string.ok_btn), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int itemPosition) {
+                setBooleanToSharedPrefs(booleanStr, true);
+                // TO Do : add progress to the task
+            }
+        });
+        builder.setNegativeButton(context.getResources().getString(R.string.cancel_btn), null);
+        builder.show();
     }
 }

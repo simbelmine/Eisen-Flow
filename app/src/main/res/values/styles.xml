@@ -22,6 +22,12 @@
         <!--<item name="android:windowTitleStyle">@style/dialog_title_style</item>-->
     </style>
 
+    <style name="MyTipDialogStyle" parent="Theme.AppCompat.Dialog.Alert">
+        <!--&lt;!&ndash; Used for the buttons &ndash;&gt;-->
+        <item name="colorAccent">@color/white</item>
+        <item name="android:textColorPrimary">@color/date</item>
+    </style>
+
     <style name="dialog_title_style" parent="android:Widget.TextView">
         <item name="android:background">@color/date</item>
     </style>
