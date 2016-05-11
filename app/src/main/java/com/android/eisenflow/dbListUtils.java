@@ -1,7 +1,5 @@
 package com.android.eisenflow;
 
-import android.util.Log;
-
 import java.text.DateFormatSymbols;
 import java.util.Calendar;
 import java.util.Date;
@@ -36,7 +34,7 @@ public class DbListUtils {
 
     public int getTaskPriority() {
         String taskPriorityStr = splitStr[0];
-        if(isNumeric(taskPriorityStr)) {
+        if(isNumericInRange(taskPriorityStr)) {
             return Integer.parseInt(taskPriorityStr);
         }
         // return lowest priority by default
@@ -78,7 +76,7 @@ public class DbListUtils {
     }
 
     public int getTaskProgress() {
-        if(splitStr.length > 5) {
+        if(splitStr.length > 5 && isNumeric(splitStr[5])) {
             return Integer.parseInt(splitStr[5]);
         }
         return -1;
@@ -117,8 +115,12 @@ public class DbListUtils {
         monthsMap.put(shortMonths[0], Calendar.DECEMBER);
     }
 
-    private boolean isNumeric(String str) {
+    private boolean isNumericInRange(String str) {
         return str.matches("^[0-9]{0,3}$");
+    }
+
+    private boolean isNumeric(String str) {
+        return str.matches("^[0-9]+$");
     }
 
     private Date getDateFromString(String taskDateStr) {
