@@ -81,7 +81,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="20dp"
                 android:gravity="top"
                 android:clickable="true"
                 android:weightSum="4"
@@ -94,10 +94,12 @@
                     android:clickable="true"
                     android:layout_weight="1"
                     android:id="@+id/do_it_l"
+                    android:background="?attr/selectableItemBackgroundBorderless"
                     >
                     <ImageView
                         android:layout_width="@dimen/task_priority_img_w"
                         android:layout_height="@dimen/task_priority_img_h"
+                        android:layout_marginTop="10dp"
                         android:background="@color/firstQuadrant"
                         />
                     <TextView
@@ -114,10 +116,12 @@
                     android:clickable="true"
                     android:layout_weight="1"
                     android:id="@+id/decide_it_l"
+                    android:background="?attr/selectableItemBackgroundBorderless"
                     >
                     <ImageView
                         android:layout_width="@dimen/task_priority_img_w"
                         android:layout_height="@dimen/task_priority_img_h"
+                        android:layout_marginTop="10dp"
                         android:background="@color/secondQuadrant"
                         />
                     <TextView
@@ -135,10 +139,12 @@
                     android:clickable="true"
                     android:layout_weight="1"
                     android:id="@+id/delegate_it_l"
+                    android:background="?attr/selectableItemBackgroundBorderless"
                     >
                     <ImageView
                         android:layout_width="@dimen/task_priority_img_w"
                         android:layout_height="@dimen/task_priority_img_h"
+                        android:layout_marginTop="10dp"
                         android:background="@color/thirdQuadrant"
                         />
                     <TextView
@@ -155,10 +161,12 @@
                     android:clickable="true"
                     android:layout_weight="1"
                     android:id="@+id/dump_it_l"
+                    android:background="?attr/selectableItemBackgroundBorderless"
                     >
                     <ImageView
                         android:layout_width="@dimen/task_priority_img_w"
                         android:layout_height="@dimen/task_priority_img_h"
+                        android:layout_marginTop="10dp"
                         android:background="@color/fourthQuadrant"
 
                         />
@@ -198,7 +206,7 @@
                         android:layout_height="@dimen/task_icon_size"
                         android:src="@mipmap/clock_b"
                         android:layout_marginLeft="@dimen/task_standard_margin"
-                        android:layout_weight="0.3"
+                        android:layout_weight="0.4"
                         android:layout_gravity="center_vertical"
                         />
                     <TextView
@@ -209,14 +217,17 @@
                         android:textSize="@dimen/task_font_size"
                         android:layout_marginLeft="@dimen/task_standard_margin"
                         android:clickable="true"
-                        android:layout_weight="3.7"
+                        android:layout_weight="2.3"
+                        android:background="?attr/selectableItemBackgroundBorderless"
                         />
                     <TextView
                         android:id="@+id/add_task_time"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center_horizontal"
+                        android:layout_weight="2.3"
+                        android:gravity="right"
+                        android:paddingRight="@dimen/task_standard_margin"
+                        android:background="?attr/selectableItemBackgroundBorderless"
                         />
                 </LinearLayout>
                 <LinearLayout
@@ -243,7 +254,7 @@
                     android:clickable="true"
                     android:visibility="gone"
                     android:textSize="18sp"
-                    android:background="?attr/selectableItemBackground"
+                    android:background="?attr/selectableItemBackgroundBorderless"
                     />
                 <LinearLayout
                     android:id="@+id/add_task_time_picker"
@@ -295,6 +306,7 @@
                         android:gravity="center_vertical"
                         android:textSize="@dimen/task_font_size"
                         android:layout_marginLeft="@dimen/task_standard_margin"
+                        android:background="?attr/selectableItemBackgroundBorderless"
                         />
                 </LinearLayout>
                 <LinearLayout
