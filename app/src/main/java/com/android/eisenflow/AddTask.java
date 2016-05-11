@@ -34,8 +34,10 @@ import android.widget.TimePicker;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by Sve on 4/21/16.
@@ -43,6 +45,7 @@ import java.util.Calendar;
 public class AddTask extends AppCompatActivity implements View.OnClickListener,
         CalendarView.OnDateChangeListener, TimePicker.OnTimeChangedListener {
     private static final int NEEDED_API_LEVEL = 22;
+    private static final String DATE_FORMAT = "EEE, MMM dd, yyyy";
     private LinearLayout closeBtn;
     private TextView saveBtn;
     private LinearLayout priorityLayout;
@@ -271,6 +274,42 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
             return false;
         }
 
+        if(!isDateValid()) {
+            showAlertMessage(getResources().getString(R.string.add_task_date_alert));
+            return false;
+        }
+
+        if(!isTimeValid()) {
+            showAlertMessage(getResources().getString(R.string.add_task_time_alert));
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean isDateValid() {
+        Calendar currDate = Calendar.getInstance();
+        Calendar date  = Calendar.getInstance();
+        date.setTime(getDate(dateTxt.getText().toString()));
+
+        if(date.get(Calendar.DAY_OF_MONTH) < currDate.get(Calendar.DAY_OF_MONTH)) {
+            return false;
+        }
+
+
+        return true;
+    }
+
+    private boolean isTimeValid() {
+        Calendar currTime = Calendar.getInstance();
+        currTime.setTime(getTime(getTimeString(Calendar.getInstance())));
+        Calendar time  = Calendar.getInstance();
+        time.setTime(getTime(timeTxt.getText().toString()));
+
+        if(time.getTimeInMillis() < currTime.getTimeInMillis()) {
+            return false;
+        }
+
         return true;
     }
 
@@ -286,7 +325,11 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
     private void showAlertSnackbar(String messageToShow) {
         Snackbar snackbar = Snackbar.make(snakbarLayout, messageToShow, Snackbar.LENGTH_INDEFINITE)
                 .setActionTextColor(Color.WHITE)
-                .setAction(getResources().getString(R.string.ok_btn), null);
+                .setAction(getResources().getString(R.string.ok_btn), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                    }
+                });
 
         View snackbarView = snackbar.getView();
         TextView text = (TextView) snackbarView.findViewById(android.support.design.R.id.snackbar_text);
@@ -441,8 +484,20 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
     }
 
     private String getDateString(Calendar cal) {
-        SimpleDateFormat postFormater = new SimpleDateFormat("EEE, MMM dd, yyyy");
+        SimpleDateFormat postFormater = new SimpleDateFormat(DATE_FORMAT);
         return postFormater.format(cal.getTime());
+    }
+
+    private Date getDate(String dateStr) {
+        SimpleDateFormat postFormater = new SimpleDateFormat(DATE_FORMAT);
+        try {
+            return postFormater.parse(dateStr);
+        }
+        catch (ParseException ex) {
+            Log.e("eisen", "String to Date Formatting Exception : " + ex.getMessage());
+        }
+
+        return null;
     }
 
     private String getTimeString(Calendar cal) {
@@ -454,6 +509,27 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
             postFormater = new SimpleDateFormat("hh:mm a");
         }
         return postFormater.format(cal.getTime());
+    }
+
+    private Date getTime(String timeStr) {
+        SimpleDateFormat postFormater;
+        if(isSystem24hFormat()) {
+            postFormater = new SimpleDateFormat("kk:mm");
+        }
+        else {
+            postFormater = new SimpleDateFormat("hh:mm a");
+        }
+
+        try {
+            Log.v("eisen", timeStr);
+            Log.v("eisen", ""+postFormater.parse(timeStr));
+            return postFormater.parse(timeStr);
+        }
+        catch (ParseException ex) {
+            Log.e("eisen", "String to Time Formatting Exception : " + ex.getMessage());
+        }
+
+        return null;
     }
 
     private boolean isSystem24hFormat() {
