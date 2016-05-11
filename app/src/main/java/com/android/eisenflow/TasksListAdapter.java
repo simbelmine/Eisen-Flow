@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,11 +20,12 @@ import java.util.List;
  */
 public class TasksListAdapter extends RecyclerView.Adapter<TasksListHolder> implements View.OnClickListener {
     private Context context;
-    private List<String> tasks;
+    private List<String> tasksList;
     private RecyclerView recyclerView;
     private SharedPreferences mainSharedPrefs;
     private Activity activity;
     private String booleanStr = "isCalendarPlusTipShown";
+    private DbListUtils dbListUtils;
 
     public TasksListAdapter(Activity activity, Context context) {
         this.activity = activity;
@@ -41,15 +43,17 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListHolder> impl
     @Override
     public void onBindViewHolder(TasksListHolder holder, int position) {
         // set values to variables from the Holder class
-        holder.text.setText(tasks.get(position));
+        holder.text.setText(getTaskName(position));
         holder.text.setTextColor(context.getResources().getColor(R.color.gray));
 
-        if(position%2 == 0) {
-            holder.cardView.setOnTouchListener(new SwipeDetector(holder, recyclerView, 0, position));
-        }
-        else {
-            holder.cardView.setOnTouchListener(new SwipeDetector(holder, recyclerView, 1, position));
-        }
+//        if(position%2 == 0) {
+//            holder.cardView.setOnTouchListener(new SwipeDetector(holder, recyclerView, 0, position));
+//        }
+//        else {
+//            holder.cardView.setOnTouchListener(new SwipeDetector(holder, recyclerView, 1, position));
+//        }
+
+        setTaskPriority(holder, getTaskPriority(position), position);
 
         holder.timerIconLayout.setOnClickListener(this);
         holder.calendarPlusIconLayout.setOnClickListener(this);
@@ -57,10 +61,51 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListHolder> impl
         holder.deleteIconLayout.setOnClickListener(this);
     }
 
+
+    private String getTaskName(int position) {
+        String taskRow = tasksList.get(position);
+        dbListUtils = new DbListUtils(taskRow);
+
+//        Log.v("eisen", "Priority: " + dbListUtils.getTaskPriority());
+//        Log.v("eisen", "Date: " + dbListUtils.getTaskDate());
+//        Log.v("eisen", "Time: " + dbListUtils.getTaskTime());
+//        Log.v("eisen", "Note: " + dbListUtils.getTaskNote());
+//        Log.v("eisen", "Progress: " + dbListUtils.getTaskProgress());
+
+
+        return dbListUtils.getTaskName();
+    }
+
+    private int getTaskPriority(int position) {
+        String taskRow = tasksList.get(position);
+        dbListUtils = new DbListUtils(taskRow);
+
+        return dbListUtils.getTaskPriority();
+    }
+
+    private void setTaskPriority(TasksListHolder holder, int priority, int position) {
+        switch (priority) {
+            case 0:
+                holder.priorityColor.setBackgroundColor(context.getResources().getColor(R.color.firstQuadrant));
+                holder.cardView.setOnTouchListener(new SwipeDetector(holder, recyclerView, 0, position));
+                break;
+            case 1:
+                holder.priorityColor.setBackgroundColor(context.getResources().getColor(R.color.secondQuadrant));
+                holder.cardView.setOnTouchListener(new SwipeDetector(holder, recyclerView, 1, position));
+                break;
+            case 2:
+                holder.priorityColor.setBackgroundColor(context.getResources().getColor(R.color.thirdQuadrant));
+                break;
+            case 3:
+                holder.priorityColor.setBackgroundColor(context.getResources().getColor(R.color.fourthQuadrant));
+                break;
+        }
+    }
+
     @Override
     public int getItemCount() {
-        if (this.tasks.size() > 0) {
-            return this.tasks.size();
+        if (this.tasksList.size() > 0) {
+            return this.tasksList.size();
         } else {
             return 0;
         }
@@ -78,7 +123,7 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListHolder> impl
     }
 
     public void setList(List<String> tasks) {
-        this.tasks = tasks;
+        this.tasksList = tasks;
     }
 
     public void setRecyclerView(RecyclerView recyclerView) {

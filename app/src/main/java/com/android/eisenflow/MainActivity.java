@@ -1,9 +1,13 @@
 package com.android.eisenflow;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Environment;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -11,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,6 +24,10 @@ import android.widget.TextView;
 
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -29,6 +38,9 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, CalendarView.OnDateChangeListener {
 
     public static final String MAIN_PREFS = "MainSharedPreferences";
+    public static final String FILE_DIR = Environment.getExternalStorageDirectory().getAbsolutePath();
+    public static final String FILE_FOLDER = ".EisenFlow";
+    public static final String FILE_NAME ="eisenDB.txt";
     private Toolbar toolbar;
     private FloatingActionButton fab;
     private DrawerLayout drawer;
@@ -108,8 +120,18 @@ public class MainActivity extends AppCompatActivity
         setLayoutManagers();
 
         initTaskAdapters();
-        setTasksLists();
+//        setTasksLists();
+        ArrayList<String> tasksList = getTasksList();
+        if(tasksList != null) {
+            quadrantOneAdapter.setList(getTasksList());
+        }
+        else {
+            showAlertSnackbar("No tasks yet to display.");
+        }
+
         setTaskAdapters();
+
+
     }
 
     private void initLayoutManagers() {
@@ -155,6 +177,38 @@ public class MainActivity extends AppCompatActivity
         rowListItem.add("Spend 30 mins brainstorming");
         rowListItem.add("Email Jay and Rob to schedule lunch meeting");
         quadrantOneAdapter.setList(rowListItem);
+    }
+
+    private ArrayList<String> getTasksList() {
+        // Read them from File
+        ArrayList<String> dbFileAsList = new ArrayList<>();
+        File dbFile = new File(MainActivity.FILE_DIR, MainActivity.FILE_FOLDER + "/" + MainActivity.FILE_NAME);
+
+        if(dbFile.exists()) {
+            try {
+                BufferedReader bufferedReader = new BufferedReader(new FileReader(dbFile));
+                String line;
+                while((line = bufferedReader.readLine()) != null) {
+                    dbFileAsList.add(line);
+                }
+                bufferedReader.close();
+
+
+//                for(String s : dbFileAsList) {
+//                    Log.v("eisen", s);
+//                }
+
+            }
+            catch (IOException ex) {
+                Log.e("eisen", "Read DB File Exception : " + ex.getMessage());
+            }
+
+        }
+        else {
+            showAlertSnackbar("Data file doen\'t exist.");
+        }
+
+        return dbFileAsList;
     }
 
     private void setTaskAdapters() {
@@ -247,7 +301,7 @@ public class MainActivity extends AppCompatActivity
             updateSlideText(sequenceToDate(year, month, day_of_month), R.color.gray);
 
             // Update Main Container
-                // # To Do .....
+            // # To Do .....
         }
         else {
             // Update Slide Date Text
@@ -287,4 +341,15 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    private void showAlertSnackbar (String messageToShow) {
+        CoordinatorLayout layout = (CoordinatorLayout) findViewById(R.id.main_layout);
+        Snackbar snackbar = Snackbar.make(layout, messageToShow, Snackbar.LENGTH_LONG)
+                .setActionTextColor(Color.WHITE)
+                .setAction(getResources().getString(R.string.ok_btn), null);
+
+        View snackbarView = snackbar.getView();
+        TextView text = (TextView) snackbarView.findViewById(android.support.design.R.id.snackbar_text);
+        text.setTextColor(getResources().getColor(R.color.firstQuadrant));
+        snackbar.show();
+    }
 }

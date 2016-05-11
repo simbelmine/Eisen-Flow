@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -23,6 +24,7 @@ public class TasksListHolder extends RecyclerView.ViewHolder
     public LinearLayout calendarPlusIconLayout;
     public LinearLayout editIconLayout;
     public LinearLayout deleteIconLayout;
+    public ImageView priorityColor;
 
     public TasksListHolder(Context context, View itemView) {
         super(itemView);
@@ -39,5 +41,7 @@ public class TasksListHolder extends RecyclerView.ViewHolder
         calendarPlusIconLayout = (LinearLayout) cardView.findViewById(R.id.calendar_plus_list_icon);
         editIconLayout = (LinearLayout) cardView.findViewById(R.id.edit_list_icon);
         deleteIconLayout = (LinearLayout) cardView.findViewById(R.id.delete_list_icon);
+
+        priorityColor = (ImageView) cardView.findViewById(R.id.list_img);
     }
 }

@@ -43,9 +43,6 @@ import java.util.Calendar;
 public class AddTask extends AppCompatActivity implements View.OnClickListener,
         CalendarView.OnDateChangeListener, TimePicker.OnTimeChangedListener {
     private static final int NEEDED_API_LEVEL = 22;
-    private static final String FILE_DIR = Environment.getExternalStorageDirectory().getAbsolutePath();
-    private static final String FILE_FOLDER = ".EisenFlow";
-    private static final String FILE_NAME ="eisenDB.txt";
     private LinearLayout closeBtn;
     private TextView saveBtn;
     private LinearLayout priorityLayout;
@@ -307,7 +304,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
     }
 
     private void saveTaskToDB() {
-        File dbFolder = new File(FILE_DIR, FILE_FOLDER);
+        File dbFolder = new File(MainActivity.FILE_DIR, MainActivity.FILE_FOLDER);
 
         if(!dbFolder.exists()) {
             if(!dbFolder.mkdirs()) {
@@ -315,7 +312,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
             }
         }
         try {
-            File dbFile = new File(FILE_DIR, FILE_FOLDER + "/" + FILE_NAME);
+            File dbFile = new File(MainActivity.FILE_DIR, MainActivity.FILE_FOLDER + "/" + MainActivity.FILE_NAME);
             dbFile.createNewFile();
             writeTaskInfoToFile(dbFile);
         } catch (IOException ex) {

@@ -42,7 +42,7 @@
                 android:id="@+id/list_img"
                 android:layout_width="@dimen/card_priority_img_width"
                 android:layout_height="match_parent"
-                android:background="@color/firstQuadrant"
+                android:background="@color/fourthQuadrant"
                 android:layout_marginLeft="@dimen/card_priority_img_margin"
                 android:layout_marginRight="@dimen/card_priority_img_margin"
                 />
