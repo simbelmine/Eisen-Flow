@@ -142,9 +142,9 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
                 overridePendingTransition(R.anim.slide_in_back, R.anim.slide_out_back);
                 break;
             case R.id.task_add_save_btn:
+                hideSoftKbd();
                 if(isDataValid()) {
                     saveNewTask();
-                    hideSoftKbd();
                 }
                 break;
             case R.id.priority_layout:
