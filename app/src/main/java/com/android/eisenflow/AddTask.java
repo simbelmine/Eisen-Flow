@@ -5,7 +5,9 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.app.Activity;
+import android.app.Instrumentation;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -362,6 +364,8 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
             Log.e("eisen", "FAILED to create DB File");
         }
 
+
+        returnResult(Activity.RESULT_OK);
         finish();
         overridePendingTransition(R.anim.slide_in_back, R.anim.slide_out_back);
     }
@@ -379,6 +383,14 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
         }
     }
 
+    private void returnResult(int resultCode) {
+        boolean resultValue = false;
+        if(resultCode == Activity.RESULT_OK) resultValue = true;
+
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra("result", resultValue);
+        setResult(resultCode,returnIntent);
+    }
 
     private String getWholeStringToSave() {
         // Priority, Date, Time, Name, Note

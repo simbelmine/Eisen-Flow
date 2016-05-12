@@ -1,5 +1,6 @@
 package com.android.eisenflow;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -192,12 +193,6 @@ public class MainActivity extends AppCompatActivity
                     dbFileAsList.add(line);
                 }
                 bufferedReader.close();
-
-
-//                for(String s : dbFileAsList) {
-//                    Log.v("eisen", s);
-//                }
-
             }
             catch (IOException ex) {
                 Log.e("eisen", "Read DB File Exception : " + ex.getMessage());
@@ -209,6 +204,33 @@ public class MainActivity extends AppCompatActivity
         }
 
         return dbFileAsList;
+    }
+
+    private String getLastRowFromDb() {
+        File dbFile = new File(MainActivity.FILE_DIR, MainActivity.FILE_FOLDER + "/" + MainActivity.FILE_NAME);
+
+        if(dbFile.exists()) {
+            try {
+                BufferedReader bufferedReader = new BufferedReader(new FileReader(dbFile));
+                String currentLine;
+                String lastLine = null;
+                while((currentLine = bufferedReader.readLine()) != null) {
+                    lastLine = currentLine;
+                }
+                bufferedReader.close();
+
+                return lastLine;
+            }
+            catch (IOException ex) {
+                Log.e("eisen", "Read DB File Exception : " + ex.getMessage());
+            }
+
+        }
+        else {
+            showAlertSnackbar("Data file doen\'t exist.");
+        }
+
+        return null;
     }
 
     private void setTaskAdapters() {
@@ -327,6 +349,8 @@ public class MainActivity extends AppCompatActivity
         dateSlideTxt.setTextColor(getResources().getColor(color));
     }
 
+    private static int TASK_SAVED_REQUEST_CODE = 1;
+
     private void startAddTaskActivity() {
 //        new Handler().postDelayed(new Runnable() {
 //            @Override
@@ -336,10 +360,27 @@ public class MainActivity extends AppCompatActivity
 //        }, 200);
 
         Intent intent = new Intent(MainActivity.this, AddTask.class);
-        startActivity(intent);
+//        startActivity(intent);
+        startActivityForResult(intent, TASK_SAVED_REQUEST_CODE);
         overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1) {
+            if(resultCode == Activity.RESULT_OK){
+                boolean result = data.getBooleanExtra("result", false);
+
+                if(result) {
+                    quadrantOneAdapter.addItem(getLastRowFromDb());
+                    quadrantOneAdapter.notifyDataSetChanged();
+                }
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+                //Write your code if there's no result
+            }
+        }
+    }
 
     private void showAlertSnackbar (String messageToShow) {
         CoordinatorLayout layout = (CoordinatorLayout) findViewById(R.id.main_layout);

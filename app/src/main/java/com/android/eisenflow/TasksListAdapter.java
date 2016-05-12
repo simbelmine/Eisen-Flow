@@ -126,6 +126,12 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListHolder> impl
         this.tasksList = tasks;
     }
 
+    public void addItem (String task) {
+        int position = getItemCount();
+        this.tasksList.add(position, task);
+        notifyItemInserted(position);
+    }
+
     public void setRecyclerView(RecyclerView recyclerView) {
         this.recyclerView = recyclerView;
     }
