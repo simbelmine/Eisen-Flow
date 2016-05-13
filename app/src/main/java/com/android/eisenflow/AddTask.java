@@ -294,6 +294,9 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
         Calendar date  = Calendar.getInstance();
         date.setTime(getDate(dateTxt.getText().toString()));
 
+        Log.v("eisen", "--- current MONTH = " + currDate.get(Calendar.MONTH));
+        Log.v("eisen", "--- set MONTH = " + date.get(Calendar.MONTH));
+
         if(date.get(Calendar.MONTH) == currDate.get(Calendar.MONTH) &&
                 date.get(Calendar.DAY_OF_MONTH) < currDate.get(Calendar.DAY_OF_MONTH)) {
             return false;
@@ -303,6 +306,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
     }
 
     private boolean isTimeValid() {
+        Calendar currDate = Calendar.getInstance();
         Calendar currTime = Calendar.getInstance();
         currTime.setTime(getTime(getTimeString(Calendar.getInstance())));
         Calendar date  = Calendar.getInstance();
@@ -310,8 +314,8 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
         Calendar time  = Calendar.getInstance();
         time.setTime(getTime(timeTxt.getText().toString()));
 
-        if(date.get(Calendar.MONTH) == currTime.get(Calendar.MONTH) &&
-                date.get(Calendar.DAY_OF_MONTH) == currTime.get(Calendar.DAY_OF_MONTH) &&
+        if(date.get(Calendar.MONTH) == currDate.get(Calendar.MONTH) &&
+                date.get(Calendar.DAY_OF_MONTH) == currDate.get(Calendar.DAY_OF_MONTH) &&
                 time.getTimeInMillis() < currTime.getTimeInMillis()) {
             return false;
         }
