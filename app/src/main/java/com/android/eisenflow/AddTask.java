@@ -46,7 +46,6 @@ import java.util.Date;
  */
 public class AddTask extends AppCompatActivity implements View.OnClickListener,
         CalendarView.OnDateChangeListener, TimePicker.OnTimeChangedListener {
-    private static final int NEEDED_API_LEVEL = 22;
     private static final String DATE_FORMAT = "EEE, MMM dd, yyyy";
     private LinearLayout closeBtn;
     private TextView saveBtn;
@@ -294,9 +293,6 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
         Calendar date  = Calendar.getInstance();
         date.setTime(getDate(dateTxt.getText().toString()));
 
-        Log.v("eisen", "--- current MONTH = " + currDate.get(Calendar.MONTH));
-        Log.v("eisen", "--- set MONTH = " + date.get(Calendar.MONTH));
-
         if(date.get(Calendar.MONTH) == currDate.get(Calendar.MONTH) &&
                 date.get(Calendar.DAY_OF_MONTH) < currDate.get(Calendar.DAY_OF_MONTH)) {
             return false;
@@ -324,7 +320,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
     }
 
     private void showAlertMessage(String messageToShow) {
-        if(Build.VERSION.SDK_INT >= NEEDED_API_LEVEL) {
+        if(Build.VERSION.SDK_INT >= MainActivity.NEEDED_API_LEVEL) {
             showAlertSnackbar(messageToShow);
         }
         else {
@@ -442,7 +438,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
     }
 
     private void expand(View view, int width, int height, int cx, int cy) {
-        if(Build.VERSION.SDK_INT >= NEEDED_API_LEVEL) {
+        if(Build.VERSION.SDK_INT >= MainActivity.NEEDED_API_LEVEL) {
             int finalRadius = Math.max(width, height);
             Animator anim = ViewAnimationUtils.createCircularReveal(view, cx, cy, 0, finalRadius);
             view.setVisibility(View.VISIBLE);
@@ -451,7 +447,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
     }
 
     private void collapse(final View view, int cx, int cy) {
-        if(Build.VERSION.SDK_INT >= NEEDED_API_LEVEL) {
+        if(Build.VERSION.SDK_INT >= MainActivity.NEEDED_API_LEVEL) {
             int initialRadius = view.getWidth();
             Animator anim = ViewAnimationUtils.createCircularReveal(view, cx, cy, initialRadius, 0);
             anim.addListener(new AnimatorListenerAdapter() {

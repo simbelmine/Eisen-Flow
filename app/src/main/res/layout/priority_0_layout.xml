@@ -23,7 +23,7 @@
             android:src="@mipmap/stopwatch"/>
     </LinearLayout>
     <LinearLayout
-        android:id="@+id/edit_list_icon"
+        android:id="@+id/edit_list_icon_0"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:background="@color/thirdQuadrant"
@@ -38,12 +38,12 @@
             android:src="@mipmap/pencil"/>
     </LinearLayout>
     <LinearLayout
-        android:id="@+id/delete_list_icon"
+        android:id="@+id/delete_list_icon_0"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:background="@color/firstQuadrant"
         android:gravity="right|center_vertical"
-        android:layout_toLeftOf="@+id/edit_list_icon"
+        android:layout_toLeftOf="@+id/edit_list_icon_0"
         android:clickable="true"
         >
         <ImageView

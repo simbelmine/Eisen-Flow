@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
@@ -12,7 +13,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 
 /**
@@ -40,11 +46,17 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListHolder> impl
         return eisenHolder;
     }
 
+    TasksListHolder globalHolder;
+
     @Override
     public void onBindViewHolder(TasksListHolder holder, int position) {
+        globalHolder = holder;
+
         // set values to variables from the Holder class
         holder.text.setText(getTaskName(position));
         holder.text.setTextColor(context.getResources().getColor(R.color.gray));
+        holder.deleteIconLayout_0.setTag(position);
+        holder.deleteIconLayout_1.setTag(position);
 
 //        if(position%2 == 0) {
 //            holder.cardView.setOnTouchListener(new SwipeDetector(holder, recyclerView, 0, position));
@@ -57,8 +69,10 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListHolder> impl
 
         holder.timerIconLayout.setOnClickListener(this);
         holder.calendarPlusIconLayout.setOnClickListener(this);
-        holder.editIconLayout.setOnClickListener(this);
-        holder.deleteIconLayout.setOnClickListener(this);
+        holder.editIconLayout_0.setOnClickListener(this);
+        holder.deleteIconLayout_0.setOnClickListener(this);
+        holder.editIconLayout_1.setOnClickListener(this);
+        holder.deleteIconLayout_1.setOnClickListener(this);
     }
 
 
@@ -151,21 +165,64 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListHolder> impl
                 }
                 else {
                     // TO Do : add progress to the task
-                    showTipMessageSnakcbar(view, context.getResources().getString(R.string.progress_added));
+                    showTipMessage(view, context.getResources().getString(R.string.progress_added));
                 }
 
                 break;
-            case R.id.edit_list_icon:
+            case R.id.edit_list_icon_0:
+                Log.v("eisen", "Edit Icon Clicked");
 
                 break;
-            case R.id.delete_list_icon:
+            case R.id.delete_list_icon_0:
+                deleteItem(view);
+                break;
+            case R.id.edit_list_icon_1:
+                Log.v("eisen", "Edit Icon Clicked");
 
+                break;
+            case R.id.delete_list_icon_1:
+                deleteItem(view);
                 break;
         }
     }
 
-    private void showTipMessageSnakcbar(View view, String message) {
-        Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
+    private void deleteItem(View view) {
+        int position = (int)view.getTag();
+        removeItemFromDB(position);
+    }
+
+    private void removeItemFromDB(int position) {
+        File dbFile = new File(MainActivity.FILE_DIR, MainActivity.FILE_FOLDER + "/" + MainActivity.FILE_NAME);
+        if(dbFile.exists()) {
+            try {
+                PrintWriter pw = new PrintWriter(dbFile);
+                pw.close();
+
+                tasksList.remove(position);
+                writeTaskInfoToFile(dbFile, tasksList, position);
+            }
+            catch (IOException ex) {
+
+                Log.e("eisen", "Remove Item from DB Exception : " + ex.getMessage());
+            }
+        }
+    }
+
+    private void writeTaskInfoToFile(File dbFile, List<String> tasksList, int position) {
+        try {
+            for(String task : tasksList) {
+                FileWriter writer = new FileWriter(dbFile, true);
+                writer.write(task);
+                writer.write("\n");
+                writer.flush();
+                writer.close();
+            }
+
+            notifyItemRemoved(position);
+        }
+        catch (IOException ex) {
+            Log.e("eisen", "Exception Write dbFile : " + ex.getMessage());
+        }
     }
 
     private void getSharedPrefs() {
@@ -174,6 +231,23 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListHolder> impl
 
     private void setBooleanToSharedPrefs(String name, boolean value) {
         mainSharedPrefs.edit().putBoolean(name, value).commit();
+    }
+
+    private void showTipMessage(View view, String messageToShow) {
+        if(Build.VERSION.SDK_INT >= MainActivity.NEEDED_API_LEVEL) {
+            showTipMessageSnakcbar(view, messageToShow);
+        }
+        else {
+            showTipMessageToast(messageToShow);
+        }
+    }
+
+    private void showTipMessageSnakcbar(View view, String message) {
+        Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
+    }
+
+    private void showTipMessageToast(String messageToShow) {
+        Toast.makeText(context, messageToShow, Toast.LENGTH_LONG).show();
     }
 
     private void showTipMessageDialog(String message) {

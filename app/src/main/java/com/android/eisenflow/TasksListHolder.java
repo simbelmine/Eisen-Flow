@@ -22,8 +22,10 @@ public class TasksListHolder extends RecyclerView.ViewHolder
     public RelativeLayout priority_1_layout;
     public LinearLayout timerIconLayout;
     public LinearLayout calendarPlusIconLayout;
-    public LinearLayout editIconLayout;
-    public LinearLayout deleteIconLayout;
+    public LinearLayout editIconLayout_0;
+    public LinearLayout deleteIconLayout_0;
+    public LinearLayout editIconLayout_1;
+    public LinearLayout deleteIconLayout_1;
     public ImageView priorityColor;
 
     public TasksListHolder(Context context, View itemView) {
@@ -39,8 +41,10 @@ public class TasksListHolder extends RecyclerView.ViewHolder
 
         timerIconLayout = (LinearLayout) cardView.findViewById(R.id.timer_list_icon);
         calendarPlusIconLayout = (LinearLayout) cardView.findViewById(R.id.calendar_plus_list_icon);
-        editIconLayout = (LinearLayout) cardView.findViewById(R.id.edit_list_icon);
-        deleteIconLayout = (LinearLayout) cardView.findViewById(R.id.delete_list_icon);
+        editIconLayout_0 = (LinearLayout) cardView.findViewById(R.id.edit_list_icon_0);
+        deleteIconLayout_0 = (LinearLayout) cardView.findViewById(R.id.delete_list_icon_0);
+        editIconLayout_1 = (LinearLayout) cardView.findViewById(R.id.edit_list_icon_1);
+        deleteIconLayout_1 = (LinearLayout) cardView.findViewById(R.id.delete_list_icon_1);
 
         priorityColor = (ImageView) cardView.findViewById(R.id.list_img);
     }

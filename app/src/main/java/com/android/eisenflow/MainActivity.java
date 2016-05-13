@@ -38,6 +38,7 @@ import java.util.Locale;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, CalendarView.OnDateChangeListener {
 
+    public static final int NEEDED_API_LEVEL = 22;
     public static final String MAIN_PREFS = "MainSharedPreferences";
     public static final String FILE_DIR = Environment.getExternalStorageDirectory().getAbsolutePath();
     public static final String FILE_FOLDER = ".EisenFlow";
