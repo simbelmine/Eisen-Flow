@@ -125,6 +125,9 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         android:src="@mipmap/plus"
+        app:layout_anchor="@+id/tasks_recyclerview"
+        app:layout_anchorGravity="bottom|end"
+        app:layout_behavior="com.android.eisenflow.FABScrollBehavior"
         />
 
 </android.support.design.widget.CoordinatorLayout>

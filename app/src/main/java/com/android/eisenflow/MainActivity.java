@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         // RecyclerView init
-        quadrantOneView = (RecyclerView) findViewById(R.id.urgent_important);
+        quadrantOneView = (RecyclerView) findViewById(R.id.tasks_recyclerview);
         quadrantOneView.setHasFixedSize(true);
         // Calendar View
         calendar = (CalendarView) findViewById(R.id.expandable_calendar);
