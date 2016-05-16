@@ -14,7 +14,6 @@
     card_view:cardBackgroundColor="@color/transparent"
     android:clickable="true"
     android:focusable="true"
-    android:foreground="?android:selectableItemBackground"
     card_view:contentPaddingTop="@dimen/card_view_padding"
     card_view:contentPaddingBottom="@dimen/card_view_padding"
     >

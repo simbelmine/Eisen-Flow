@@ -34,30 +34,34 @@ public class SwipeDetector implements View.OnTouchListener {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN: {
                 downX = event.getX();
-                return true; // allow other events like Click to be processed
+                return false; // allow other events like Click to be processed
             }
 
             case MotionEvent.ACTION_MOVE: {
                 upX = event.getX();
                 float deltaX = downX - upX;
 
+                // Prevent swipe from Left-to-Right
                 if (deltaX < 0 && currentMenuLayout !=null && currentMenuLayout.getVisibility() == View.GONE) {
                     return true;
                 }
 
+                // If we opened the menu enough => the RecyclerView is going to accept the change if not, skip it
                 if (Math.abs(deltaX) > MIN_LOCK_DISTANCE && recyclerView != null && !motionInterceptDisallowed) {
                     recyclerView.requestDisallowInterceptTouchEvent(true);
                     motionInterceptDisallowed = true;
                 }
 
+                // Open enough => VISIBLE
                 if (deltaX > 0) {
                     if(currentMenuLayout != null) {
                         currentMenuLayout.setVisibility(View.VISIBLE);
                     }
                 }
-
-                if (deltaX < 0 && currentMenuLayout!= null && currentMenuLayout.getVisibility() == View.VISIBLE) {
-                        currentMenuLayout.setVisibility(View.GONE);
+                else {
+                    currentMenuLayout.setVisibility(View.GONE);
+                    swipe(0);
+                    return true;
                 }
 
                 swipe(-(int) deltaX);
@@ -68,28 +72,30 @@ public class SwipeDetector implements View.OnTouchListener {
                 upX = event.getX();
                 float deltaX = upX - downX;
 
+                // If not opened enough => GONE
                 if (Math.abs(deltaX) < MIN_DISTANCE) {
                     swipe(0);
+                    currentMenuLayout.setVisibility(View.GONE);
                 }
 
+                // Stop accepting changes
                 if (recyclerView != null) {
                     recyclerView.requestDisallowInterceptTouchEvent(false);
                     motionInterceptDisallowed = false;
                 }
 
-                if (currentMenuLayout!= null && currentMenuLayout.getVisibility() != View.VISIBLE) {
-                    swipe(0);
-                }
                 return true;
 
             case MotionEvent.ACTION_CANCEL:
-                return true;
+                return false;
         }
 
         return true;
     }
 
     private void swipe(int distance) {
+        Log.v("eisen", " " + distance);
+
         View animationView = holder.mainLayout;
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) animationView.getLayoutParams();
         params.rightMargin = -distance;
