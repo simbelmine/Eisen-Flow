@@ -94,8 +94,6 @@ public class SwipeDetector implements View.OnTouchListener {
     }
 
     private void swipe(int distance) {
-        Log.v("eisen", " " + distance);
-
         View animationView = holder.mainLayout;
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) animationView.getLayoutParams();
         params.rightMargin = -distance;
@@ -109,6 +107,10 @@ public class SwipeDetector implements View.OnTouchListener {
                 return holder.priority_0_layout;
             case 1:
                 return holder.priority_1_layout;
+            case 2:
+                return holder.priority_2_3_layout;
+            case 3:
+                return holder.priority_2_3_layout;
         }
 
         return null;
