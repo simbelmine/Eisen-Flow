@@ -33,7 +33,7 @@ public class SwipeDetector implements View.OnTouchListener {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN: {
                 downX = event.getX();
-                return false; // allow other events like Click to be processed
+                return true; // allow other events like Click to be processed
             }
 
             case MotionEvent.ACTION_MOVE: {
@@ -86,7 +86,9 @@ public class SwipeDetector implements View.OnTouchListener {
                 return true;
 
             case MotionEvent.ACTION_CANCEL:
-                return false;
+                currentMenuLayout.setVisibility(View.GONE);
+                swipe(0);
+                return true;
         }
 
         return true;
