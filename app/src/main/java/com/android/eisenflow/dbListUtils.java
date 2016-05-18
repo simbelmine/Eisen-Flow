@@ -1,5 +1,7 @@
 package com.android.eisenflow;
 
+import android.util.Log;
+
 import java.text.DateFormatSymbols;
 import java.util.Calendar;
 import java.util.Date;
@@ -58,21 +60,21 @@ public class DbListUtils {
             return timeStr;
         }
 
-        return null;
+        return "";
     }
 
     public String getTaskName() {
         if(splitStr.length > 3) {
             return splitStr[3];
         }
-        return null;
+        return "";
     }
 
     public String getTaskNote() {
         if(splitStr.length > 4) {
             return splitStr[4];
         }
-        return null;
+        return "";
     }
 
     public int getTaskProgress() {
@@ -107,12 +109,12 @@ public class DbListUtils {
         monthsMap.put(shortMonths[3], Calendar.APRIL);
         monthsMap.put(shortMonths[4], Calendar.MAY);
         monthsMap.put(shortMonths[5], Calendar.JUNE);
-        monthsMap.put(shortMonths[0], Calendar.JULY);
-        monthsMap.put(shortMonths[0], Calendar.AUGUST);
-        monthsMap.put(shortMonths[0], Calendar.SEPTEMBER);
-        monthsMap.put(shortMonths[0], Calendar.OCTOBER);
-        monthsMap.put(shortMonths[0], Calendar.NOVEMBER);
-        monthsMap.put(shortMonths[0], Calendar.DECEMBER);
+        monthsMap.put(shortMonths[6], Calendar.JULY);
+        monthsMap.put(shortMonths[7], Calendar.AUGUST);
+        monthsMap.put(shortMonths[8], Calendar.SEPTEMBER);
+        monthsMap.put(shortMonths[9], Calendar.OCTOBER);
+        monthsMap.put(shortMonths[10], Calendar.NOVEMBER);
+        monthsMap.put(shortMonths[11], Calendar.DECEMBER);
     }
 
     private boolean isNumericInRange(String str) {
@@ -125,16 +127,23 @@ public class DbListUtils {
 
     private Date getDateFromString(String taskDateStr) {
         String[] splitDateStr = taskDateStr.split(",");
+        Log.v("eisen", "splitDateStr = " + splitDateStr);
+
         String dayOfWeek = splitDateStr[0];
         dayOfWeek = dayOfWeek.trim();
         String year = splitDateStr[2];
         year = year.trim();
         String date = splitDateStr[1];  //N.B. there is a space in the begining too
+        Log.v("eisen", "date = " + date);
+
         String[] splitDate = date.split("\\s+");
+        Log.v("eisen", "splitDate = " + splitDate);
 
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.DAY_OF_WEEK, daysOfWeekMap.get(dayOfWeek));
         cal.set(Calendar.YEAR, Integer.parseInt(year));
+
+        Log.v("eisen", "MONTH = " + splitDate[1].trim());
         cal.set(Calendar.MONTH, monthsMap.get(splitDate[1].trim()));
         cal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(splitDate[2].trim()));
 

@@ -24,7 +24,8 @@ import java.util.List;
 /**
  * Created by Sve on 3/23/16.
  */
-public class TasksListAdapter extends RecyclerView.Adapter<TasksListHolder> implements View.OnClickListener {
+public class TasksListAdapter extends RecyclerView.Adapter<TasksListHolder> {
+    public static final String EDIT_TASK_INFO_EXTRA = "editTaskInfoExtra";
     private Context context;
     private List<String> tasksList;
     private RecyclerView recyclerView;
@@ -60,6 +61,9 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListHolder> impl
         holder.deleteIconLayout_2.setTag(position);
         holder.deleteIconLayout_3.setTag(position);
 
+        holder.editIconLayout_0.setTag(position);
+        holder.editIconLayout_1.setTag(position);
+        holder.editIconLayout_2.setTag(position);
         holder.editIconLayout_3.setTag(position);
 
 //        if(position%2 == 0) {
@@ -71,17 +75,18 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListHolder> impl
 
         setTaskPriority(holder, getTaskPriority(position), position);
 
-        holder.timerIconLayout.setOnClickListener(this);
-        holder.calendarPlusIconLayout.setOnClickListener(this);
-        holder.editIconLayout_0.setOnClickListener(this);
-        holder.deleteIconLayout_0.setOnClickListener(this);
-        holder.editIconLayout_1.setOnClickListener(this);
-        holder.deleteIconLayout_1.setOnClickListener(this);
+        PositionBasedOnClickListener positionListener = new PositionBasedOnClickListener(position);
+        holder.timerIconLayout.setOnClickListener(positionListener);
+        holder.calendarPlusIconLayout.setOnClickListener(positionListener);
+        holder.editIconLayout_0.setOnClickListener(positionListener);
+        holder.deleteIconLayout_0.setOnClickListener(positionListener);
+        holder.editIconLayout_1.setOnClickListener(positionListener);
+        holder.deleteIconLayout_1.setOnClickListener(positionListener);
 
-        holder.deleteIconLayout_2.setOnClickListener(this);
-        holder.editIconLayout_2.setOnClickListener(this);
-        holder.deleteIconLayout_3.setOnClickListener(this);
-        holder.editIconLayout_3.setOnClickListener(this);
+        holder.deleteIconLayout_2.setOnClickListener(positionListener);
+        holder.editIconLayout_2.setOnClickListener(positionListener);
+        holder.deleteIconLayout_3.setOnClickListener(positionListener);
+        holder.editIconLayout_3.setOnClickListener(positionListener);
     }
 
 
@@ -161,53 +166,21 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListHolder> impl
         this.recyclerView = recyclerView;
     }
 
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.timer_list_icon:
-                Intent intent = new Intent(context, TimerActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(intent);
-                break;
-            case R.id.calendar_plus_list_icon:
-                getSharedPrefs();
-                if(!mainSharedPrefs.contains(booleanStr) || !mainSharedPrefs.getBoolean(booleanStr, false)) {
-                    showTipMessageDialog(context.getResources().getString(R.string.tip_calendar_plus_msg));
-                }
-                else {
-                    // TO Do : add progress to the task
-                    showTipMessage(view, context.getResources().getString(R.string.progress_added));
-                }
-
-                break;
-            case R.id.edit_list_icon_0:
-                Log.v("eisen", "Edit Icon Clicked 0");
-
-                break;
-            case R.id.delete_list_icon_0:
-                deleteItem(view);
-                break;
-            case R.id.edit_list_icon_1:
-                Log.v("eisen", "Edit Icon Clicked 1");
-
-                break;
-            case R.id.delete_list_icon_1:
-                deleteItem(view);
-                break;
-            case R.id.delete_list_icon_2:
-                deleteItem(view);
-                break;
-            case R.id.edit_list_icon_2:
-                Log.v("eisen", "Edit Icon Clicked 2");
-                break;
-            case R.id.delete_list_icon_3:
-                deleteItem(view);
-                break;
-            case R.id.edit_list_icon_3:
-                Log.v("eisen", "Edit Icon Clicked 3");
-                break;
-
+    private void startActivity(Class<?> activityClass, int[] flags, String[] extras_names, String[] extras_values) {
+        Intent intent = new Intent(context, activityClass);
+        if(flags != null) {
+            for(int i = 0; i < flags.length; i++) {
+                intent.addFlags(flags[i]);
+            }
         }
+        if(extras_names != null && extras_values != null) {
+            if(extras_names.length == extras_values.length) {
+                for(int i = 0; i < extras_names.length; i++) {
+                    intent.putExtra(extras_names[i], extras_values[i]);
+                }
+            }
+        }
+        context.startActivity(intent);
     }
 
     private void deleteItem(View view) {
@@ -288,5 +261,63 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListHolder> impl
         });
         builder.setNegativeButton(context.getResources().getString(R.string.cancel_btn), null);
         builder.show();
+    }
+
+    private class PositionBasedOnClickListener implements View.OnClickListener {
+        private int position;
+        public PositionBasedOnClickListener(int position) {
+            this.position = position;
+        }
+
+        @Override
+        public void onClick(View view) {
+            int[] flags = new int[] {Intent.FLAG_ACTIVITY_NEW_TASK};
+            String[] extra_names;
+            String[] extra_value;
+            extra_names = new String[]{EDIT_TASK_INFO_EXTRA};
+            extra_value = new String[]{tasksList.get(position)};
+
+            switch (view.getId()) {
+                case R.id.timer_list_icon:
+                    startActivity(TimerActivity.class, flags, null, null);
+
+                    break;
+                case R.id.calendar_plus_list_icon:
+                    getSharedPrefs();
+                    if(!mainSharedPrefs.contains(booleanStr) || !mainSharedPrefs.getBoolean(booleanStr, false)) {
+                        showTipMessageDialog(context.getResources().getString(R.string.tip_calendar_plus_msg));
+                    }
+                    else {
+                        // TO Do : add progress to the task
+                        showTipMessage(view, context.getResources().getString(R.string.progress_added));
+                    }
+
+                    break;
+                case R.id.edit_list_icon_0:
+                    startActivity(AddTask.class, flags, extra_names, extra_value);
+                    break;
+                case R.id.delete_list_icon_0:
+                    deleteItem(view);
+                    break;
+                case R.id.edit_list_icon_1:
+                    startActivity(AddTask.class, flags, extra_names, extra_value);
+                    break;
+                case R.id.delete_list_icon_1:
+                    deleteItem(view);
+                    break;
+                case R.id.delete_list_icon_2:
+                    deleteItem(view);
+                    break;
+                case R.id.edit_list_icon_2:
+                    startActivity(AddTask.class, flags, extra_names, extra_value);
+                    break;
+                case R.id.delete_list_icon_3:
+                    deleteItem(view);
+                    break;
+                case R.id.edit_list_icon_3:
+                    startActivity(AddTask.class, flags, extra_names, extra_value);
+                    break;
+            }
+        }
     }
 }

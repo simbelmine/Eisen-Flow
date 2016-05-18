@@ -5,7 +5,6 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.app.Activity;
-import android.app.Instrumentation;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -14,7 +13,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
@@ -78,6 +76,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
         setContentView(R.layout.add_task_lyout);
 
         initLayout();
+        populateLayout();
     }
 
     private void initLayout() {
@@ -109,13 +108,10 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
         timePickerView.setOnTimeChangedListener(this);
 
         dateTxt = (TextView) findViewById(R.id.add_task_date_txt);
-        dateTxt.setText(getDateString(Calendar.getInstance()));
         dateTxt.setOnClickListener(this);
         currDateTxt = (TextView) findViewById(R.id.curr_date_txt);
-        currDateTxt.setText(getDateString(Calendar.getInstance()));
         currDateTxt.setOnClickListener(this);
         timeTxt = (TextView) findViewById(R.id.add_task_time);
-        timeTxt.setText(getTimeString(Calendar.getInstance()));
         timeTxt.setOnClickListener(this);
 
         noteLayout = (LinearLayout) findViewById(R.id.note_layout);
@@ -125,6 +121,42 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
         taskName = (TextView) findViewById(R.id.task_name);
         noteTxt = (EditText) findViewById(R.id.note_txt);
         snakbarLayout = (CoordinatorLayout) findViewById(R.id.snackbarCoordinatorLayout);
+    }
+
+    private void populateLayout() {
+        Intent intent = getIntent();
+
+        if(isEditMode(intent)) {
+            String taskInfo = intent.getStringExtra(TasksListAdapter.EDIT_TASK_INFO_EXTRA);
+            DbListUtils dbListUtils = new DbListUtils(taskInfo);
+
+            Log.v("eisen", "Task Info : " + taskInfo);
+            Log.v("eisen", "Task Priority : " + dbListUtils.getTaskPriority());
+            setBgPriorityColor(dbListUtils.getTaskPriority());
+            taskName.setText(dbListUtils.getTaskName());
+            Calendar cal = Calendar.getInstance();
+            if(dbListUtils.getTaskDate() != null) {
+                cal.setTime(dbListUtils.getTaskDate());
+            }
+            dateTxt.setText(getDateString(cal));
+            calendarView.setDate(cal.getTimeInMillis(), true, true);
+
+            timeTxt.setText(dbListUtils.getTaskTime());
+            if(Build.VERSION.SDK_INT >= MainActivity.NEEDED_API_LEVEL) {
+                Date date = getTime(dbListUtils.getTaskTime());
+                Calendar c = Calendar.getInstance();
+                c.setTime(date);
+                timePickerView.setHour(c.get(Calendar.HOUR_OF_DAY));
+                timePickerView.setMinute(c.get(Calendar.MINUTE));
+            }
+
+            noteTxt.setText(dbListUtils.getTaskNote());
+        }
+        else {
+            dateTxt.setText(getDateString(Calendar.getInstance()));
+            currDateTxt.setText(getDateString(Calendar.getInstance()));
+            timeTxt.setText(getTimeString(Calendar.getInstance()));
+        }
     }
 
     @Override
@@ -150,22 +182,22 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
                 break;
             case R.id.do_it_l:
                 hideSoftKbd();
-                setBackgroundWithAnimation(R.color.firstQuadrant);
+                setBgPriorityColor(0);
                 priorityInt = 0;
                 break;
             case R.id.decide_it_l:
                 hideSoftKbd();
-                setBackgroundWithAnimation(R.color.secondQuadrant);
+                setBgPriorityColor(1);
                 priorityInt = 1;
                 break;
             case R.id.delegate_it_l:
                 hideSoftKbd();
-                setBackgroundWithAnimation(R.color.thirdQuadrant);
+                setBgPriorityColor(2);
                 priorityInt = 2;
                 break;
             case R.id.dump_it_l:
                 hideSoftKbd();
-                setBackgroundWithAnimation(R.color.fourthQuadrant);
+                setBgPriorityColor(3);
                 priorityInt = 3;
                 break;
             case R.id.add_task_date_txt:
@@ -464,6 +496,23 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
         }
     }
 
+    private void setBgPriorityColor(int priority) {
+        switch (priority) {
+            case 0:
+                setBackgroundWithAnimation(R.color.firstQuadrant);
+                break;
+            case 1:
+                setBackgroundWithAnimation(R.color.secondQuadrant);
+                break;
+            case 2:
+                setBackgroundWithAnimation(R.color.thirdQuadrant);
+                break;
+            case 3:
+                setBackgroundWithAnimation(R.color.fourthQuadrant);
+                break;
+        }
+    }
+
     private void setBackgroundWithAnimation(final int toColor) {
         final int color = getBackgroundColor();
 
@@ -564,6 +613,13 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
         if(view.requestFocus()) {
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         }
+    }
+
+    private boolean isEditMode(Intent intent) {
+        if(intent != null && intent.getStringExtra(TasksListAdapter.EDIT_TASK_INFO_EXTRA) != null) {
+            return true;
+        }
+        return false;
     }
 }
 
