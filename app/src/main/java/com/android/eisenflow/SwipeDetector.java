@@ -1,7 +1,6 @@
 package com.android.eisenflow;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -108,9 +107,9 @@ public class SwipeDetector implements View.OnTouchListener {
             case 1:
                 return holder.priority_1_layout;
             case 2:
-                return holder.priority_2_3_layout;
+                return holder.priority_2_layout;
             case 3:
-                return holder.priority_2_3_layout;
+                return holder.priority_3_layout;
         }
 
         return null;

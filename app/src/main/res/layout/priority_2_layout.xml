@@ -3,18 +3,32 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="80dp"
-    android:id="@+id/task_card_priority_2_3"
+    android:id="@+id/task_card_priority_2"
     android:visibility="gone"
     >
 
     <LinearLayout
-        android:id="@+id/edit_list_icon_2_3"
+        android:id="@+id/share_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@color/secondQuadrant"
+        android:layout_alignParentRight="true"
+        android:gravity="right|center_vertical"
+        android:orientation="vertical"
+        >
+        <ImageView
+            android:layout_width="@dimen/card_under_icon_size"
+            android:layout_height="@dimen/card_under_icon_size"
+            android:layout_margin="@dimen/card_under_icon_margin"
+            android:src="@mipmap/share"/>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/edit_list_icon_2"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:background="@color/thirdQuadrant"
         android:gravity="right|center_vertical"
-        android:layout_alignParentRight="true"
-        android:layout_toLeftOf="@+id/calendar_plus_list_icon"
+        android:layout_toLeftOf="@+id/share_icon"
         >
         <ImageView
             android:layout_width="@dimen/card_under_icon_size"
@@ -23,12 +37,12 @@
             android:src="@mipmap/pencil"/>
     </LinearLayout>
     <LinearLayout
-        android:id="@+id/delete_list_icon_2_3"
+        android:id="@+id/delete_list_icon_2"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:background="@color/firstQuadrant"
         android:gravity="right|center_vertical"
-        android:layout_toLeftOf="@+id/edit_list_icon_2_3"
+        android:layout_toLeftOf="@+id/edit_list_icon_2"
         >
         <ImageView
             android:layout_width="@dimen/card_under_icon_size"

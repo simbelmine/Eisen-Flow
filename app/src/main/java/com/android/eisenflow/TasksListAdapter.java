@@ -57,9 +57,10 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListHolder> impl
         holder.text.setTextColor(context.getResources().getColor(R.color.gray));
         holder.deleteIconLayout_0.setTag(position);
         holder.deleteIconLayout_1.setTag(position);
-        holder.deleteIconLayout_2_3.setTag(position);
+        holder.deleteIconLayout_2.setTag(position);
+        holder.deleteIconLayout_3.setTag(position);
 
-        holder.editIconLayout_2_3.setTag(position);
+        holder.editIconLayout_3.setTag(position);
 
 //        if(position%2 == 0) {
 //            holder.cardView.setOnTouchListener(new SwipeDetector(holder, recyclerView, 0, position));
@@ -77,8 +78,10 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListHolder> impl
         holder.editIconLayout_1.setOnClickListener(this);
         holder.deleteIconLayout_1.setOnClickListener(this);
 
-        holder.deleteIconLayout_2_3.setOnClickListener(this);
-        holder.editIconLayout_2_3.setOnClickListener(this);
+        holder.deleteIconLayout_2.setOnClickListener(this);
+        holder.editIconLayout_2.setOnClickListener(this);
+        holder.deleteIconLayout_3.setOnClickListener(this);
+        holder.editIconLayout_3.setOnClickListener(this);
     }
 
 
@@ -191,11 +194,17 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListHolder> impl
             case R.id.delete_list_icon_1:
                 deleteItem(view);
                 break;
-            case R.id.delete_list_icon_2_3:
+            case R.id.delete_list_icon_2:
                 deleteItem(view);
                 break;
-            case R.id.edit_list_icon_2_3:
-                Log.v("eisen", "Edit Icon Clicked 2-3");
+            case R.id.edit_list_icon_2:
+                Log.v("eisen", "Edit Icon Clicked 2");
+                break;
+            case R.id.delete_list_icon_3:
+                deleteItem(view);
+                break;
+            case R.id.edit_list_icon_3:
+                Log.v("eisen", "Edit Icon Clicked 3");
                 break;
 
         }

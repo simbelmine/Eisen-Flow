@@ -26,7 +26,8 @@
 
         <include layout="@layout/priority_0_layout"/>
         <include layout="@layout/priority_1_layout"/>
-        <include layout="@layout/priority_2_3_layout"/>
+        <include layout="@layout/priority_2_layout"/>
+        <include layout="@layout/priority_3_layout"/>
 
         <LinearLayout
             android:layout_width="match_parent"
