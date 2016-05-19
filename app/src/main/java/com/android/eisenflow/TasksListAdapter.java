@@ -81,6 +81,7 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListHolder> {
         holder.editIconLayout_3.setTag(position);
 
         holder.task_check.setTag(position);
+        holder.share_icon.setTag(position);
 
 //        if(position%2 == 0) {
 //            holder.cardView.setOnTouchListener(new SwipeDetector(holder, recyclerView, 0, position));
@@ -103,6 +104,8 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListHolder> {
         holder.editIconLayout_2.setOnClickListener(positionListener);
         holder.deleteIconLayout_3.setOnClickListener(positionListener);
         holder.editIconLayout_3.setOnClickListener(positionListener);
+
+        holder.share_icon.setOnClickListener(positionListener);
 
         PositionBasedOnCheckClickedListener positionCheckListener = new PositionBasedOnCheckClickedListener(holder);
         holder.task_check.setOnCheckedChangeListener(positionCheckListener);
@@ -342,8 +345,29 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListHolder> {
                 case R.id.edit_list_icon_3:
                     startActivity(AddTask.class, flags, extra_names, extra_value);
                     break;
+                case R.id.share_icon:
+                    showShareOptions();
+                    break;
             }
         }
+    }
+
+    private void showShareOptions() {
+        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, getMessageToShare());
+        context.startActivity(Intent.createChooser(sharingIntent,"Share using").setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+    }
+
+    private String getMessageToShare() {
+        String name = dbListUtils.getTaskName();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(dbListUtils.getTaskDate());
+        String date = getDateString(cal, DATE_FORMAT);
+        String time = dbListUtils.getTaskTime();
+        String note = dbListUtils.getTaskNote();
+
+        return "To Do: " + name + "\n" + "When: " + date + "@" + time + "\n" + "Note: " + note;
     }
 
     private void savePercentageToDb(View view, int position) {

@@ -38,6 +38,7 @@ public class TasksListHolder extends RecyclerView.ViewHolder
     public ImageView task_done_line;
     public TextView task_time_txt;
     public TextView task_p1_progress;
+    public LinearLayout share_icon;
 
     public TasksListHolder(Context context, View itemView) {
         super(itemView);
@@ -69,5 +70,7 @@ public class TasksListHolder extends RecyclerView.ViewHolder
         task_done_line = (ImageView) cardView.findViewById(R.id.done_divider);
         task_time_txt = (TextView) cardView.findViewById(R.id.task_time_txt);
         task_p1_progress = (TextView) cardView.findViewById(R.id.task_p1_percentage);
+
+        share_icon = (LinearLayout) cardView.findViewById(R.id.share_icon);
     }
 }
