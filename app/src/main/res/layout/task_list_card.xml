@@ -52,27 +52,31 @@
                 android:background="@color/fourthQuadrant"
                 android:layout_marginRight="@dimen/card_priority_img_margin"
                 />
-            <TextView
-                android:id="@+id/list_text"
-                android:layout_width="match_parent"
+            <FrameLayout
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_toRightOf="@+id/list_img"
+                >
+            <TextView
+                android:id="@+id/list_text"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_centerVertical="true"
                 android:singleLine="true"
                 android:gravity="center_vertical"
+                android:text="dfgdfgdgdgfdfgdfgd"
                 />
+                <ImageView
+                    android:id="@+id/done_divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/date"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="2dp"
+                    android:visibility="gone"
+                    />
+            </FrameLayout>
         </LinearLayout>
-
-        <ImageView
-            android:id="@+id/done_divider"
-            android:layout_width="match_parent"
-            android:layout_height="0.9dp"
-            android:background="@color/divider_border"
-            android:layout_centerInParent="true"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:visibility="gone"
-            />
 
         <ImageView
             android:id="@+id/divider"
