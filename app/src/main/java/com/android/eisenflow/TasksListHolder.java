@@ -1,9 +1,11 @@
 package com.android.eisenflow;
 
 import android.content.Context;
+import android.media.Image;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -33,6 +35,8 @@ public class TasksListHolder extends RecyclerView.ViewHolder
     public LinearLayout editIconLayout_3;
     public LinearLayout deleteIconLayout_3;
     public ImageView priorityColor;
+    public CheckBox task_check;
+    public ImageView task_done_line;
 
     public TasksListHolder(Context context, View itemView) {
         super(itemView);
@@ -59,5 +63,8 @@ public class TasksListHolder extends RecyclerView.ViewHolder
         deleteIconLayout_3 = (LinearLayout) cardView.findViewById(R.id.delete_list_icon_3);
 
         priorityColor = (ImageView) cardView.findViewById(R.id.list_img);
+
+        task_check = (CheckBox) cardView.findViewById(R.id.task_check);
+        task_done_line = (ImageView) cardView.findViewById(R.id.done_divider);
     }
 }

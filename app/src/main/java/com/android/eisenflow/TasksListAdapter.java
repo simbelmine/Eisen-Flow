@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.Toast;
 
 import java.io.File;
@@ -66,6 +67,8 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListHolder> {
         holder.editIconLayout_2.setTag(position);
         holder.editIconLayout_3.setTag(position);
 
+        holder.task_check.setTag(position);
+
 //        if(position%2 == 0) {
 //            holder.cardView.setOnTouchListener(new SwipeDetector(holder, recyclerView, 0, position));
 //        }
@@ -87,6 +90,9 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListHolder> {
         holder.editIconLayout_2.setOnClickListener(positionListener);
         holder.deleteIconLayout_3.setOnClickListener(positionListener);
         holder.editIconLayout_3.setOnClickListener(positionListener);
+
+        PositionBasedOnCheckClikedListener positionCheckListener = new PositionBasedOnCheckClikedListener(holder, position);
+        holder.task_check.setOnCheckedChangeListener(positionCheckListener);
     }
 
 
@@ -317,6 +323,25 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListHolder> {
                 case R.id.edit_list_icon_3:
                     startActivity(AddTask.class, flags, extra_names, extra_value);
                     break;
+            }
+        }
+    }
+
+    private class PositionBasedOnCheckClikedListener implements CompoundButton.OnCheckedChangeListener {
+        private int position;
+        private TasksListHolder holder;
+        public PositionBasedOnCheckClikedListener(TasksListHolder holder, int position) {
+            this.holder = holder;
+            this.position = position;
+        }
+
+        @Override
+        public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+            if(compoundButton.isChecked()) {
+                holder.task_done_line.setVisibility(View.VISIBLE);
+            }
+            else {
+                holder.task_done_line.setVisibility(View.GONE);
             }
         }
     }
