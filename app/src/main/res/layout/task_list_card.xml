@@ -84,6 +84,16 @@
                     android:layout_gravity="bottom"
                     />
             </FrameLayout>
+            <TextView
+                android:id="@+id/task_p1_percentage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical|right"
+                android:layout_marginRight="@dimen/card_padding"
+                android:textColor="@color/colorAccent"
+                android:text="12%"
+                android:visibility="gone"
+                />
         </LinearLayout>
 
         <ImageView

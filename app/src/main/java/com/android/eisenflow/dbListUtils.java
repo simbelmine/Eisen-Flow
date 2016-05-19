@@ -81,7 +81,12 @@ public class DbListUtils {
         if(splitStr.length > 5 && isNumeric(splitStr[5])) {
             return Integer.parseInt(splitStr[5]);
         }
-        return -1;
+        // If there is no Note
+        else if(splitStr.length > 4 && "".equals(getTaskNote())) {
+            return Integer.parseInt(splitStr[4]);
+        }
+
+        return 0;
     }
 
 
@@ -127,23 +132,18 @@ public class DbListUtils {
 
     private Date getDateFromString(String taskDateStr) {
         String[] splitDateStr = taskDateStr.split(",");
-        Log.v("eisen", "splitDateStr = " + splitDateStr);
 
         String dayOfWeek = splitDateStr[0];
         dayOfWeek = dayOfWeek.trim();
         String year = splitDateStr[2];
         year = year.trim();
         String date = splitDateStr[1];  //N.B. there is a space in the begining too
-        Log.v("eisen", "date = " + date);
 
         String[] splitDate = date.split("\\s+");
-        Log.v("eisen", "splitDate = " + splitDate);
 
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.DAY_OF_WEEK, daysOfWeekMap.get(dayOfWeek));
         cal.set(Calendar.YEAR, Integer.parseInt(year));
-
-        Log.v("eisen", "MONTH = " + splitDate[1].trim());
         cal.set(Calendar.MONTH, monthsMap.get(splitDate[1].trim()));
         cal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(splitDate[2].trim()));
 

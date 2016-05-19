@@ -29,6 +29,7 @@ import java.util.List;
  */
 public class TasksListAdapter extends RecyclerView.Adapter<TasksListHolder> {
     private static final String DATE_FORMAT = "MMM dd";
+    private static final String DATE_FORMAT_LONG = "EEE, MMM dd, yyyy";
     public static final String EDIT_TASK_INFO_EXTRA = "editTaskInfoExtra";
     private Context context;
     private List<String> tasksList;
@@ -64,6 +65,10 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListHolder> {
         holder.text.setTextColor(context.getResources().getColor(R.color.gray));
         holder.task_time_txt.setText(getTaskDateTime(dbListUtils));
         holder.task_time_txt.setTextColor(context.getResources().getColor(R.color.gray_light));
+        if(getTaskPriority(position) == 1) {
+            holder.task_p1_progress.setVisibility(View.VISIBLE);
+            holder.task_p1_progress.setText(dbListUtils.getTaskProgress() + "%");
+        }
 
         holder.deleteIconLayout_0.setTag(position);
         holder.deleteIconLayout_1.setTag(position);
@@ -116,14 +121,14 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListHolder> {
     private String getTaskDateTime(DbListUtils dbListUtils) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(dbListUtils.getTaskDate());
-        String date  = getDateString(cal);
+        String date  = getDateString(cal, DATE_FORMAT);
         String time = dbListUtils.getTaskTime();
 
         return date + ", " + time;
     }
 
-    private String getDateString(Calendar cal) {
-        SimpleDateFormat postFormater = new SimpleDateFormat(DATE_FORMAT);
+    private String getDateString(Calendar cal, String format) {
+        SimpleDateFormat postFormater = new SimpleDateFormat(format);
         return postFormater.format(cal.getTime());
     }
 
@@ -238,7 +243,12 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListHolder> {
                 writer.close();
             }
 
-            notifyItemRemoved(position);
+            if(position != -1) {
+                notifyItemRemoved(position);
+            }
+            else {
+                notifyDataSetChanged();
+            }
         }
         catch (IOException ex) {
             Log.e("eisen", "Exception Write dbFile : " + ex.getMessage());
@@ -306,15 +316,7 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListHolder> {
 
                     break;
                 case R.id.calendar_plus_list_icon:
-                    getSharedPrefs();
-                    if(!mainSharedPrefs.contains(booleanStr) || !mainSharedPrefs.getBoolean(booleanStr, false)) {
-                        showTipMessageDialog(context.getResources().getString(R.string.tip_calendar_plus_msg));
-                    }
-                    else {
-                        // TO Do : add progress to the task
-                        showTipMessage(view, context.getResources().getString(R.string.progress_added));
-                    }
-
+                    savePercentageToDb(view, position);
                     break;
                 case R.id.edit_list_icon_0:
                     startActivity(AddTask.class, flags, extra_names, extra_value);
@@ -341,6 +343,46 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListHolder> {
                     startActivity(AddTask.class, flags, extra_names, extra_value);
                     break;
             }
+        }
+    }
+
+    private void savePercentageToDb(View view, int position) {
+        File dbFile = new File(MainActivity.FILE_DIR, MainActivity.FILE_FOLDER + "/" + MainActivity.FILE_NAME);
+        int progress = dbListUtils.getTaskProgress() + 1;
+        String separator = "+";
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(dbListUtils.getTaskDate());
+
+        String replacement = String.valueOf(dbListUtils.getTaskPriority()) + separator +
+                getDateString(cal,DATE_FORMAT_LONG) + separator + dbListUtils.getTaskTime() + separator +
+                dbListUtils.getTaskName() + separator + dbListUtils.getTaskNote() + separator + String.valueOf(progress);
+
+
+        if(dbFile.exists()) {
+            try {
+                PrintWriter pw = new PrintWriter(dbFile);
+                pw.close();
+
+                tasksList.set(position, replacement);
+                writeTaskInfoToFile(dbFile, tasksList, -1);
+
+
+                showMessageAddedPercent(view);
+            }
+            catch (IOException ex) {
+                Log.e("eisen", "Replace(+ Percentage num) Item from DB Exception : " + ex.getMessage());
+            }
+        }
+    }
+
+    private void showMessageAddedPercent(View view) {
+        getSharedPrefs();
+        if(!mainSharedPrefs.contains(booleanStr) || !mainSharedPrefs.getBoolean(booleanStr, false)) {
+            showTipMessageDialog(context.getResources().getString(R.string.tip_calendar_plus_msg));
+        }
+        else {
+            // TO Do : add progress to the task
+            showTipMessage(view, context.getResources().getString(R.string.progress_added));
         }
     }
 

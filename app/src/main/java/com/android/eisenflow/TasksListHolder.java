@@ -1,7 +1,6 @@
 package com.android.eisenflow;
 
 import android.content.Context;
-import android.media.Image;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -38,6 +37,7 @@ public class TasksListHolder extends RecyclerView.ViewHolder
     public CheckBox task_check;
     public ImageView task_done_line;
     public TextView task_time_txt;
+    public TextView task_p1_progress;
 
     public TasksListHolder(Context context, View itemView) {
         super(itemView);
@@ -68,5 +68,6 @@ public class TasksListHolder extends RecyclerView.ViewHolder
         task_check = (CheckBox) cardView.findViewById(R.id.task_check);
         task_done_line = (ImageView) cardView.findViewById(R.id.done_divider);
         task_time_txt = (TextView) cardView.findViewById(R.id.task_time_txt);
+        task_p1_progress = (TextView) cardView.findViewById(R.id.task_p1_percentage);
     }
 }
