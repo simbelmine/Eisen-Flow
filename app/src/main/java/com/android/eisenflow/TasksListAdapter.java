@@ -20,12 +20,15 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 
 /**
  * Created by Sve on 3/23/16.
  */
 public class TasksListAdapter extends RecyclerView.Adapter<TasksListHolder> {
+    private static final String DATE_FORMAT = "MMM dd";
     public static final String EDIT_TASK_INFO_EXTRA = "editTaskInfoExtra";
     private Context context;
     private List<String> tasksList;
@@ -53,10 +56,15 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListHolder> {
     @Override
     public void onBindViewHolder(TasksListHolder holder, int position) {
         globalHolder = holder;
+        String taskRow = tasksList.get(position);
+        dbListUtils = new DbListUtils(taskRow);
 
         // set values to variables from the Holder class
-        holder.text.setText(getTaskName(position));
+        holder.text.setText(getTaskName(dbListUtils));
         holder.text.setTextColor(context.getResources().getColor(R.color.gray));
+        holder.task_time_txt.setText(getTaskDateTime(dbListUtils));
+        holder.task_time_txt.setTextColor(context.getResources().getColor(R.color.gray_light));
+
         holder.deleteIconLayout_0.setTag(position);
         holder.deleteIconLayout_1.setTag(position);
         holder.deleteIconLayout_2.setTag(position);
@@ -91,23 +99,32 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListHolder> {
         holder.deleteIconLayout_3.setOnClickListener(positionListener);
         holder.editIconLayout_3.setOnClickListener(positionListener);
 
-        PositionBasedOnCheckClikedListener positionCheckListener = new PositionBasedOnCheckClikedListener(holder, position);
+        PositionBasedOnCheckClickedListener positionCheckListener = new PositionBasedOnCheckClickedListener(holder);
         holder.task_check.setOnCheckedChangeListener(positionCheckListener);
     }
 
-
-    private String getTaskName(int position) {
-        String taskRow = tasksList.get(position);
-        dbListUtils = new DbListUtils(taskRow);
-
+    private String getTaskName(DbListUtils dbListUtils) {
 //        Log.v("eisen", "Priority: " + dbListUtils.getTaskPriority());
 //        Log.v("eisen", "Date: " + dbListUtils.getTaskDate());
 //        Log.v("eisen", "Time: " + dbListUtils.getTaskTime());
 //        Log.v("eisen", "Note: " + dbListUtils.getTaskNote());
 //        Log.v("eisen", "Progress: " + dbListUtils.getTaskProgress());
 
-
         return dbListUtils.getTaskName();
+    }
+
+    private String getTaskDateTime(DbListUtils dbListUtils) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(dbListUtils.getTaskDate());
+        String date  = getDateString(cal);
+        String time = dbListUtils.getTaskTime();
+
+        return date + ", " + time;
+    }
+
+    private String getDateString(Calendar cal) {
+        SimpleDateFormat postFormater = new SimpleDateFormat(DATE_FORMAT);
+        return postFormater.format(cal.getTime());
     }
 
     private int getTaskPriority(int position) {
@@ -327,12 +344,10 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListHolder> {
         }
     }
 
-    private class PositionBasedOnCheckClikedListener implements CompoundButton.OnCheckedChangeListener {
-        private int position;
+    private class PositionBasedOnCheckClickedListener implements CompoundButton.OnCheckedChangeListener {
         private TasksListHolder holder;
-        public PositionBasedOnCheckClikedListener(TasksListHolder holder, int position) {
+        public PositionBasedOnCheckClickedListener(TasksListHolder holder) {
             this.holder = holder;
-            this.position = position;
         }
 
         @Override

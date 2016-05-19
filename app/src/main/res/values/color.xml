@@ -21,6 +21,7 @@
     <color name="lighter_dark_blue">#1D5E70</color>
 
     <color name="gray">#6a7275</color>
+    <color name="gray_light">#B6B9BA</color>
     <color name="gray_transparent">#036a7275</color>
     <color name="list_item_txt">#c9e3dc</color>
     <color name="list_item_bg">#ffebeff1</color>

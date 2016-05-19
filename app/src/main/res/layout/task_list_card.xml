@@ -64,7 +64,8 @@
                 android:layout_centerVertical="true"
                 android:singleLine="true"
                 android:gravity="center_vertical"
-                android:text="dfgdfgdgdgfdfgdfgd"
+                android:text="Release Main Project 2.1"
+                android:textSize="17sp"
                 />
                 <ImageView
                     android:id="@+id/done_divider"
@@ -74,6 +75,13 @@
                     android:layout_gravity="center"
                     android:layout_marginTop="2dp"
                     android:visibility="gone"
+                    />
+                <TextView
+                    android:id="@+id/task_time_txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="May 2, 16:00"
+                    android:layout_gravity="bottom"
                     />
             </FrameLayout>
         </LinearLayout>
