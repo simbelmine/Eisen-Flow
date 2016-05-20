@@ -520,7 +520,11 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
 
         String stringToReturn;
         if(priorityInt == 1) {
-            stringToReturn = String.valueOf(priorityInt) + separator + date + separator + time + separator + name + separator + note + separator + dbListUtils.getTaskProgress();
+            int progress = 0;
+            if(isEditMode(intent)) {
+                progress = dbListUtils.getTaskProgress();
+            }
+            stringToReturn = String.valueOf(priorityInt) + separator + date + separator + time + separator + name + separator + note + separator + progress;
         }
         else {
             stringToReturn = String.valueOf(priorityInt) + separator + date + separator + time + separator + name + separator + note;
@@ -676,8 +680,6 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
         }
 
         try {
-            Log.v("eisen", timeStr);
-            Log.v("eisen", ""+postFormater.parse(timeStr));
             return postFormater.parse(timeStr);
         }
         catch (ParseException ex) {
