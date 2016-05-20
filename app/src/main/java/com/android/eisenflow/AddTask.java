@@ -513,12 +513,20 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
         String name = taskName.getText().toString();
         String note = noteTxt.getText().toString();
         String separator = "+";
-        
+
         if(isEditMode(intent) && priorityInt == -1) {
             priorityInt = dbListUtils.getTaskPriority();
         }
 
-        return String.valueOf(priorityInt) + separator + date + separator + time + separator + name + separator + note;
+        String stringToReturn;
+        if(priorityInt == 1) {
+            stringToReturn = String.valueOf(priorityInt) + separator + date + separator + time + separator + name + separator + note + separator + dbListUtils.getTaskProgress();
+        }
+        else {
+            stringToReturn = String.valueOf(priorityInt) + separator + date + separator + time + separator + name + separator + note;
+        }
+
+        return stringToReturn;
     }
 
 
