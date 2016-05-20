@@ -68,6 +68,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
     private TextView taskName;
     private EditText noteTxt;
     private CoordinatorLayout snakbarLayout;
+    private Intent intent;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -75,6 +76,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         setContentView(R.layout.add_task_lyout);
 
+        intent = getIntent();
         initLayout();
         populateLayout();
     }
@@ -124,8 +126,6 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
     }
 
     private void populateLayout() {
-        Intent intent = getIntent();
-
         if(isEditMode(intent)) {
             String taskInfo = intent.getStringExtra(TasksListAdapter.EDIT_TASK_INFO_EXTRA);
             DbListUtils dbListUtils = new DbListUtils(taskInfo);
@@ -295,25 +295,64 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
     }
 
     private boolean isDataValid() {
+        String taskInfo = intent.getStringExtra(TasksListAdapter.EDIT_TASK_INFO_EXTRA);
+        DbListUtils dbListUtils = new DbListUtils(taskInfo);
+
         String name = taskName.getText().toString();
 
-        if(priorityInt == -1) {
-            showAlertMessage(getResources().getString(R.string.add_task_priority_alert));
-            return false;
+        if(isEditMode(intent) && priorityInt != dbListUtils.getTaskPriority()) {
+            checkPriority();
         }
+        else if(!isEditMode(intent)) {
+            checkPriority();
+        }
+
 
         if(name.length() == 0 || name == null || getResources().getString(R.string.enter_task_hint).equals(name)) {
             showAlertMessage(getResources().getString(R.string.add_task_name_alert));
             return false;
         }
 
-        if(!isDateValid()) {
+        if(isEditMode(intent) && isDateTimeEdited(dbListUtils)) {
+            checkDateTime();
+        }
+        else if(!isEditMode(intent)) {
+            checkDateTime();
+        }
+
+        return true;
+    }
+
+    private boolean isDateTimeEdited(DbListUtils dbListUtils) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(dbListUtils.getTaskDate());
+        String date = getDateString(cal);
+        String time = dbListUtils.getTaskTime();
+
+        if(!dateTxt.getText().equals(date) || !timeTxt.getText().equals(time)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private boolean checkDateTime() {
+        if (!isDateValid()) {
             showAlertMessage(getResources().getString(R.string.add_task_date_alert));
             return false;
         }
 
-        if(!isTimeValid()) {
+        if (!isTimeValid()) {
             showAlertMessage(getResources().getString(R.string.add_task_time_alert));
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean checkPriority() {
+        if(priorityInt == -1) {
+            showAlertMessage(getResources().getString(R.string.add_task_priority_alert));
             return false;
         }
 
