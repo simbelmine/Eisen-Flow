@@ -37,7 +37,6 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListHolder> {
     private SharedPreferences mainSharedPrefs;
     private Activity activity;
     private String booleanStr = "isCalendarPlusTipShown";
-    private DbListUtils dbListUtils;
 
     public TasksListAdapter(Activity activity, Context context) {
         this.activity = activity;
@@ -58,14 +57,14 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListHolder> {
     public void onBindViewHolder(TasksListHolder holder, int position) {
         globalHolder = holder;
         String taskRow = tasksList.get(position);
-        dbListUtils = new DbListUtils(taskRow);
+        DbListUtils dbListUtils = new DbListUtils(taskRow);
 
         // set values to variables from the Holder class
         holder.text.setText(getTaskName(dbListUtils));
         holder.text.setTextColor(context.getResources().getColor(R.color.gray));
         holder.task_time_txt.setText(getTaskDateTime(dbListUtils));
         holder.task_time_txt.setTextColor(context.getResources().getColor(R.color.gray_light));
-        if(getTaskPriority(position) == 1) {
+        if(getTaskPriority(dbListUtils) == 1) {
             holder.task_p1_progress.setVisibility(View.VISIBLE);
             holder.task_p1_progress.setText(dbListUtils.getTaskProgress() + "%");
         }
@@ -90,9 +89,9 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListHolder> {
 //            holder.cardView.setOnTouchListener(new SwipeDetector(holder, recyclerView, 1, position));
 //        }
 
-        setTaskPriority(holder, getTaskPriority(position), position);
+        setTaskPriority(holder, getTaskPriority(dbListUtils), position);
 
-        PositionBasedOnClickListener positionListener = new PositionBasedOnClickListener(position);
+        PositionBasedOnClickListener positionListener = new PositionBasedOnClickListener(dbListUtils, position);
         holder.timerIconLayout.setOnClickListener(positionListener);
         holder.calendarPlusIconLayout.setOnClickListener(positionListener);
         holder.editIconLayout_0.setOnClickListener(positionListener);
@@ -135,10 +134,7 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListHolder> {
         return postFormater.format(cal.getTime());
     }
 
-    private int getTaskPriority(int position) {
-        String taskRow = tasksList.get(position);
-        dbListUtils = new DbListUtils(taskRow);
-
+    private int getTaskPriority(DbListUtils dbListUtils) {
         return dbListUtils.getTaskPriority();
     }
 
@@ -300,8 +296,10 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListHolder> {
     }
 
     private class PositionBasedOnClickListener implements View.OnClickListener {
+        private DbListUtils dbListUtils;
         private int position;
-        public PositionBasedOnClickListener(int position) {
+        public PositionBasedOnClickListener(DbListUtils dbListUtils, int position) {
+            this.dbListUtils = dbListUtils;
             this.position = position;
         }
 
@@ -319,7 +317,7 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListHolder> {
 
                     break;
                 case R.id.calendar_plus_list_icon:
-                    savePercentageToDb(view, position);
+                    saveProgressToDb(view, dbListUtils, position);
                     break;
                 case R.id.edit_list_icon_0:
                     startActivity(AddTask.class, flags, extra_names, extra_value);
@@ -346,20 +344,20 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListHolder> {
                     startActivity(AddTask.class, flags, extra_names, extra_value);
                     break;
                 case R.id.share_icon:
-                    showShareOptions();
+                    showShareOptions(dbListUtils);
                     break;
             }
         }
     }
 
-    private void showShareOptions() {
+    private void showShareOptions(DbListUtils dbListUtils) {
         Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
         sharingIntent.setType("text/plain");
-        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, getMessageToShare());
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, getMessageToShare(dbListUtils));
         context.startActivity(Intent.createChooser(sharingIntent,"Share using").setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
     }
 
-    private String getMessageToShare() {
+    private String getMessageToShare(DbListUtils dbListUtils) {
         String name = dbListUtils.getTaskName();
         Calendar cal = Calendar.getInstance();
         cal.setTime(dbListUtils.getTaskDate());
@@ -370,7 +368,7 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListHolder> {
         return "To Do: " + name + "\n" + "When: " + date + "@" + time + "\n" + "Note: " + note;
     }
 
-    private void savePercentageToDb(View view, int position) {
+    private void saveProgressToDb(View view, DbListUtils dbListUtils, int position) {
         File dbFile = new File(MainActivity.FILE_DIR, MainActivity.FILE_FOLDER + "/" + MainActivity.FILE_NAME);
         int progress = dbListUtils.getTaskProgress() + 1;
         String separator = "+";
@@ -381,7 +379,6 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListHolder> {
                 getDateString(cal,DATE_FORMAT_LONG) + separator + dbListUtils.getTaskTime() + separator +
                 dbListUtils.getTaskName() + separator + dbListUtils.getTaskNote() + separator + String.valueOf(progress);
 
-
         if(dbFile.exists()) {
             try {
                 //Clear file
@@ -391,7 +388,6 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListHolder> {
                 // Save everything at once
                 tasksList.set(position, replacement);
                 writeTaskInfoToFile(dbFile, tasksList, -1);
-
 
                 showMessageAddedPercent(view);
             }
