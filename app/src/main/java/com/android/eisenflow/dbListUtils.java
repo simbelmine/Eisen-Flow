@@ -80,11 +80,11 @@ public class DbListUtils {
     }
 
     public int getTaskProgress() {
-        if(splitStr.length > 5 && isNumeric(splitStr[5])) {
+        if(splitStr.length > 5 && isNumeric(splitStr[5]) && splitStr[5]!= null) {
             return Integer.parseInt(splitStr[5]);
         }
         // If there is no Note
-        else if(splitStr.length > 4 && "".equals(getTaskNote())) {
+        else if(splitStr.length > 4 && "".equals(getTaskNote()) && splitStr[4]!= null) {
             return Integer.parseInt(splitStr[4]);
         }
 
