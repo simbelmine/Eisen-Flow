@@ -31,11 +31,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -69,6 +73,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
     private EditText noteTxt;
     private CoordinatorLayout snakbarLayout;
     private Intent intent;
+    private DbListUtils dbListUtils;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -77,6 +82,9 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
         setContentView(R.layout.add_task_lyout);
 
         intent = getIntent();
+        String taskInfo = intent.getStringExtra(TasksListAdapter.EDIT_TASK_INFO_EXTRA);
+        dbListUtils = new DbListUtils(taskInfo);
+
         initLayout();
         populateLayout();
     }
@@ -127,11 +135,6 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
 
     private void populateLayout() {
         if(isEditMode(intent)) {
-            String taskInfo = intent.getStringExtra(TasksListAdapter.EDIT_TASK_INFO_EXTRA);
-            DbListUtils dbListUtils = new DbListUtils(taskInfo);
-
-            Log.v("eisen", "Task Info : " + taskInfo);
-            Log.v("eisen", "Task Priority : " + dbListUtils.getTaskPriority());
             setBgPriorityColor(dbListUtils.getTaskPriority());
             taskName.setText(dbListUtils.getTaskName());
             Calendar cal = Calendar.getInstance();
@@ -295,9 +298,6 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
     }
 
     private boolean isDataValid() {
-        String taskInfo = intent.getStringExtra(TasksListAdapter.EDIT_TASK_INFO_EXTRA);
-        DbListUtils dbListUtils = new DbListUtils(taskInfo);
-
         String name = taskName.getText().toString();
 
         if(isEditMode(intent) && priorityInt != dbListUtils.getTaskPriority()) {
@@ -313,7 +313,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
             return false;
         }
 
-        if(isEditMode(intent) && isDateTimeEdited(dbListUtils)) {
+        if(isEditMode(intent) && isDateTimeEdited()) {
             checkDateTime();
         }
         else if(!isEditMode(intent)) {
@@ -323,7 +323,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
         return true;
     }
 
-    private boolean isDateTimeEdited(DbListUtils dbListUtils) {
+    private boolean isDateTimeEdited() {
         Calendar cal = Calendar.getInstance();
         cal.setTime(dbListUtils.getTaskDate());
         String date = getDateString(cal);
@@ -426,19 +426,58 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
     private void saveTaskToDB() {
         File dbFolder = new File(MainActivity.FILE_DIR, MainActivity.FILE_FOLDER);
 
-        if(!dbFolder.exists()) {
-            if(!dbFolder.mkdirs()) {
-                Log.e("eisen", "FAILED to create DB Folder");
+        if(isEditMode(intent)) {
+            File dbFile = new File(MainActivity.FILE_DIR, MainActivity.FILE_FOLDER + "/" + MainActivity.FILE_NAME);
+            ArrayList<String> dbList = new ArrayList<>();
+
+            if(dbFile.exists()) {
+                try {
+                    BufferedReader bufferedReader = new BufferedReader(new FileReader(dbFile));
+                    String line;
+                    while((line = bufferedReader.readLine()) != null) {
+                        if(line.contains(dbListUtils.getTaskName())) {
+                            dbList.add(getWholeStringToSave());
+                        }
+                        else {
+                            dbList.add(line);
+                        }
+                    }
+                    bufferedReader.close();
+
+
+                    PrintWriter pw = new PrintWriter(dbFile);
+                    pw.close();
+                    for(String s : dbList) {
+                        FileWriter writer = new FileWriter(dbFile, true);
+                        writer.write(s);
+                        writer.write("\n");
+                        writer.flush();
+                        writer.close();
+                    }
+                }
+                catch (IOException ex) {
+                    Log.e("eisen", "Read DB File Exception : " + ex.getMessage());
+                }
+
+            }
+            else {
+                showAlertSnackbar("Data file doen\'t exist.");
             }
         }
-        try {
-            File dbFile = new File(MainActivity.FILE_DIR, MainActivity.FILE_FOLDER + "/" + MainActivity.FILE_NAME);
-            dbFile.createNewFile();
-            writeTaskInfoToFile(dbFile);
-        } catch (IOException ex) {
-            Log.e("eisen", "FAILED to create DB File");
+        else {
+            if (!dbFolder.exists()) {
+                if (!dbFolder.mkdirs()) {
+                    Log.e("eisen", "FAILED to create DB Folder");
+                }
+            }
+            try {
+                File dbFile = new File(MainActivity.FILE_DIR, MainActivity.FILE_FOLDER + "/" + MainActivity.FILE_NAME);
+                dbFile.createNewFile();
+                writeTaskInfoToFile(dbFile);
+            } catch (IOException ex) {
+                Log.e("eisen", "FAILED to create DB File");
+            }
         }
-
 
         returnResult(Activity.RESULT_OK);
         finish();
@@ -474,6 +513,10 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
         String name = taskName.getText().toString();
         String note = noteTxt.getText().toString();
         String separator = "+";
+        
+        if(isEditMode(intent) && priorityInt == -1) {
+            priorityInt = dbListUtils.getTaskPriority();
+        }
 
         return String.valueOf(priorityInt) + separator + date + separator + time + separator + name + separator + note;
     }

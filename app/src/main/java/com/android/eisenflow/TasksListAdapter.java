@@ -384,9 +384,11 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListHolder> {
 
         if(dbFile.exists()) {
             try {
+                //Clear file
                 PrintWriter pw = new PrintWriter(dbFile);
                 pw.close();
 
+                // Save everything at once
                 tasksList.set(position, replacement);
                 writeTaskInfoToFile(dbFile, tasksList, -1);
 

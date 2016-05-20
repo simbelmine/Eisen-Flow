@@ -195,7 +195,11 @@ public class MainActivity extends AppCompatActivity
                 BufferedReader bufferedReader = new BufferedReader(new FileReader(dbFile));
                 String line;
                 while((line = bufferedReader.readLine()) != null) {
-                    dbFileAsList.add(line);
+                    if(!"".equals(line)) {
+                        dbFileAsList.add(line);
+                    }
+                    else {
+                    }
                 }
                 bufferedReader.close();
             }

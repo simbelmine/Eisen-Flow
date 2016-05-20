@@ -31,7 +31,9 @@ public class DbListUtils {
     }
 
     private void splitDBString() {
-        splitStr = task.split("\\+");
+        if(task != null) {
+            splitStr = task.split("\\+");
+        }
     }
 
     public int getTaskPriority() {
