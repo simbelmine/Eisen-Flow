@@ -31,4 +31,8 @@
     <dimen name="card_under_icon_margin">25dp</dimen>
 
 
+    <dimen name="padding">6dp</dimen>
+    <dimen name="padding_tb">2dp</dimen>
+    <dimen name="txt_size">20sp</dimen>
+
 </resources>

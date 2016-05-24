@@ -26,4 +26,6 @@
     <color name="list_item_txt">#c9e3dc</color>
     <color name="list_item_bg">#ffebeff1</color>
     <color name="divider_border">#dde0e1</color>
+
+    <color name="event_color">#9C5F6E</color>
 </resources>
