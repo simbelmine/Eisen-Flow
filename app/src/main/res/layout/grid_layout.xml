@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<TableLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/events_tbl_grid"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     android:stretchColumns="*"
@@ -147,6 +149,7 @@
             android:src="@drawable/event_dot"
             android:layout_gravity="left"
             android:padding="@dimen/padding"
+            android:visibility="invisible"
             />
         <ImageView
             android:id="@+id/mon1"
@@ -158,6 +161,7 @@
             android:src="@drawable/event_dot"
             android:layout_gravity="left"
             android:padding="@dimen/padding"
+            android:visibility="invisible"
             />
         <ImageView
             android:id="@+id/tue1"
@@ -169,6 +173,7 @@
             android:src="@drawable/event_dot"
             android:layout_gravity="left"
             android:padding="@dimen/padding"
+            android:visibility="invisible"
             />
         <ImageView
             android:id="@+id/wed1"
@@ -180,6 +185,7 @@
             android:src="@drawable/event_dot"
             android:layout_gravity="left"
             android:padding="@dimen/padding"
+            android:visibility="invisible"
             />
         <ImageView
             android:id="@+id/thu1"
@@ -191,6 +197,7 @@
             android:src="@drawable/event_dot"
             android:layout_gravity="left"
             android:padding="@dimen/padding"
+            android:visibility="invisible"
             />
         <ImageView
             android:id="@+id/fri1"
@@ -202,6 +209,7 @@
             android:src="@drawable/event_dot"
             android:layout_gravity="left"
             android:padding="@dimen/padding"
+            android:visibility="invisible"
             />
         <ImageView
             android:id="@+id/sat1"
@@ -213,6 +221,7 @@
             android:src="@drawable/event_dot"
             android:layout_gravity="left"
             android:padding="@dimen/padding"
+            android:visibility="invisible"
             />
     </TableRow>
 
@@ -230,6 +239,7 @@
             android:src="@drawable/event_dot"
             android:layout_gravity="left"
             android:padding="@dimen/padding"
+            android:visibility="invisible"
             />
         <ImageView
             android:id="@+id/mon2"
@@ -241,6 +251,7 @@
             android:src="@drawable/event_dot"
             android:layout_gravity="left"
             android:padding="@dimen/padding"
+            android:visibility="invisible"
             />
         <ImageView
             android:id="@+id/tue2"
@@ -252,6 +263,7 @@
             android:src="@drawable/event_dot"
             android:layout_gravity="left"
             android:padding="@dimen/padding"
+            android:visibility="invisible"
             />
         <ImageView
             android:id="@+id/wed2"
@@ -263,6 +275,7 @@
             android:src="@drawable/event_dot"
             android:layout_gravity="left"
             android:padding="@dimen/padding"
+            android:visibility="invisible"
             />
         <ImageView
             android:id="@+id/thu2"
@@ -274,6 +287,7 @@
             android:src="@drawable/event_dot"
             android:layout_gravity="left"
             android:padding="@dimen/padding"
+            android:visibility="invisible"
             />
         <ImageView
             android:id="@+id/fri2"
@@ -285,6 +299,7 @@
             android:src="@drawable/event_dot"
             android:layout_gravity="left"
             android:padding="@dimen/padding"
+            android:visibility="invisible"
             />
         <ImageView
             android:id="@+id/sat2"
@@ -296,6 +311,7 @@
             android:src="@drawable/event_dot"
             android:layout_gravity="left"
             android:padding="@dimen/padding"
+            android:visibility="invisible"
             />
     </TableRow>
 
@@ -313,6 +329,7 @@
             android:src="@drawable/event_dot"
             android:layout_gravity="left"
             android:padding="@dimen/padding"
+            android:visibility="invisible"
             />
         <ImageView
             android:id="@+id/mon3"
@@ -324,6 +341,7 @@
             android:src="@drawable/event_dot"
             android:layout_gravity="left"
             android:padding="@dimen/padding"
+            android:visibility="invisible"
             />
         <ImageView
             android:id="@+id/tue3"
@@ -335,6 +353,7 @@
             android:src="@drawable/event_dot"
             android:layout_gravity="left"
             android:padding="@dimen/padding"
+            android:visibility="invisible"
             />
         <ImageView
             android:id="@+id/wed3"
@@ -346,6 +365,7 @@
             android:src="@drawable/event_dot"
             android:layout_gravity="left"
             android:padding="@dimen/padding"
+            android:visibility="invisible"
             />
         <ImageView
             android:id="@+id/thu3"
@@ -357,6 +377,7 @@
             android:src="@drawable/event_dot"
             android:layout_gravity="left"
             android:padding="@dimen/padding"
+            android:visibility="invisible"
             />
         <ImageView
             android:id="@+id/fri3"
@@ -368,6 +389,7 @@
             android:src="@drawable/event_dot"
             android:layout_gravity="left"
             android:padding="@dimen/padding"
+            android:visibility="invisible"
             />
         <ImageView
             android:id="@+id/sat3"
@@ -379,6 +401,7 @@
             android:src="@drawable/event_dot"
             android:layout_gravity="left"
             android:padding="@dimen/padding"
+            android:visibility="invisible"
             />
     </TableRow>
 
@@ -396,6 +419,7 @@
             android:src="@drawable/event_dot"
             android:layout_gravity="left"
             android:padding="@dimen/padding"
+            android:visibility="invisible"
             />
         <ImageView
             android:id="@+id/mon4"
@@ -407,6 +431,7 @@
             android:src="@drawable/event_dot"
             android:layout_gravity="left"
             android:padding="@dimen/padding"
+            android:visibility="invisible"
             />
         <ImageView
             android:id="@+id/tue4"
@@ -418,6 +443,7 @@
             android:src="@drawable/event_dot"
             android:layout_gravity="left"
             android:padding="@dimen/padding"
+            android:visibility="invisible"
             />
         <ImageView
             android:id="@+id/wed4"
@@ -429,6 +455,7 @@
             android:src="@drawable/event_dot"
             android:layout_gravity="left"
             android:padding="@dimen/padding"
+            android:visibility="invisible"
             />
         <ImageView
             android:id="@+id/thu4"
@@ -440,6 +467,7 @@
             android:src="@drawable/event_dot"
             android:layout_gravity="left"
             android:padding="@dimen/padding"
+            android:visibility="invisible"
             />
         <ImageView
             android:id="@+id/fri4"
@@ -451,6 +479,7 @@
             android:src="@drawable/event_dot"
             android:layout_gravity="left"
             android:padding="@dimen/padding"
+            android:visibility="invisible"
             />
         <ImageView
             android:id="@+id/sat4"
@@ -462,6 +491,7 @@
             android:src="@drawable/event_dot"
             android:layout_gravity="left"
             android:padding="@dimen/padding"
+            android:visibility="invisible"
             />
     </TableRow>
 
@@ -479,6 +509,7 @@
             android:src="@drawable/event_dot"
             android:layout_gravity="left"
             android:padding="@dimen/padding"
+            android:visibility="invisible"
             />
         <ImageView
             android:id="@+id/mont5"
@@ -490,6 +521,7 @@
             android:src="@drawable/event_dot"
             android:layout_gravity="left"
             android:padding="@dimen/padding"
+            android:visibility="invisible"
             />
         <ImageView
             android:id="@+id/tue5"
@@ -501,6 +533,7 @@
             android:src="@drawable/event_dot"
             android:layout_gravity="left"
             android:padding="@dimen/padding"
+            android:visibility="invisible"
             />
         <ImageView
             android:id="@+id/wed5"
@@ -512,6 +545,7 @@
             android:src="@drawable/event_dot"
             android:layout_gravity="left"
             android:padding="@dimen/padding"
+            android:visibility="invisible"
             />
         <ImageView
             android:id="@+id/thu5"
@@ -523,6 +557,7 @@
             android:src="@drawable/event_dot"
             android:layout_gravity="left"
             android:padding="@dimen/padding"
+            android:visibility="invisible"
             />
         <ImageView
             android:id="@+id/fri5"
@@ -534,6 +569,7 @@
             android:src="@drawable/event_dot"
             android:layout_gravity="left"
             android:padding="@dimen/padding"
+            android:visibility="invisible"
             />
         <ImageView
             android:id="@+id/sat5"
@@ -545,6 +581,7 @@
             android:src="@drawable/event_dot"
             android:layout_gravity="left"
             android:padding="@dimen/padding"
+            android:visibility="invisible"
             />
     </TableRow>
 

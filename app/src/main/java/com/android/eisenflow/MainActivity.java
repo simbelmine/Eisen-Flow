@@ -21,6 +21,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CalendarView;
+import android.widget.TableLayout;
 import android.widget.TextView;
 
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
@@ -56,6 +57,8 @@ public class MainActivity extends AppCompatActivity
     private SlidingUpPanelLayout slidingLayout;
     private TextView dateSlideTxt;
     private Date date;
+    private ArrayList<String> tasksList;
+    private TableLayout eventsTblGrid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,6 +109,8 @@ public class MainActivity extends AppCompatActivity
         // Date Day Txt on slide
         dateSlideTxt = (TextView) findViewById(R.id.day_date_txt);
         dateSlideTxt.setText(getDateTxt(date));
+
+        eventsTblGrid = (TableLayout) findViewById(R.id.events_tbl_grid);
     }
 
     private String getMonthName() {
@@ -127,7 +132,7 @@ public class MainActivity extends AppCompatActivity
 
         initTaskAdapters();
 //        setTasksLists();
-        ArrayList<String> tasksList = getTasksList();
+        tasksList = getTasksList();
         if(tasksList != null) {
             quadrantOneAdapter.setList(getTasksList());
         }
@@ -136,8 +141,6 @@ public class MainActivity extends AppCompatActivity
         }
 
         setTaskAdapters();
-
-
     }
 
     private void initLayoutManagers() {
@@ -248,6 +251,42 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    private void populateEventsTblGrid(int month) {
+        DbListUtils dbListUtils;
+        if(tasksList!= null) {
+            for(String s : tasksList) {
+                dbListUtils = new DbListUtils(s);
+                Date date = dbListUtils.getTaskDate();
+
+                Log.v("eisen", getDateTxt(date));
+                Log.v("eisen", "Date: " + getDayOfMonth(date) + "  Week day: " + (getDayOfWeek(date)-1));
+                Log.v("eisen", "Week of Month : " + getWeekOfMonth(date));
+
+                StringBuffer strBuff = new StringBuffer();
+                strBuff.append(String.valueOf((getDayOfWeek(date)-1)));
+                strBuff.append(String.valueOf(getWeekOfMonth(date)));
+
+                if(month == getMonth(date)) {
+                    setEventVisible(strBuff.toString());
+                }
+                else {
+                    setEventInvisible(strBuff.toString());
+                }
+            }
+        }
+    }
+
+    private void setEventVisible(String eventShortStr) {
+        View event_dot = eventsTblGrid.findViewWithTag(eventShortStr);
+        event_dot.setVisibility(View.VISIBLE);
+    }
+
+    private void setEventInvisible(String eventShortStr) {
+        View event_dot = eventsTblGrid.findViewWithTag(eventShortStr);
+        event_dot.setVisibility(View.INVISIBLE);
+    }
+
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -327,6 +366,8 @@ public class MainActivity extends AppCompatActivity
     public void onSelectedDayChange(CalendarView calendarView, int year, int month, int day_of_month) {
         int date_day = getDayOfMonth(date);
 
+        populateEventsTblGrid(month);
+
         if(day_of_month != date_day) {
             // Update Slide Date Text
             updateSlideText(sequenceToDate(year, month, day_of_month), R.color.gray);
@@ -340,11 +381,32 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    private int getMonth(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+
+        return cal.get(Calendar.MONTH);
+    }
+
     private int getDayOfMonth(Date date) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
 
         return cal.get(Calendar.DAY_OF_MONTH);
+    }
+
+    private int getDayOfWeek(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+
+        return cal.get(Calendar.DAY_OF_WEEK);
+    }
+
+    private int getWeekOfMonth(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+
+        return cal.get(Calendar.WEEK_OF_MONTH);
     }
 
     private Date sequenceToDate(int year, int month, int day_of_month) {
