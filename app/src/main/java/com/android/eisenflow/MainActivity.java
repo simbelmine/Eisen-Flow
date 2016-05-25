@@ -40,8 +40,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener,
@@ -67,6 +69,7 @@ public class MainActivity extends AppCompatActivity
     private Date date;
     private ArrayList<String> tasksList;
     private ArrayList<CalendarDay> eventDates;
+    private ArrayList<CalendarObject> eventTaskList;
 
 
     private MaterialCalendarView materialCalendarView;
@@ -84,7 +87,8 @@ public class MainActivity extends AppCompatActivity
         initLayout();
         feedTaskQuadrants();
 
-        eventDates = getListOfCalendarDates();
+        eventDates = new ArrayList<>();
+        eventTaskList = getListOfCalendarDates();
         materialCalendarView.addDecorators(
                 new EventDecorator(getResources().getColor(R.color.event_color), eventDates),
                 new HighlightWeekendsDecorator()
@@ -271,18 +275,8 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        if (id == R.id.nav_view_all) {
+            feedTaskQuadrants();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -397,41 +391,50 @@ public class MainActivity extends AppCompatActivity
         updateSlideText(date, R.color.colorAccent);
     }
 
-    private ArrayList<CalendarDay> getListOfCalendarDates() {
-        ArrayList<CalendarDay> dates = new ArrayList<>();
+    private ArrayList<CalendarObject> getListOfCalendarDates() {
+        ArrayList<CalendarObject> dates = new ArrayList<>();
         DbListUtils dbListUtils;
         CalendarDay day;
         Calendar calendar = Calendar.getInstance();
 
-        for(String s : tasksList) {
-            dbListUtils = new DbListUtils(s);
+        for(String strTask : tasksList) {
+            dbListUtils = new DbListUtils(strTask);
             calendar.setTime(dbListUtils.getTaskDate());
+
             day = CalendarDay.from(calendar);
-            dates.add(day);
+
+            dates.add(new CalendarObject(day, strTask));
+            eventDates.add(day);
         }
 
         return dates;
     }
 
+    private void showCurrentTasksFromEvent(CalendarDay pressedCalendarDate) {
+        ArrayList<String> currEvents = new ArrayList<>();
+        for(CalendarObject co : eventTaskList) {
+            if(pressedCalendarDate.equals(co.getCalendarDay())) {
+                currEvents.add(co.getTaskStr());
+            }
+        }
+
+        quadrantOneAdapter.setList(currEvents);
+        quadrantOneAdapter.notifyDataSetChanged();
+    }
+
     @Override
-    public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay calendarDate, boolean selected) {
+    public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay pressedCalendarDate, boolean selected) {
         CalendarDay currentDate = CalendarDay.from(Calendar.getInstance());
 
-        if (!calendarDate.equals(currentDate)) {
-            updateSlideText(calendarDate.getDate(), R.color.gray);
+        if (!pressedCalendarDate.equals(currentDate)) {
+            updateSlideText(pressedCalendarDate.getDate(), R.color.gray);
         }
         else
         {
             updateSlideText(currentDate.getDate(), R.color.colorAccent);
         }
 
-
-        if(eventDates.contains(calendarDate)) {
-            Log.v("eisen", "EVENT on this Date");
-        }
-        else {
-            Log.v("eisen", "NO EVENT on this Date");
-        }
+        showCurrentTasksFromEvent(pressedCalendarDate);
     }
 
     @Override
