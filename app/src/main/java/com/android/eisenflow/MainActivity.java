@@ -66,6 +66,7 @@ public class MainActivity extends AppCompatActivity
     private TextView dateSlideTxt;
     private Date date;
     private ArrayList<String> tasksList;
+    private ArrayList<CalendarDay> eventDates;
 
 
     private MaterialCalendarView materialCalendarView;
@@ -83,8 +84,9 @@ public class MainActivity extends AppCompatActivity
         initLayout();
         feedTaskQuadrants();
 
+        eventDates = getListOfCalendarDates();
         materialCalendarView.addDecorators(
-                new EventDecorator(getResources().getColor(R.color.event_color), getListOfCalendarDates()),
+                new EventDecorator(getResources().getColor(R.color.event_color), eventDates),
                 new HighlightWeekendsDecorator()
         );
     }
@@ -395,7 +397,7 @@ public class MainActivity extends AppCompatActivity
         updateSlideText(date, R.color.colorAccent);
     }
 
-    private List<CalendarDay> getListOfCalendarDates() {
+    private ArrayList<CalendarDay> getListOfCalendarDates() {
         ArrayList<CalendarDay> dates = new ArrayList<>();
         DbListUtils dbListUtils;
         CalendarDay day;
@@ -413,22 +415,22 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay calendarDate, boolean selected) {
-        int date_day = getDayOfMonth(date);
-        int day_of_month = calendarDate.getDay();
-        int month = calendarDate.getMonth();
-        int year = calendarDate.getYear();
+        CalendarDay currentDate = CalendarDay.from(Calendar.getInstance());
+
+        if (!calendarDate.equals(currentDate)) {
+            updateSlideText(calendarDate.getDate(), R.color.gray);
+        }
+        else
+        {
+            updateSlideText(currentDate.getDate(), R.color.colorAccent);
+        }
 
 
-        if(day_of_month != date_day) {
-            // Update Slide Date Text
-            updateSlideText(sequenceToDate(year, month, day_of_month), R.color.gray);
-
-            // Update Main Container
-            // # To Do .....
+        if(eventDates.contains(calendarDate)) {
+            Log.v("eisen", "EVENT on this Date");
         }
         else {
-            // Update Slide Date Text
-            updateSlideText(calendarDate.getDate(), R.color.colorAccent);
+            Log.v("eisen", "NO EVENT on this Date");
         }
     }
 
