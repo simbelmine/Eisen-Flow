@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -24,6 +25,12 @@ import android.widget.CalendarView;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
+import com.android.eisenflow.decorators.EventDecorator;
+import com.android.eisenflow.decorators.HighlightWeekendsDecorator;
+import com.prolificinteractive.materialcalendarview.CalendarDay;
+import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
+import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
+import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.io.BufferedReader;
@@ -37,7 +44,9 @@ import java.util.List;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, CalendarView.OnDateChangeListener {
+        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener,
+        OnDateSelectedListener, OnMonthChangedListener
+{
 
     public static final int NEEDED_API_LEVEL = 22;
     public static final String MAIN_PREFS = "MainSharedPreferences";
@@ -53,12 +62,13 @@ public class MainActivity extends AppCompatActivity
     private LinearLayoutManager quadrantOneManager;
     private TasksListAdapter quadrantOneAdapter;
     private TextView month;
-    private CalendarView calendar;
     private SlidingUpPanelLayout slidingLayout;
     private TextView dateSlideTxt;
     private Date date;
     private ArrayList<String> tasksList;
-    private TableLayout eventsTblGrid;
+
+
+    private MaterialCalendarView materialCalendarView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +82,11 @@ public class MainActivity extends AppCompatActivity
 
         initLayout();
         feedTaskQuadrants();
+
+        materialCalendarView.addDecorators(
+                new EventDecorator(getResources().getColor(R.color.event_color), getListOfCalendarDates()),
+                new HighlightWeekendsDecorator()
+        );
     }
 
     private void initLayout() {
@@ -99,18 +114,17 @@ public class MainActivity extends AppCompatActivity
         // RecyclerView init
         quadrantOneView = (RecyclerView) findViewById(R.id.tasks_recyclerview);
         quadrantOneView.setHasFixedSize(true);
-        // Calendar View
-        calendar = (CalendarView) findViewById(R.id.expandable_calendar);
-        calendar.setOnDateChangeListener(this);
         // Sliding Layout
         slidingLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
-        // Current Date
-        date = new Date(calendar.getDate());
         // Date Day Txt on slide
         dateSlideTxt = (TextView) findViewById(R.id.day_date_txt);
+        date = Calendar.getInstance().getTime();
         dateSlideTxt.setText(getDateTxt(date));
 
-        eventsTblGrid = (TableLayout) findViewById(R.id.events_tbl_grid);
+        materialCalendarView = (MaterialCalendarView) findViewById(R.id.materialCalendarView);
+        setCurrentDate();
+        materialCalendarView.setOnDateChangedListener(this);
+        materialCalendarView.setOnMonthChangedListener(this);
     }
 
     private String getMonthName() {
@@ -153,39 +167,6 @@ public class MainActivity extends AppCompatActivity
 
     private void initTaskAdapters() {
         quadrantOneAdapter = new TasksListAdapter(this, getApplicationContext());
-    }
-
-    private void setTasksLists() {
-        List<String> rowListItem = new ArrayList<>();
-        rowListItem.add("Finalize logo mock up");
-        rowListItem.add("Make a list of urgent tasks");
-        rowListItem.add("Spend 30 mins brainstorming");
-        rowListItem.add("Email Jay and Rob to schedule lunch meeting");
-        rowListItem.add("Finalize logo mock up");
-        rowListItem.add("Make a list of urgent tasks");
-        rowListItem.add("Spend 30 mins brainstorming");
-        rowListItem.add("Email Jay and Rob to schedule lunch meeting");
-        rowListItem.add("Finalize logo mock up");
-        rowListItem.add("Make a list of urgent tasks");
-        rowListItem.add("Spend 30 mins brainstorming");
-        rowListItem.add("Email Jay and Rob to schedule lunch meeting");
-        rowListItem.add("Finalize logo mock up");
-        rowListItem.add("Make a list of urgent tasks");
-        rowListItem.add("Spend 30 mins brainstorming");
-        rowListItem.add("Email Jay and Rob to schedule lunch meeting");
-        rowListItem.add("Finalize logo mock up");
-        rowListItem.add("Make a list of urgent tasks");
-        rowListItem.add("Spend 30 mins brainstorming");
-        rowListItem.add("Email Jay and Rob to schedule lunch meeting");
-        rowListItem.add("Finalize logo mock up");
-        rowListItem.add("Make a list of urgent tasks");
-        rowListItem.add("Spend 30 mins brainstorming");
-        rowListItem.add("Email Jay and Rob to schedule lunch meeting");
-        rowListItem.add("Finalize logo mock up");
-        rowListItem.add("Make a list of urgent tasks");
-        rowListItem.add("Spend 30 mins brainstorming");
-        rowListItem.add("Email Jay and Rob to schedule lunch meeting");
-        quadrantOneAdapter.setList(rowListItem);
     }
 
     private ArrayList<String> getTasksList() {
@@ -249,43 +230,6 @@ public class MainActivity extends AppCompatActivity
         quadrantOneAdapter.setRecyclerView(quadrantOneView);
         quadrantOneView.setAdapter(quadrantOneAdapter);
     }
-
-
-    private void populateEventsTblGrid(int month) {
-        DbListUtils dbListUtils;
-        if(tasksList!= null) {
-            for(String s : tasksList) {
-                dbListUtils = new DbListUtils(s);
-                Date date = dbListUtils.getTaskDate();
-
-                Log.v("eisen", getDateTxt(date));
-                Log.v("eisen", "Date: " + getDayOfMonth(date) + "  Week day: " + (getDayOfWeek(date)-1));
-                Log.v("eisen", "Week of Month : " + getWeekOfMonth(date));
-
-                StringBuffer strBuff = new StringBuffer();
-                strBuff.append(String.valueOf((getDayOfWeek(date)-1)));
-                strBuff.append(String.valueOf(getWeekOfMonth(date)));
-
-                if(month == getMonth(date)) {
-                    setEventVisible(strBuff.toString());
-                }
-                else {
-                    setEventInvisible(strBuff.toString());
-                }
-            }
-        }
-    }
-
-    private void setEventVisible(String eventShortStr) {
-        View event_dot = eventsTblGrid.findViewWithTag(eventShortStr);
-        event_dot.setVisibility(View.VISIBLE);
-    }
-
-    private void setEventInvisible(String eventShortStr) {
-        View event_dot = eventsTblGrid.findViewWithTag(eventShortStr);
-        event_dot.setVisibility(View.INVISIBLE);
-    }
-
 
     @Override
     public void onBackPressed() {
@@ -355,29 +299,9 @@ public class MainActivity extends AppCompatActivity
             }
             case R.id.toolbar_month: {
                 // Return Calendar to Current Date
-                calendar.setDate(date.getTime());
-                updateSlideText(date, R.color.colorAccent);
+                setCurrentDate();
                 break;
             }
-        }
-    }
-
-    @Override
-    public void onSelectedDayChange(CalendarView calendarView, int year, int month, int day_of_month) {
-        int date_day = getDayOfMonth(date);
-
-        populateEventsTblGrid(month);
-
-        if(day_of_month != date_day) {
-            // Update Slide Date Text
-            updateSlideText(sequenceToDate(year, month, day_of_month), R.color.gray);
-
-            // Update Main Container
-            // # To Do .....
-        }
-        else {
-            // Update Slide Date Text
-            updateSlideText(date, R.color.colorAccent);
         }
     }
 
@@ -463,5 +387,53 @@ public class MainActivity extends AppCompatActivity
         TextView text = (TextView) snackbarView.findViewById(android.support.design.R.id.snackbar_text);
         text.setTextColor(getResources().getColor(R.color.firstQuadrant));
         snackbar.show();
+    }
+
+    private void setCurrentDate() {
+        materialCalendarView.setCurrentDate(Calendar.getInstance());
+        materialCalendarView.setSelectedDate(Calendar.getInstance());
+        updateSlideText(date, R.color.colorAccent);
+    }
+
+    private List<CalendarDay> getListOfCalendarDates() {
+        ArrayList<CalendarDay> dates = new ArrayList<>();
+        DbListUtils dbListUtils;
+        CalendarDay day;
+        Calendar calendar = Calendar.getInstance();
+
+        for(String s : tasksList) {
+            dbListUtils = new DbListUtils(s);
+            calendar.setTime(dbListUtils.getTaskDate());
+            day = CalendarDay.from(calendar);
+            dates.add(day);
+        }
+
+        return dates;
+    }
+
+    @Override
+    public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay calendarDate, boolean selected) {
+        int date_day = getDayOfMonth(date);
+        int day_of_month = calendarDate.getDay();
+        int month = calendarDate.getMonth();
+        int year = calendarDate.getYear();
+
+
+        if(day_of_month != date_day) {
+            // Update Slide Date Text
+            updateSlideText(sequenceToDate(year, month, day_of_month), R.color.gray);
+
+            // Update Main Container
+            // # To Do .....
+        }
+        else {
+            // Update Slide Date Text
+            updateSlideText(calendarDate.getDate(), R.color.colorAccent);
+        }
+    }
+
+    @Override
+    public void onMonthChanged(MaterialCalendarView widget, CalendarDay date) {
+
     }
 }

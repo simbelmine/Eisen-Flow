@@ -76,17 +76,18 @@
                 android:background="@drawable/tile_bg"
                 />
             <FrameLayout
+                android:id="@+id/calendar_frame_layout"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1.7">
-                <CalendarView
-                    android:id="@+id/expandable_calendar"
+                <com.prolificinteractive.materialcalendarview.MaterialCalendarView
+                    android:id="@+id/materialCalendarView"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
+                    app:mcv_selectionColor="@color/colorAccent"
+                    app:mcv_arrowColor="@color/colorPrimaryDark"
+                    sothree:mcv_tileSize="45dp"
                     />
-
-                <include layout="@layout/grid_layout"/>
-
             </FrameLayout>
             <RelativeLayout
                 android:layout_width="match_parent"
