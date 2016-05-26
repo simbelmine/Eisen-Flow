@@ -1,7 +1,9 @@
 package com.android.eisenflow;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
@@ -78,16 +80,23 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-
+        
         initLayout();
-        feedTaskQuadrants();
 
-        eventDates = new ArrayList<>();
-        eventsTaskList = getListOfCalendarDates();
-        materialCalendarView.addDecorators(
-                new EventDecorator(getResources().getColor(R.color.event_color), eventDates),
-                new HighlightWeekendsDecorator()
-        );
+        PermissionHelper permissionHelper = new PermissionHelper(this);
+        if(permissionHelper.isBiggerOrEqualToAPI23()) {
+            String[] permissions = new String[] {
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+            };
+
+            permissionHelper.checkForPermissions(permissions);
+            if(permissionHelper.isAllPermissionsGranted) {
+                onPermissionGranted();
+            }
+        }
+        else {
+           onPermissionGranted();
+        }
     }
 
     private void initLayout() {
@@ -133,6 +142,18 @@ public class MainActivity extends AppCompatActivity
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
 
+    }
+
+
+    private void onPermissionGranted() {
+        feedTaskQuadrants();
+
+        eventDates = new ArrayList<>();
+        eventsTaskList = getListOfCalendarDates();
+        materialCalendarView.addDecorators(
+                new EventDecorator(getResources().getColor(R.color.event_color), eventDates),
+                new HighlightWeekendsDecorator()
+        );
     }
 
     private String getMonthName() {
@@ -466,5 +487,16 @@ public class MainActivity extends AppCompatActivity
 
         feedTaskQuadrants();
         eventsTaskList = getListOfCalendarDates();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case PermissionHelper.REQUEST_CODE_ASK_PERMISSIONS:
+                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    onPermissionGranted();
+                }
+                break;
+        }
     }
 }
