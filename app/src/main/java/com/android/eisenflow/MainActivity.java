@@ -12,6 +12,7 @@ import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -42,7 +43,7 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener,
-        OnDateSelectedListener, OnMonthChangedListener
+        OnDateSelectedListener, OnMonthChangedListener, SwipeRefreshLayout.OnRefreshListener
 {
 
     public static final int NEEDED_API_LEVEL = 22;
@@ -57,7 +58,7 @@ public class MainActivity extends AppCompatActivity
     private NavigationView navigationView;
     private RecyclerView quadrantOneView;
     private LinearLayoutManager quadrantOneManager;
-    private TasksListAdapter quadrantOneAdapter;
+    private TasksListAdapter tasksAdapter;
     private TextView month;
     private SlidingUpPanelLayout slidingLayout;
     private TextView dateSlideTxt;
@@ -65,9 +66,8 @@ public class MainActivity extends AppCompatActivity
     private ArrayList<String> tasksList;
     private ArrayList<CalendarDay> eventDates;
     private ArrayList<CalendarObject> eventsTaskList;
-
-
     private MaterialCalendarView materialCalendarView;
+    private SwipeRefreshLayout pullToRefreshContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,6 +126,13 @@ public class MainActivity extends AppCompatActivity
         setCurrentDate();
         materialCalendarView.setOnDateChangedListener(this);
         materialCalendarView.setOnMonthChangedListener(this);
+        pullToRefreshContainer = (SwipeRefreshLayout) findViewById(R.id.pull_to_refresh_container);
+        pullToRefreshContainer.setOnRefreshListener(this);
+        pullToRefreshContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+
     }
 
     private String getMonthName() {
@@ -149,13 +156,14 @@ public class MainActivity extends AppCompatActivity
 //        setTasksLists();
         tasksList = getTasksList();
         if(tasksList != null) {
-            quadrantOneAdapter.setList(getTasksList());
+            tasksAdapter.setList(getTasksList());
         }
         else {
             showAlertSnackbar("No tasks yet to display.");
         }
 
         setTaskAdapters();
+        pullToRefreshContainer.setRefreshing(false);
     }
 
     private void initLayoutManagers() {
@@ -167,7 +175,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void initTaskAdapters() {
-        quadrantOneAdapter = new TasksListAdapter(this, getApplicationContext());
+        tasksAdapter = new TasksListAdapter(this, getApplicationContext());
     }
 
     private ArrayList<String> getTasksList() {
@@ -228,8 +236,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void setTaskAdapters() {
-        quadrantOneAdapter.setRecyclerView(quadrantOneView);
-        quadrantOneView.setAdapter(quadrantOneAdapter);
+        tasksAdapter.setRecyclerView(quadrantOneView);
+        quadrantOneView.setAdapter(tasksAdapter);
     }
 
     @Override
@@ -358,8 +366,8 @@ public class MainActivity extends AppCompatActivity
                 boolean result = data.getBooleanExtra("result", false);
 
                 if(result) {
-                    quadrantOneAdapter.addItem(getLastRowFromDb());
-                    quadrantOneAdapter.notifyDataSetChanged();
+                    tasksAdapter.addItem(getLastRowFromDb());
+                    tasksAdapter.notifyDataSetChanged();
                 }
             }
             if (resultCode == Activity.RESULT_CANCELED) {
@@ -413,8 +421,8 @@ public class MainActivity extends AppCompatActivity
             }
         }
 
-        quadrantOneAdapter.setList(currEvents);
-        quadrantOneAdapter.notifyDataSetChanged();
+        tasksAdapter.setList(currEvents);
+        tasksAdapter.notifyDataSetChanged();
     }
 
     private boolean isEventDate(CalendarDay pressedCalendarDate) {
@@ -449,5 +457,14 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onMonthChanged(MaterialCalendarView widget, CalendarDay date) {
 
+    }
+
+    @Override
+    public void onRefresh() {
+        tasksList.clear();
+        tasksAdapter.notifyDataSetChanged();
+
+        feedTaskQuadrants();
+        eventsTaskList = getListOfCalendarDates();
     }
 }
