@@ -21,8 +21,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.CalendarView;
-import android.widget.TableLayout;
 import android.widget.TextView;
 
 import com.android.eisenflow.decorators.EventDecorator;
@@ -40,10 +38,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener,
@@ -69,7 +64,7 @@ public class MainActivity extends AppCompatActivity
     private Date date;
     private ArrayList<String> tasksList;
     private ArrayList<CalendarDay> eventDates;
-    private ArrayList<CalendarObject> eventTaskList;
+    private ArrayList<CalendarObject> eventsTaskList;
 
 
     private MaterialCalendarView materialCalendarView;
@@ -88,7 +83,7 @@ public class MainActivity extends AppCompatActivity
         feedTaskQuadrants();
 
         eventDates = new ArrayList<>();
-        eventTaskList = getListOfCalendarDates();
+        eventsTaskList = getListOfCalendarDates();
         materialCalendarView.addDecorators(
                 new EventDecorator(getResources().getColor(R.color.event_color), eventDates),
                 new HighlightWeekendsDecorator()
@@ -412,7 +407,7 @@ public class MainActivity extends AppCompatActivity
 
     private void showCurrentTasksFromEvent(CalendarDay pressedCalendarDate) {
         ArrayList<String> currEvents = new ArrayList<>();
-        for(CalendarObject co : eventTaskList) {
+        for(CalendarObject co : eventsTaskList) {
             if(pressedCalendarDate.equals(co.getCalendarDay())) {
                 currEvents.add(co.getTaskStr());
             }
@@ -420,6 +415,16 @@ public class MainActivity extends AppCompatActivity
 
         quadrantOneAdapter.setList(currEvents);
         quadrantOneAdapter.notifyDataSetChanged();
+    }
+
+    private boolean isEventDate(CalendarDay pressedCalendarDate) {
+        for(CalendarObject co : eventsTaskList) {
+            if(pressedCalendarDate.equals(co.getCalendarDay())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     @Override
@@ -435,6 +440,10 @@ public class MainActivity extends AppCompatActivity
         }
 
         showCurrentTasksFromEvent(pressedCalendarDate);
+
+        if(isEventDate(pressedCalendarDate)) {
+            slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+        }
     }
 
     @Override
