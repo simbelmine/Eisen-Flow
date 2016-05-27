@@ -3,6 +3,7 @@ package com.android.eisenflow;
 import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
@@ -26,6 +27,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CalendarView;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -74,6 +76,9 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
     private CoordinatorLayout snakbarLayout;
     private Intent intent;
     private DbListUtils dbListUtils;
+    private ImageView arrow_calendar;
+    private ImageView arrow_time;
+    private ImageView arrow_note;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -131,6 +136,10 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
         taskName = (TextView) findViewById(R.id.task_name);
         noteTxt = (EditText) findViewById(R.id.note_txt);
         snakbarLayout = (CoordinatorLayout) findViewById(R.id.snackbarCoordinatorLayout);
+
+        arrow_calendar = (ImageView) findViewById(R.id.arrow_cal);
+        arrow_time = (ImageView) findViewById(R.id.arrow_time);
+        arrow_note = (ImageView) findViewById(R.id.arrow_note);
     }
 
     private void populateLayout() {
@@ -206,13 +215,15 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
             case R.id.add_task_date_txt:
                 hideSoftKbd();
                 if(calendarLayout.getVisibility() == View.VISIBLE) {
-                    viewExpandCollapse(calendarLayout, false);
+                    viewExpand(calendarLayout, false);
+                    setArrowAnimation(arrow_calendar, false);
                 }
                 else {
                     timePickerLayout.setVisibility(View.GONE);
                     noteEditLayout.setVisibility(View.GONE);
                     currDateTxt.setVisibility(View.VISIBLE);
-                    viewExpandCollapse(calendarLayout, true);
+                    viewExpand(calendarLayout, true);
+                    setArrowAnimation(arrow_calendar, true);
                 }
                 break;
             case R.id.add_task_time:
@@ -225,25 +236,29 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
                 }
 
                 if(timePickerLayout.getVisibility() == View.VISIBLE) {
-                    viewExpandCollapse(timePickerLayout, false);
+                    viewExpand(timePickerLayout, false);
+                    setArrowAnimation(arrow_time, false);
                 }
                 else {
                     calendarLayout.setVisibility(View.GONE);
                     currDateTxt.setVisibility(View.GONE);
                     noteEditLayout.setVisibility(View.GONE);
-                    viewExpandCollapse(timePickerLayout, true);
+                    viewExpand(timePickerLayout, true);
+                    setArrowAnimation(arrow_time, true);
                 }
                 break;
             case R.id.note_layout:
                 if(noteEditLayout.getVisibility() == View.VISIBLE) {
                     hideSoftKbd();
-                    viewExpandCollapse(noteEditLayout, false);
+                    viewExpand(noteEditLayout, false);
+                    setArrowAnimation(arrow_note, false);
                 }
                 else {
                     calendarLayout.setVisibility(View.GONE);
                     timePickerLayout.setVisibility(View.GONE);
-                    viewExpandCollapse(noteEditLayout, true);
+                    viewExpand(noteEditLayout, true);
                     setFocusToView(view);
+                    setArrowAnimation(arrow_note, true);
                 }
                 break;
             case R.id.curr_date_txt:
@@ -534,7 +549,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
     }
 
 
-    private void viewExpandCollapse(View view, boolean expanded) {
+    private void viewExpand(View view, boolean expanded) {
         view.measure(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         final int height = view.getMeasuredHeight();
         final int width = view.getMeasuredWidth();
@@ -712,6 +727,16 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
             return true;
         }
         return false;
+    }
+
+    private void setArrowAnimation(View v, boolean pflipDown) {
+        int rotationAngle = 0;
+        if(pflipDown) {
+            rotationAngle = rotationAngle + 180;
+        }
+        ObjectAnimator anim = ObjectAnimator.ofFloat(v, "rotation",rotationAngle, rotationAngle);
+        anim.setDuration(500);
+        anim.start();
     }
 }
 
