@@ -2,7 +2,9 @@ package com.android.eisenflow;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -37,11 +39,16 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener,
@@ -70,11 +77,14 @@ public class MainActivity extends AppCompatActivity
     private ArrayList<CalendarObject> eventsTaskList;
     private MaterialCalendarView materialCalendarView;
     private SwipeRefreshLayout pullToRefreshContainer;
+    private SharedPreferences mainSharedPrefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mainSharedPrefs = getSharedPreferences(MAIN_PREFS, Context.MODE_PRIVATE);
     }
 
     @Override
@@ -307,12 +317,62 @@ public class MainActivity extends AppCompatActivity
                 feedTaskQuadrants();
                 return true;
             case R.id.clear_all_done:
-                // Clear all Done Tasks
+                Set<String> doneTasks;
+                if(mainSharedPrefs.contains(TasksListAdapter.DONE_TASK_PREF_STR)) {
+                    doneTasks = mainSharedPrefs.getStringSet(TasksListAdapter.DONE_TASK_PREF_STR, null);
+                    if(doneTasks != null) {
+                        for(int taskNum = 0; taskNum < tasksList.size(); taskNum++) {
+                            if(doneTasks.contains(tasksList.get(taskNum))){
+                                Log.v("eisen", "Pos = " + taskNum);
+                                removeItemFromDB(taskNum);
+
+
+                            }
+                        }
+                    }
+                }
+                return true;
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void removeItemFromDB(int position) {
+
+        File dbFile = new File(FILE_DIR, FILE_FOLDER + "/" + FILE_NAME);
+        if(dbFile.exists()) {
+            try {
+                PrintWriter pw = new PrintWriter(dbFile);
+                pw.close();
+
+                tasksList.remove(position);
+                writeTaskInfoToFile(dbFile, tasksList);
+            }
+            catch (IOException ex) {
+
+                Log.e("eisen", "Remove Item from DB Exception : " + ex.getMessage());
+            }
+        }
+    }
+
+    private void writeTaskInfoToFile(File dbFile, List<String> tasksList) {
+        try {
+            for(String task : tasksList) {
+                FileWriter writer = new FileWriter(dbFile, true);
+                writer.write(task);
+                writer.write("\n");
+                writer.flush();
+                writer.close();
+            }
+
+            tasksAdapter.setList(this.tasksList);
+            mainSharedPrefs.edit().remove(TasksListAdapter.DONE_TASK_PREF_STR).apply();
+        }
+        catch (IOException ex) {
+            Log.e("eisen", "Exception Write dbFile : " + ex.getMessage());
+        }
     }
 
     @Override

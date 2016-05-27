@@ -30,10 +30,10 @@ import java.util.Set;
  * Created by Sve on 3/23/16.
  */
 public class TasksListAdapter extends RecyclerView.Adapter<TasksListHolder> {
-    private static final String TASK_LIST_PREFS = "TaskListSharedPreferences";
     private static final String DATE_FORMAT = "MMM dd";
     private static final String DATE_FORMAT_LONG = "EEE, MMM dd, yyyy";
     public static final String EDIT_TASK_INFO_EXTRA = "editTaskInfoExtra";
+    public static final String DONE_TASK_PREF_STR = "doneTasks";
     private Context context;
     private List<String> tasksList;
     private RecyclerView recyclerView;
@@ -47,7 +47,7 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListHolder> {
         this.activity = activity;
         this.context = context;
         doneTasks = new HashSet<>();
-        sharedPreferences = context.getSharedPreferences(TASK_LIST_PREFS, Context.MODE_PRIVATE);
+        sharedPreferences = context.getSharedPreferences(MainActivity.MAIN_PREFS, Context.MODE_PRIVATE);
     }
 
     @Override
@@ -444,12 +444,12 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListHolder> {
     }
 
     private void saveDoneTasks() {
-        sharedPreferences.edit().putStringSet("doneTasks", doneTasks).commit();
+        sharedPreferences.edit().putStringSet(DONE_TASK_PREF_STR, doneTasks).commit();
     }
 
     private void crossTaskIfDone(TasksListHolder holder, int position) {
-        if(sharedPreferences.contains("doneTasks")) {
-            Set<String> doneTasksSet = sharedPreferences.getStringSet("doneTasks", null);
+        if(sharedPreferences.contains(DONE_TASK_PREF_STR)) {
+            Set<String> doneTasksSet = sharedPreferences.getStringSet(DONE_TASK_PREF_STR, null);
             if(doneTasksSet!= null) {
                 if (doneTasksSet.contains(tasksList.get(position))) {
                     holder.task_check.setChecked(true);
