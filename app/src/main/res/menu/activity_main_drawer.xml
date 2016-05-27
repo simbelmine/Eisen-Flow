@@ -6,6 +6,11 @@
             android:id="@+id/nav_view_all"
             android:icon="@drawable/view_all"
             android:title="Show all tasks" />
+        <item
+            android:id="@+id/clear_all_done"
+            android:icon="@drawable/ic_menu_clear_all_done"
+            android:title="Clear Done tasks"
+            />
     </group>
 
     <item android:title="Communicate">

@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        
+
         initLayout();
 
         PermissionHelper permissionHelper = new PermissionHelper(this);
@@ -196,7 +196,9 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void initTaskAdapters() {
-        tasksAdapter = new TasksListAdapter(this, getApplicationContext());
+        if(tasksAdapter == null) {
+            tasksAdapter = new TasksListAdapter(this, getApplicationContext());
+        }
     }
 
     private ArrayList<String> getTasksList() {
@@ -285,10 +287,11 @@ public class MainActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (id) {
+            case  R.id.action_settings:
+                return true;
         }
+
 
         return super.onOptionsItemSelected(item);
     }
@@ -299,8 +302,12 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_view_all) {
-            feedTaskQuadrants();
+        switch (id) {
+            case R.id.nav_view_all:
+                feedTaskQuadrants();
+                return true;
+            case R.id.clear_all_done:
+                // Clear all Done Tasks
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

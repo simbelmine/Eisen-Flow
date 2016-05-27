@@ -22,12 +22,15 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Sve on 3/23/16.
  */
 public class TasksListAdapter extends RecyclerView.Adapter<TasksListHolder> {
+    private static final String TASK_LIST_PREFS = "TaskListSharedPreferences";
     private static final String DATE_FORMAT = "MMM dd";
     private static final String DATE_FORMAT_LONG = "EEE, MMM dd, yyyy";
     public static final String EDIT_TASK_INFO_EXTRA = "editTaskInfoExtra";
@@ -37,10 +40,14 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListHolder> {
     private SharedPreferences mainSharedPrefs;
     private Activity activity;
     private String booleanStr = "isCalendarPlusTipShown";
+    private Set<String> doneTasks;
+    private SharedPreferences sharedPreferences;
 
     public TasksListAdapter(Activity activity, Context context) {
         this.activity = activity;
         this.context = context;
+        doneTasks = new HashSet<>();
+        sharedPreferences = context.getSharedPreferences(TASK_LIST_PREFS, Context.MODE_PRIVATE);
     }
 
     @Override
@@ -108,6 +115,8 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListHolder> {
 
         PositionBasedOnCheckClickedListener positionCheckListener = new PositionBasedOnCheckClickedListener(holder);
         holder.task_check.setOnCheckedChangeListener(positionCheckListener);
+
+        crossTaskIfDone(holder, position);
     }
 
     private String getTaskName(DbListUtils dbListUtils) {
@@ -416,11 +425,36 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListHolder> {
 
         @Override
         public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+            int position = (int)compoundButton.getTag();
+
             if(compoundButton.isChecked()) {
                 holder.task_done_line.setVisibility(View.VISIBLE);
+                doneTasks.add(tasksList.get(position));
             }
             else {
                 holder.task_done_line.setVisibility(View.GONE);
+
+                if(doneTasks.size() > 0 && doneTasks.contains(tasksList.get(position))) {
+                    doneTasks.remove(tasksList.get(position));
+                }
+            }
+
+            saveDoneTasks();
+        }
+    }
+
+    private void saveDoneTasks() {
+        sharedPreferences.edit().putStringSet("doneTasks", doneTasks).commit();
+    }
+
+    private void crossTaskIfDone(TasksListHolder holder, int position) {
+        if(sharedPreferences.contains("doneTasks")) {
+            Set<String> doneTasksSet = sharedPreferences.getStringSet("doneTasks", null);
+            if(doneTasksSet!= null) {
+                if (doneTasksSet.contains(tasksList.get(position))) {
+                    holder.task_check.setChecked(true);
+                    holder.task_done_line.setVisibility(View.VISIBLE);
+                }
             }
         }
     }
