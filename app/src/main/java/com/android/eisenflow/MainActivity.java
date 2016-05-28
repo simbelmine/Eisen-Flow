@@ -315,6 +315,7 @@ public class MainActivity extends AppCompatActivity
         switch (id) {
             case R.id.nav_view_all:
                 feedTaskQuadrants();
+                closeDrawer();
                 return true;
             case R.id.clear_all_done:
                 Set<String> doneTasks;
@@ -323,20 +324,21 @@ public class MainActivity extends AppCompatActivity
                     if(doneTasks != null) {
                         for(int taskNum = 0; taskNum < tasksList.size(); taskNum++) {
                             if(doneTasks.contains(tasksList.get(taskNum))){
-                                Log.v("eisen", "Pos = " + taskNum);
                                 removeItemFromDB(taskNum);
-
-
                             }
                         }
                     }
                 }
+                closeDrawer();
                 return true;
         }
 
+        return true;
+    }
+
+    private void closeDrawer() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
-        return true;
     }
 
     private void removeItemFromDB(int position) {
