@@ -67,65 +67,17 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListHolder> {
         DbListUtils dbListUtils = new DbListUtils(taskRow);
 
         // set values to variables from the Holder class
-        holder.text.setText(getTaskName(dbListUtils));
-        holder.text.setTextColor(context.getResources().getColor(R.color.gray));
-        holder.task_time_txt.setText(getTaskDateTime(dbListUtils));
-        holder.task_time_txt.setTextColor(context.getResources().getColor(R.color.gray_light));
-        if(getTaskPriority(dbListUtils) == 1) {
-            holder.task_p1_progress.setVisibility(View.VISIBLE);
-            holder.task_p1_progress.setText(dbListUtils.getTaskProgress() + "%");
-        }
 
-        holder.deleteIconLayout_0.setTag(position);
-        holder.deleteIconLayout_1.setTag(position);
-        holder.deleteIconLayout_2.setTag(position);
-        holder.deleteIconLayout_3.setTag(position);
-
-        holder.editIconLayout_0.setTag(position);
-        holder.editIconLayout_1.setTag(position);
-        holder.editIconLayout_2.setTag(position);
-        holder.editIconLayout_3.setTag(position);
-
-        holder.task_check.setTag(position);
-        holder.share_icon.setTag(position);
-
-//        if(position%2 == 0) {
-//            holder.cardView.setOnTouchListener(new SwipeDetector(holder, recyclerView, 0, position));
-//        }
-//        else {
-//            holder.cardView.setOnTouchListener(new SwipeDetector(holder, recyclerView, 1, position));
-//        }
+        setValueToField(holder, dbListUtils);
+        setTagToField(holder, position);
+        setOnClickListeners(holder, dbListUtils, position);
+        setOnCheckedClickedListeners(holder);
 
         setTaskPriority(holder, getTaskPriority(dbListUtils), position);
-
-        PositionBasedOnClickListener positionListener = new PositionBasedOnClickListener(dbListUtils, position);
-        holder.timerIconLayout.setOnClickListener(positionListener);
-        holder.calendarPlusIconLayout.setOnClickListener(positionListener);
-        holder.editIconLayout_0.setOnClickListener(positionListener);
-        holder.deleteIconLayout_0.setOnClickListener(positionListener);
-        holder.editIconLayout_1.setOnClickListener(positionListener);
-        holder.deleteIconLayout_1.setOnClickListener(positionListener);
-
-        holder.deleteIconLayout_2.setOnClickListener(positionListener);
-        holder.editIconLayout_2.setOnClickListener(positionListener);
-        holder.deleteIconLayout_3.setOnClickListener(positionListener);
-        holder.editIconLayout_3.setOnClickListener(positionListener);
-
-        holder.share_icon.setOnClickListener(positionListener);
-
-        PositionBasedOnCheckClickedListener positionCheckListener = new PositionBasedOnCheckClickedListener(holder);
-        holder.task_check.setOnCheckedChangeListener(positionCheckListener);
-
         crossTaskIfDone(holder, position);
     }
 
     private String getTaskName(DbListUtils dbListUtils) {
-//        Log.v("eisen", "Priority: " + dbListUtils.getTaskPriority());
-//        Log.v("eisen", "Date: " + dbListUtils.getTaskDate());
-//        Log.v("eisen", "Time: " + dbListUtils.getTaskTime());
-//        Log.v("eisen", "Note: " + dbListUtils.getTaskNote());
-//        Log.v("eisen", "Progress: " + dbListUtils.getTaskProgress());
-
         return dbListUtils.getTaskName();
     }
 
@@ -457,5 +409,53 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListHolder> {
                 }
             }
         }
+    }
+
+    private void setValueToField(TasksListHolder holder, DbListUtils dbListUtils) {
+        holder.text.setText(getTaskName(dbListUtils));
+        holder.text.setTextColor(context.getResources().getColor(R.color.gray));
+        holder.task_time_txt.setText(getTaskDateTime(dbListUtils));
+        holder.task_time_txt.setTextColor(context.getResources().getColor(R.color.gray_light));
+        if(getTaskPriority(dbListUtils) == 1) {
+            holder.task_p1_progress.setVisibility(View.VISIBLE);
+            holder.task_p1_progress.setText(dbListUtils.getTaskProgress() + "%");
+        }
+    }
+
+    private void setTagToField(TasksListHolder holder, int position) {
+        holder.deleteIconLayout_0.setTag(position);
+        holder.deleteIconLayout_1.setTag(position);
+        holder.deleteIconLayout_2.setTag(position);
+        holder.deleteIconLayout_3.setTag(position);
+
+        holder.editIconLayout_0.setTag(position);
+        holder.editIconLayout_1.setTag(position);
+        holder.editIconLayout_2.setTag(position);
+        holder.editIconLayout_3.setTag(position);
+
+        holder.task_check.setTag(position);
+        holder.share_icon.setTag(position);
+    }
+
+    private void setOnClickListeners(TasksListHolder holder, DbListUtils dbListUtils, int position) {
+        PositionBasedOnClickListener positionListener = new PositionBasedOnClickListener(dbListUtils, position);
+        holder.timerIconLayout.setOnClickListener(positionListener);
+        holder.calendarPlusIconLayout.setOnClickListener(positionListener);
+        holder.editIconLayout_0.setOnClickListener(positionListener);
+        holder.deleteIconLayout_0.setOnClickListener(positionListener);
+        holder.editIconLayout_1.setOnClickListener(positionListener);
+        holder.deleteIconLayout_1.setOnClickListener(positionListener);
+
+        holder.deleteIconLayout_2.setOnClickListener(positionListener);
+        holder.editIconLayout_2.setOnClickListener(positionListener);
+        holder.deleteIconLayout_3.setOnClickListener(positionListener);
+        holder.editIconLayout_3.setOnClickListener(positionListener);
+
+        holder.share_icon.setOnClickListener(positionListener);
+    }
+
+    private void setOnCheckedClickedListeners(TasksListHolder holder) {
+        PositionBasedOnCheckClickedListener positionCheckListener = new PositionBasedOnCheckClickedListener(holder);
+        holder.task_check.setOnCheckedChangeListener(positionCheckListener);
     }
 }
