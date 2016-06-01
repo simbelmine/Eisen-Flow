@@ -66,8 +66,6 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListHolder> {
         String taskRow = tasksList.get(position);
         DbListUtils dbListUtils = new DbListUtils(taskRow);
 
-        // set values to variables from the Holder class
-
         setValueToField(holder, dbListUtils);
         setTagToField(holder, position);
         setOnClickListeners(holder, dbListUtils, position);

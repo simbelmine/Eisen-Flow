@@ -318,16 +318,20 @@ public class MainActivity extends AppCompatActivity
                 closeDrawer();
                 return true;
             case R.id.nav_show_do_it:
-                // Show Priority 0 only
+                showTaskPriority(0);
+                closeDrawer();
                 return true;
             case R.id.nav_show_decide:
-                // Show Priority 1 only
+                showTaskPriority(1);
+                closeDrawer();
                 return true;
             case R.id.nav_show_delegate:
-                // Show Priority 2 only
+                showTaskPriority(2);
+                closeDrawer();
                 return true;
             case R.id.nav_show_drop_it:
-                // Show Priority 3 only
+                showTaskPriority(3);
+                closeDrawer();
                 return true;
             case R.id.clear_all_done:
                 Set<String> doneTasks;
@@ -351,6 +355,21 @@ public class MainActivity extends AppCompatActivity
     private void closeDrawer() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+    }
+
+    private void showTaskPriority(int priority) {
+        ArrayList<String> currentPriorityList = new ArrayList<>();
+        DbListUtils taskUtils;
+
+        for(String task : tasksList) {
+            taskUtils = new DbListUtils(task);
+            if(priority != -1 && priority == taskUtils.getTaskPriority()) {
+                currentPriorityList.add(task);
+            }
+        }
+
+        tasksAdapter.setList(currentPriorityList);
+        tasksAdapter.notifyDataSetChanged();
     }
 
     private void removeItemFromDB(int position) {
