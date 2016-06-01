@@ -7,6 +7,22 @@
             android:icon="@drawable/view_all"
             android:title="Show all tasks" />
         <item
+            android:id="@+id/nav_show_do_it"
+            android:icon="@drawable/do_it"
+            android:title="Do It Now" />
+        <item
+            android:id="@+id/nav_show_decide"
+            android:icon="@drawable/decide"
+            android:title="Decide When" />
+        <item
+            android:id="@+id/nav_show_delegate"
+            android:icon="@drawable/delegate"
+            android:title="Delegate It" />
+        <item
+            android:id="@+id/nav_show_drop_it"
+            android:icon="@drawable/drop_it"
+            android:title="Drop It" />
+        <item
             android:id="@+id/clear_all_done"
             android:icon="@drawable/ic_menu_clear_all_done"
             android:title="Clear Done tasks"

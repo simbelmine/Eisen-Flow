@@ -317,6 +317,18 @@ public class MainActivity extends AppCompatActivity
                 feedTaskQuadrants();
                 closeDrawer();
                 return true;
+            case R.id.nav_show_do_it:
+                // Show Priority 0 only
+                return true;
+            case R.id.nav_show_decide:
+                // Show Priority 1 only
+                return true;
+            case R.id.nav_show_delegate:
+                // Show Priority 2 only
+                return true;
+            case R.id.nav_show_drop_it:
+                // Show Priority 3 only
+                return true;
             case R.id.clear_all_done:
                 Set<String> doneTasks;
                 if(mainSharedPrefs.contains(TasksListAdapter.DONE_TASK_PREF_STR)) {
