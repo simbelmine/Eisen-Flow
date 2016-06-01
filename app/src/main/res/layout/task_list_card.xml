@@ -37,20 +37,20 @@
             android:orientation="horizontal"
             android:visibility="visible"
             >
+            <ImageView
+                android:id="@+id/list_img"
+                android:layout_width="@dimen/card_priority_img_width"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:background="@color/fourthQuadrant"
+                android:layout_marginRight="@dimen/card_priority_img_margin"
+                />
             <CheckBox
                 android:id="@+id/task_check"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:paddingRight="5dp"
-                android:layout_marginLeft="5dp"
                 android:theme="@style/CustomCheckBox"
-                />
-            <ImageView
-                android:id="@+id/list_img"
-                android:layout_width="@dimen/card_priority_img_width"
-                android:layout_height="match_parent"
-                android:background="@color/fourthQuadrant"
-                android:layout_marginRight="@dimen/card_priority_img_margin"
                 />
             <FrameLayout
                 android:layout_width="wrap_content"
