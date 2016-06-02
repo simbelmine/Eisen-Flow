@@ -9,6 +9,8 @@
     android:orientation="vertical"
     android:layout_below="@+id/priority_divider"
     android:layout_marginTop="@dimen/task_standard_margin"
+    android:layout_marginLeft="@dimen/task_standard_margin"
+    android:layout_marginRight="@dimen/task_standard_margin"
     >
     <!-- Cal-Time Txt Layout START -->
     <RelativeLayout
@@ -20,7 +22,7 @@
             android:id="@+id/clock_icon"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/task_icon_size"
-            android:src="@mipmap/clock_b"
+            android:src="@drawable/calendar_clock"
             />
         <LinearLayout
             android:id="@+id/cal_txt_layout"
@@ -34,6 +36,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
+                android:layout_marginLeft="@dimen/task_standard_margin"
                 android:textSize="@dimen/task_font_size"
                 android:clickable="true"
                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -59,7 +62,6 @@
                 android:layout_height="25dp"
                 android:src="@mipmap/ic_arrow_up"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="@dimen/task_standard_margin"
                 />
             <TextView
                 android:id="@+id/add_task_time"

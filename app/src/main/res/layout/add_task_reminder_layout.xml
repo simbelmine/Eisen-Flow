@@ -19,7 +19,7 @@
             android:id="@+id/reminder_icon"
             android:layout_width="@dimen/task_icon_size"
             android:layout_height="@dimen/task_icon_size"
-            android:src="@mipmap/reminder_bell"
+            android:src="@drawable/reminder_bell"
             />
         <TextView
             android:id="@+id/reminder_label"
@@ -62,6 +62,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/date"
+                android:textSize="15sp"
                 android:text="Daily"
                 />
             <RadioButton
@@ -69,6 +70,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/date"
+                android:textSize="15sp"
                 android:text="Weekly"
                 />
             <RadioButton
@@ -76,6 +78,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/date"
+                android:textSize="15sp"
                 android:text="Monthly"
                 />
             <RadioButton
@@ -83,6 +86,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/date"
+                android:textSize="15sp"
                 android:text="Yearly"
                 />
         </RadioGroup>

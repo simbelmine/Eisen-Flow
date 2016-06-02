@@ -20,7 +20,7 @@
         <ImageView
             android:layout_width="@dimen/task_icon_size"
             android:layout_height="@dimen/task_icon_size"
-            android:src="@mipmap/note_outline_b"
+            android:src="@drawable/note"
             />
         <TextView
             android:layout_width="wrap_content"
