@@ -76,10 +76,25 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
     private CoordinatorLayout snakbarLayout;
     private Intent intent;
     private DbListUtils dbListUtils;
-    private ImageView arrow_calendar;
-    private ImageView arrow_time;
-    private ImageView arrow_note;
+    private ImageView arrowCalendar;
+    private ImageView arrowTime;
+    private ImageView arrowNote;
     private boolean isPriority0_tip_shown = false;
+    private LinearLayout reminderLayout;
+    private LinearLayout reminderCalendar;
+    private LinearLayout reminderTimePicker;
+    private TextView reminderDateTxt;
+    private TextView reminderTimeTxt;
+    private ImageView reminderArrowCalendar;
+    private ImageView reminderArrowTime;
+    private TextView reminderCurrDateTxt;
+    private CalendarView reminderCalendarView;
+    private TimePicker reminderTimePickerView;
+    private RelativeLayout reminderClickableLayout;
+    private ImageView reminderArrow;
+    private RelativeLayout reminderContentLayout;
+    private ImageView reminderDivider;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -138,9 +153,34 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
         noteTxt = (EditText) findViewById(R.id.note_txt);
         snakbarLayout = (CoordinatorLayout) findViewById(R.id.snackbarCoordinatorLayout);
 
-        arrow_calendar = (ImageView) findViewById(R.id.arrow_cal);
-        arrow_time = (ImageView) findViewById(R.id.arrow_time);
-        arrow_note = (ImageView) findViewById(R.id.arrow_note);
+        arrowCalendar = (ImageView) findViewById(R.id.arrow_cal);
+        arrowTime = (ImageView) findViewById(R.id.arrow_time);
+        arrowNote = (ImageView) findViewById(R.id.arrow_note);
+
+        reminderLayout = (LinearLayout) findViewById(R.id.reminder_layout);
+        reminderLayout.setVisibility(View.GONE);
+        reminderCalendar = (LinearLayout) findViewById(R.id.reminder_calendar);
+        reminderTimePicker = (LinearLayout) findViewById(R.id.reminder_time_picker);
+        reminderTimePicker.setVisibility(View.GONE);
+        reminderDateTxt = (TextView) findViewById(R.id.reminder_date_txt);
+        reminderTimeTxt = (TextView) findViewById(R.id.reminder_time_txt);
+        reminderDateTxt.setOnClickListener(this);
+        reminderTimeTxt.setOnClickListener(this);
+        reminderArrowCalendar = (ImageView) findViewById(R.id.arrow_cal_reminder);
+        reminderArrowTime = (ImageView) findViewById(R.id.arrow_time_reminder);
+        reminderCurrDateTxt = (TextView) findViewById(R.id.reminder_curr_date_txt);
+        reminderCurrDateTxt.setOnClickListener(this);
+        reminderCalendarView = (CalendarView) findViewById(R.id.reminder_calendar_view);
+        reminderCalendarView.setOnDateChangeListener(this);
+        reminderTimePickerView = (TimePicker) findViewById(R.id.reminder_time_picker_view);
+        reminderTimePickerView.setOnTimeChangedListener(this);
+        reminderClickableLayout = (RelativeLayout) findViewById(R.id.reminder_clickable_layout);
+        reminderClickableLayout.setOnClickListener(this);
+        reminderArrow = (ImageView) findViewById(R.id.arrow_reminder);
+        reminderContentLayout = (RelativeLayout) findViewById(R.id.reminder_content_layout);
+        reminderContentLayout.setVisibility(View.GONE);
+        reminderDivider = (ImageView) findViewById(R.id.reminder_divider);
+        reminderDivider.setVisibility(View.GONE);
     }
 
     private void populateLayout() {
@@ -155,12 +195,15 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
             calendarView.setDate(cal.getTimeInMillis(), true, true);
 
             timeTxt.setText(dbListUtils.getTaskTime());
+            reminderTimeTxt.setText(dbListUtils.getTaskTime());
             if(Build.VERSION.SDK_INT >= MainActivity.NEEDED_API_LEVEL) {
                 Date date = getTime(dbListUtils.getTaskTime());
                 Calendar c = Calendar.getInstance();
                 c.setTime(date);
                 timePickerView.setHour(c.get(Calendar.HOUR_OF_DAY));
                 timePickerView.setMinute(c.get(Calendar.MINUTE));
+                reminderTimePickerView.setHour(c.get(Calendar.HOUR_OF_DAY));
+                reminderTimePickerView.setMinute(c.get(Calendar.MINUTE));
             }
 
             noteTxt.setText(dbListUtils.getTaskNote());
@@ -196,35 +239,44 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
             case R.id.do_it_l:
                 hideSoftKbd();
                 setBgPriorityColor(0);
+                reminderLayout.setVisibility(View.GONE);
+                reminderDivider.setVisibility(View.GONE);
                 priorityInt = 0;
                 break;
             case R.id.decide_it_l:
                 hideSoftKbd();
                 setBgPriorityColor(1);
+                reminderLayout.setVisibility(View.VISIBLE);
+                reminderDivider.setVisibility(View.VISIBLE);
                 priorityInt = 1;
                 break;
             case R.id.delegate_it_l:
                 hideSoftKbd();
                 setBgPriorityColor(2);
+                reminderLayout.setVisibility(View.GONE);
+                reminderDivider.setVisibility(View.GONE);
                 priorityInt = 2;
                 break;
             case R.id.dump_it_l:
                 hideSoftKbd();
                 setBgPriorityColor(3);
+                reminderLayout.setVisibility(View.GONE);
+                reminderDivider.setVisibility(View.GONE);
                 priorityInt = 3;
                 break;
             case R.id.add_task_date_txt:
                 hideSoftKbd();
                 if(calendarLayout.getVisibility() == View.VISIBLE) {
                     viewExpand(calendarLayout, false);
-                    setArrowAnimation(arrow_calendar, false);
+                    setArrowAnimation(arrowCalendar, false);
                 }
                 else {
                     timePickerLayout.setVisibility(View.GONE);
                     noteEditLayout.setVisibility(View.GONE);
+                    reminderContentLayout.setVisibility(View.GONE);
                     currDateTxt.setVisibility(View.VISIBLE);
                     viewExpand(calendarLayout, true);
-                    setArrowAnimation(arrow_calendar, true);
+                    setArrowAnimation(arrowCalendar, true);
                 }
                 break;
             case R.id.add_task_time:
@@ -238,33 +290,90 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
 
                 if(timePickerLayout.getVisibility() == View.VISIBLE) {
                     viewExpand(timePickerLayout, false);
-                    setArrowAnimation(arrow_time, false);
+                    setArrowAnimation(arrowTime, false);
                 }
                 else {
                     calendarLayout.setVisibility(View.GONE);
                     currDateTxt.setVisibility(View.GONE);
                     noteEditLayout.setVisibility(View.GONE);
+                    reminderContentLayout.setVisibility(View.GONE);
                     viewExpand(timePickerLayout, true);
-                    setArrowAnimation(arrow_time, true);
+                    setArrowAnimation(arrowTime, true);
                 }
                 break;
             case R.id.note_layout:
                 if(noteEditLayout.getVisibility() == View.VISIBLE) {
                     hideSoftKbd();
                     viewExpand(noteEditLayout, false);
-                    setArrowAnimation(arrow_note, false);
+                    setArrowAnimation(arrowNote, false);
                 }
                 else {
                     calendarLayout.setVisibility(View.GONE);
                     timePickerLayout.setVisibility(View.GONE);
+                    reminderContentLayout.setVisibility(View.GONE);
                     viewExpand(noteEditLayout, true);
                     setFocusToView(view);
-                    setArrowAnimation(arrow_note, true);
+                    setArrowAnimation(arrowNote, true);
                 }
                 break;
             case R.id.curr_date_txt:
                 calendarView.setDate(Calendar.getInstance().getTimeInMillis(), true, true);
                 dateTxt.setText(getDateString(Calendar.getInstance()));
+                break;
+            case R.id.reminder_curr_date_txt:
+                reminderCalendarView.setDate(Calendar.getInstance().getTimeInMillis(), true, true);
+                reminderDateTxt.setText(getDateString(Calendar.getInstance()));
+                break;
+
+
+            case R.id.reminder_clickable_layout:
+                if(reminderContentLayout.getVisibility() == View.VISIBLE) {
+                    hideSoftKbd();
+                    viewExpand(reminderContentLayout, false);
+                    setArrowAnimation(reminderArrow, false);
+                }
+                else {
+                    calendarLayout.setVisibility(View.GONE);
+                    timePickerLayout.setVisibility(View.GONE);
+                    noteEditLayout.setVisibility(View.GONE);
+                    viewExpand(reminderContentLayout, true);
+                    setArrowAnimation(reminderArrow, true);
+                }
+                break;
+            case R.id.reminder_date_txt:
+                hideSoftKbd();
+                if(reminderCalendar.getVisibility() == View.VISIBLE) {
+                    viewExpand(reminderCalendar, false);
+                    setArrowAnimation(reminderArrowCalendar, false);
+                }
+                else {
+                    reminderTimePicker.setVisibility(View.GONE);
+                    noteEditLayout.setVisibility(View.GONE);
+                    reminderCurrDateTxt.setVisibility(View.VISIBLE);
+                    viewExpand(reminderCalendar, true);
+                    setArrowAnimation(reminderArrowCalendar, true);
+                }
+                break;
+            case R.id.reminder_time_txt:
+                hideSoftKbd();
+                if(isSystem24hFormat()) {
+                    reminderTimePickerView.setIs24HourView(true);
+                }
+                else {
+                    reminderTimePickerView.setIs24HourView(false);
+                }
+
+                if(reminderTimePicker.getVisibility() == View.VISIBLE) {
+                    viewExpand(reminderTimePicker, false);
+                    setArrowAnimation(reminderArrowTime, false);
+                }
+                else {
+                    reminderCalendar.setVisibility(View.GONE);
+                    reminderCurrDateTxt.setVisibility(View.GONE);
+                    noteEditLayout.setVisibility(View.GONE);
+                    viewExpand(reminderTimePicker, true);
+                    setArrowAnimation(reminderArrowTime, true);
+                }
                 break;
         }
     }
