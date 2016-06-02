@@ -20,9 +20,6 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Html;
-import android.text.Spannable;
-import android.text.SpannableString;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewAnimationUtils;
@@ -88,7 +85,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        setContentView(R.layout.add_task_lyout);
+        setContentView(R.layout.add_task_main_lyout);
 
         intent = getIntent();
         String taskInfo = intent.getStringExtra(TasksListAdapter.EDIT_TASK_INFO_EXTRA);

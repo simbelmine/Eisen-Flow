@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/add_task_bg"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:background="@color/date"
+    android:layout_weight="0.7"
+    >
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/task_name_buttons_layout_height"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="@dimen/task_name_buttons_margin"
+        >
+        <LinearLayout
+            android:id="@+id/task_add_close_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            >
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/task_name_buttons_height"
+                android:src="@mipmap/close"
+                />
+        </LinearLayout>
+        <TextView
+            android:id="@+id/task_add_save_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/task_name_buttons_height"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/task_standard_margin"
+            android:text="@string/save_btn"
+            android:textColor="@color/white"
+            android:layout_centerVertical="true"
+            android:textSize="@dimen/task_name_font_size"
+            android:textAllCaps="true"
+            android:clickable="true"
+            />
+    </RelativeLayout>
+
+    <EditText
+        android:id="@+id/task_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:hint="@string/enter_task_hint"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        android:textSize="@dimen/task_name_font_size"
+        android:layout_marginRight="@dimen/task_standard_margin"
+        android:layout_marginLeft="@dimen/task_standard_margin"
+        android:layout_marginBottom="@dimen/task_standard_margin"
+        android:background="@color/transparent"
+        />
+</RelativeLayout>

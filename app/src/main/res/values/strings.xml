@@ -17,6 +17,7 @@
     <string name="task_priority_txt">Task priority</string>
     <string name="time_txt">All day</string>
     <string name="note_txt">Add note</string>
+    <string name="reminder_txt">Add reminder</string>
 
     <!-- Priority Dialog -->
     <string name="u_and_i">Urgent and Important</string>
