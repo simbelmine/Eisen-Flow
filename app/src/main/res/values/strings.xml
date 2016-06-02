@@ -36,6 +36,7 @@
     <string name="ok_btn">OK</string>
     <string name="cancel_btn">Cancel</string>
     <string name="progress_added">Good job! You added progress to your task!</string>
+    <string name="priority_0_tip_snackbar">Scheduling \'Do it now\' more than one day in advance, is not helping with productivity.</string>
 
     <string name="add_task_alert_title">Alert</string>
 

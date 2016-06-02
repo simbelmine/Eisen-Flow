@@ -20,6 +20,9 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewAnimationUtils;
@@ -79,6 +82,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
     private ImageView arrow_calendar;
     private ImageView arrow_time;
     private ImageView arrow_note;
+    private boolean isPriority0_tip_shown = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -293,12 +297,31 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
 
             permissionHelper.checkForPermissions(permissions);
             if(permissionHelper.isAllPermissionsGranted) {
-                saveTaskToDB();
+                if(!isPriority0()) {
+                    saveTaskToDB();
+                }
+                else {
+                    showAlertMessage(getResources().getString(R.string.priority_0_tip_snackbar), R.color.date);
+                }
             }
         }
         else {
-            saveTaskToDB();
+            if(!isPriority0()) {
+                saveTaskToDB();
+            }
+            else {
+                showAlertMessage(getResources().getString(R.string.priority_0_tip_snackbar), R.color.date);
+            }
         }
+    }
+
+    private boolean isPriority0() {
+        if(priorityInt == 0 && !isPriority0_tip_shown) {
+            isPriority0_tip_shown = true;
+            return true;
+        }
+
+        return false;
     }
 
     @Override
@@ -324,7 +347,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
 
 
         if(name.length() == 0 || name == null || getResources().getString(R.string.enter_task_hint).equals(name)) {
-            showAlertMessage(getResources().getString(R.string.add_task_name_alert));
+            showAlertMessage(getResources().getString(R.string.add_task_name_alert), R.color.firstQuadrant);
             return false;
         }
 
@@ -353,12 +376,12 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
 
     private boolean checkDateTime() {
         if (!isDateValid()) {
-            showAlertMessage(getResources().getString(R.string.add_task_date_alert));
+            showAlertMessage(getResources().getString(R.string.add_task_date_alert), R.color.firstQuadrant);
             return false;
         }
 
         if (!isTimeValid()) {
-            showAlertMessage(getResources().getString(R.string.add_task_time_alert));
+            showAlertMessage(getResources().getString(R.string.add_task_time_alert), R.color.firstQuadrant);
             return false;
         }
 
@@ -367,7 +390,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
 
     private boolean checkPriority() {
         if(priorityInt == -1) {
-            showAlertMessage(getResources().getString(R.string.add_task_priority_alert));
+            showAlertMessage(getResources().getString(R.string.add_task_priority_alert), R.color.firstQuadrant);
             return false;
         }
 
@@ -405,16 +428,16 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
         return true;
     }
 
-    private void showAlertMessage(String messageToShow) {
+    private void showAlertMessage(String messageToShow, int colorMsg) {
         if(Build.VERSION.SDK_INT >= MainActivity.NEEDED_API_LEVEL) {
-            showAlertSnackbar(messageToShow);
+            showAlertSnackbar(messageToShow, colorMsg);
         }
         else {
-            showAlertDialog(messageToShow);
+            showAlertDialog(messageToShow, colorMsg);
         }
     }
 
-    private void showAlertSnackbar(String messageToShow) {
+    private void showAlertSnackbar(String messageToShow, int colorMsg) {
         Snackbar snackbar = Snackbar.make(snakbarLayout, messageToShow, Snackbar.LENGTH_INDEFINITE)
                 .setActionTextColor(Color.WHITE)
                 .setAction(getResources().getString(R.string.ok_btn), new View.OnClickListener() {
@@ -425,13 +448,21 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
 
         View snackbarView = snackbar.getView();
         TextView text = (TextView) snackbarView.findViewById(android.support.design.R.id.snackbar_text);
-        text.setTextColor(getResources().getColor(R.color.firstQuadrant));
+        text.setTextColor(getResources().getColor(colorMsg));
         snackbar.show();
     }
 
-    private void showAlertDialog(String messageToShow) {
+    private void showAlertDialog(String messageToShow, int colorMsg) {
+        int theme;
+        if(colorMsg == R.color.date) {
+            theme = R.style.MyTipDialogStyle;
+        }
+        else {
+            theme =  R.style.MyAlertDialogStyle;
+        }
+
         AlertDialog.Builder builder =
-                new AlertDialog.Builder(AddTask.this, R.style.MyAlertDialogStyle);
+                new AlertDialog.Builder(AddTask.this, theme);
         builder.setTitle(getResources().getString(R.string.add_task_alert_title));
         builder.setMessage(messageToShow);
         builder.setPositiveButton(getResources().getString(R.string.ok_btn), null);
@@ -476,7 +507,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
 
             }
             else {
-                showAlertSnackbar("Data file doen\'t exist.");
+                showAlertSnackbar("Data file doen\'t exist.", R.color.firstQuadrant);
             }
         }
         else {
