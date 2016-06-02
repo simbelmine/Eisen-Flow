@@ -47,7 +47,7 @@
     <!-- Priority Tips -->
     <string name="priority_tip_0"><b>DO IT</b> \n <i>Handle now. Today\'s tasks.</i></string>
     <string name="priority_tip_1"><b>DECIDE</b> \n <i>Plan it. Invest in it every day.</i></string>
-    <string name="priority_tip_2"><b>DELEGATE</b> \n <i>Share it. Leta\'s somebody else to handle it.</i></string>
+    <string name="priority_tip_2"><b>DELEGATE</b> \n <i>Share it. Let\'s somebody else to handle it.</i></string>
     <string name="priority_tip_3"><b>DROP</b> \n <i>Unnecessary. Usually a distraction.</i></string>
 
 </resources>
