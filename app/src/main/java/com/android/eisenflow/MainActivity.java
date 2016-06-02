@@ -36,6 +36,8 @@ import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
+import org.w3c.dom.Text;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -78,6 +80,7 @@ public class MainActivity extends AppCompatActivity
     private MaterialCalendarView materialCalendarView;
     private SwipeRefreshLayout pullToRefreshContainer;
     private SharedPreferences mainSharedPrefs;
+    private TextView priorityTipTxt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,7 +154,7 @@ public class MainActivity extends AppCompatActivity
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
-
+        priorityTipTxt = (TextView) findViewById(R.id.priority_tip_txt);
     }
 
 
@@ -186,8 +189,10 @@ public class MainActivity extends AppCompatActivity
         initTasksAdapter();
 
         tasksList = getTasksList();
+        int priority = getPriorityFromSharedPrefs();
 
-        showTaskPriority(getPriorityFromSharedPrefs());
+        showTaskPriority(priority);
+        setPriorityTipTxt(priority);
 
 
 //        if(tasksList != null) {
@@ -318,6 +323,7 @@ public class MainActivity extends AppCompatActivity
 
         switch (id) {
             case R.id.nav_view_all:
+                savePriorityToSharedPrefs(-1);
                 feedTaskQuadrants();
                 closeDrawer();
                 return true;
@@ -383,12 +389,39 @@ public class MainActivity extends AppCompatActivity
         if(currentPriorityList != null) {
             tasksAdapter.setList(currentPriorityList);
             setTaskAdapters();
+            setPriorityTipTxt(priority);
         }
         else {
             showAlertSnackbar("No tasks yet to display.");
         }
+    }
 
-//        tasksAdapter.notifyDataSetChanged();
+    private void setPriorityTipTxt(int priority) {
+        switch (priority) {
+            case -1:
+                priorityTipTxt.setVisibility(View.GONE);
+                break;
+            case 0:
+                priorityTipTxt.setVisibility(View.VISIBLE);
+                priorityTipTxt.setText(getResources().getText(R.string.priority_tip_0));
+                priorityTipTxt.setBackgroundColor(getResources().getColor(R.color.firstQuadrant));
+                break;
+            case 1:
+                priorityTipTxt.setVisibility(View.VISIBLE);
+                priorityTipTxt.setText(getResources().getText(R.string.priority_tip_1));
+                priorityTipTxt.setBackgroundColor(getResources().getColor(R.color.secondQuadrant));
+                break;
+            case 2:
+                priorityTipTxt.setVisibility(View.VISIBLE);
+                priorityTipTxt.setText(getResources().getText(R.string.priority_tip_2));
+                priorityTipTxt.setBackgroundColor(getResources().getColor(R.color.thirdQuadrant));
+                break;
+            case 3:
+                priorityTipTxt.setVisibility(View.VISIBLE);
+                priorityTipTxt.setText(getResources().getText(R.string.priority_tip_3));
+                priorityTipTxt.setBackgroundColor(getResources().getColor(R.color.fourthQuadrant));
+                break;
+        }
     }
 
     private void removeItemFromDB(int position) {
