@@ -45,7 +45,6 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -57,6 +56,7 @@ public class MainActivity extends AppCompatActivity
 
     public static final int NEEDED_API_LEVEL = 22;
     public static final String MAIN_PREFS = "MainSharedPreferences";
+    private static final String PRIORITY_PREFS_STR = "priority";
     public static final String FILE_DIR = Environment.getExternalStorageDirectory().getAbsolutePath();
     public static final String FILE_FOLDER = ".EisenFlow";
     public static final String FILE_NAME ="eisenDB.txt";
@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity
     private DrawerLayout drawer;
     private ActionBarDrawerToggle toggle;
     private NavigationView navigationView;
-    private RecyclerView quadrantOneView;
+    private RecyclerView tasksRecyclerView;
     private LinearLayoutManager quadrantOneManager;
     private TasksListAdapter tasksAdapter;
     private TextView month;
@@ -132,8 +132,8 @@ public class MainActivity extends AppCompatActivity
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         // RecyclerView init
-        quadrantOneView = (RecyclerView) findViewById(R.id.tasks_recyclerview);
-        quadrantOneView.setHasFixedSize(true);
+        tasksRecyclerView = (RecyclerView) findViewById(R.id.tasks_recyclerview);
+        tasksRecyclerView.setHasFixedSize(true);
         // Sliding Layout
         slidingLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
         // Date Day Txt on slide
@@ -183,17 +183,21 @@ public class MainActivity extends AppCompatActivity
         initLayoutManagers();
         setLayoutManagers();
 
-        initTaskAdapters();
-//        setTasksLists();
-        tasksList = getTasksList();
-        if(tasksList != null) {
-            tasksAdapter.setList(getTasksList());
-        }
-        else {
-            showAlertSnackbar("No tasks yet to display.");
-        }
+        initTasksAdapter();
 
-        setTaskAdapters();
+        tasksList = getTasksList();
+
+        showTaskPriority(getPriorityFromSharedPrefs());
+
+
+//        if(tasksList != null) {
+//            tasksAdapter.setList(getTasksList());
+//        }
+//        else {
+//            showAlertSnackbar("No tasks yet to display.");
+//        }
+
+//        setTaskAdapters();
         pullToRefreshContainer.setRefreshing(false);
     }
 
@@ -202,10 +206,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void setLayoutManagers() {
-        quadrantOneView.setLayoutManager(quadrantOneManager);
+        tasksRecyclerView.setLayoutManager(quadrantOneManager);
     }
 
-    private void initTaskAdapters() {
+    private void initTasksAdapter() {
         if(tasksAdapter == null) {
             tasksAdapter = new TasksListAdapter(this, getApplicationContext());
         }
@@ -269,8 +273,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void setTaskAdapters() {
-        tasksAdapter.setRecyclerView(quadrantOneView);
-        quadrantOneView.setAdapter(tasksAdapter);
+        tasksAdapter.setRecyclerView(tasksRecyclerView);
+        tasksRecyclerView.setAdapter(tasksAdapter);
     }
 
     @Override
@@ -319,18 +323,22 @@ public class MainActivity extends AppCompatActivity
                 return true;
             case R.id.nav_show_do_it:
                 showTaskPriority(0);
+                savePriorityToSharedPrefs(0);
                 closeDrawer();
                 return true;
             case R.id.nav_show_decide:
                 showTaskPriority(1);
+                savePriorityToSharedPrefs(1);
                 closeDrawer();
                 return true;
             case R.id.nav_show_delegate:
                 showTaskPriority(2);
+                savePriorityToSharedPrefs(2);
                 closeDrawer();
                 return true;
             case R.id.nav_show_drop_it:
                 showTaskPriority(3);
+                savePriorityToSharedPrefs(3);
                 closeDrawer();
                 return true;
             case R.id.clear_all_done:
@@ -368,8 +376,19 @@ public class MainActivity extends AppCompatActivity
             }
         }
 
-        tasksAdapter.setList(currentPriorityList);
-        tasksAdapter.notifyDataSetChanged();
+        if(currentPriorityList.size() == 0) {
+            currentPriorityList = tasksList;
+        }
+
+        if(currentPriorityList != null) {
+            tasksAdapter.setList(currentPriorityList);
+            setTaskAdapters();
+        }
+        else {
+            showAlertSnackbar("No tasks yet to display.");
+        }
+
+//        tasksAdapter.notifyDataSetChanged();
     }
 
     private void removeItemFromDB(int position) {
@@ -508,6 +527,23 @@ public class MainActivity extends AppCompatActivity
         text.setTextColor(getResources().getColor(R.color.firstQuadrant));
         snackbar.show();
     }
+
+    private int getPriorityFromSharedPrefs() {
+        int priority;
+        if(mainSharedPrefs.contains(PRIORITY_PREFS_STR)) {
+            priority = mainSharedPrefs.getInt(PRIORITY_PREFS_STR, -1);
+        }
+        else {
+            priority = -1;
+        }
+
+        return priority;
+    }
+
+    private void savePriorityToSharedPrefs(int priority) {
+        mainSharedPrefs.edit().putInt(PRIORITY_PREFS_STR, priority).apply();
+    }
+
 
     private void setCurrentDate() {
         materialCalendarView.setCurrentDate(Calendar.getInstance());
