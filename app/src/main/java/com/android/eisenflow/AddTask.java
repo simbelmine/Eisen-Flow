@@ -26,9 +26,11 @@ import android.view.ViewAnimationUtils;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CalendarView;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -49,18 +51,16 @@ import java.util.Date;
  * Created by Sve on 4/21/16.
  */
 public class AddTask extends AppCompatActivity implements View.OnClickListener,
-        CalendarView.OnDateChangeListener, TimePicker.OnTimeChangedListener {
+        CalendarView.OnDateChangeListener, TimePicker.OnTimeChangedListener, RadioGroup.OnCheckedChangeListener {
     private static final String DATE_FORMAT = "EEE, MMM dd, yyyy";
     private LinearLayout closeBtn;
     private TextView saveBtn;
     private LinearLayout priorityLayout;
     private RelativeLayout addTaskBg;
-
     private LinearLayout doItLayout;
     private LinearLayout decideItLayout;
     private LinearLayout delegateItLayout;
     private LinearLayout dumpItLayout;
-
     private LinearLayout calendarLayout;
     private CalendarView calendarView;
     private LinearLayout timePickerLayout;
@@ -90,10 +90,20 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
     private TextView reminderCurrDateTxt;
     private CalendarView reminderCalendarView;
     private TimePicker reminderTimePickerView;
+    private LinearLayout reminderCalendarTextLayout;
     private RelativeLayout reminderClickableLayout;
     private ImageView reminderArrow;
     private RelativeLayout reminderContentLayout;
     private ImageView reminderDivider;
+    private RadioGroup reminderRadioGroup;
+    private LinearLayout reminderCheckGroup;
+    private CheckBox monCheckbox;
+    private CheckBox tueCheckbox;
+    private CheckBox wedCheckbox;
+    private CheckBox thuCheckbox;
+    private CheckBox friCheckbox;
+    private CheckBox satCheckbox;
+    private CheckBox sunCheckbox;
 
 
     @Override
@@ -181,6 +191,27 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
         reminderContentLayout.setVisibility(View.GONE);
         reminderDivider = (ImageView) findViewById(R.id.reminder_divider);
         reminderDivider.setVisibility(View.GONE);
+        reminderCalendarTextLayout = (LinearLayout) findViewById(R.id.reminder_cal_txt_layout);
+        reminderCalendarTextLayout.setVisibility(View.GONE);
+
+        reminderRadioGroup = (RadioGroup) findViewById(R.id.radio_group_reminder);
+        reminderRadioGroup.setOnCheckedChangeListener(this);
+        reminderCheckGroup = (LinearLayout) findViewById(R.id.check_group_reminder);
+        reminderCheckGroup.setVisibility(View.GONE);
+        monCheckbox = (CheckBox) findViewById(R.id.mon_btn);
+        tueCheckbox = (CheckBox) findViewById(R.id.tue_btn);
+        wedCheckbox = (CheckBox) findViewById(R.id.wed_btn);
+        thuCheckbox = (CheckBox) findViewById(R.id.thur_btn);
+        friCheckbox = (CheckBox) findViewById(R.id.fri_btn);
+        satCheckbox = (CheckBox) findViewById(R.id.sat_btn);
+        sunCheckbox = (CheckBox) findViewById(R.id.sun_btn);
+        monCheckbox.setOnClickListener(this);
+        tueCheckbox.setOnClickListener(this);
+        wedCheckbox.setOnClickListener(this);
+        thuCheckbox.setOnClickListener(this);
+        friCheckbox.setOnClickListener(this);
+        satCheckbox.setOnClickListener(this);
+        sunCheckbox.setOnClickListener(this);
     }
 
     private void populateLayout() {
@@ -374,6 +405,28 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
                     viewExpand(reminderTimePicker, true);
                     setArrowAnimation(reminderArrowTime, true);
                 }
+                break;
+        }
+    }
+
+    @Override
+    public void onCheckedChanged(RadioGroup radioGroup, int radioBtnId) {
+        switch (radioBtnId) {
+            case R.id.daily_btn:
+                reminderCheckGroup.setVisibility(View.GONE);
+                reminderCalendarTextLayout.setVisibility(View.GONE);
+                break;
+            case R.id.weekly_btn:
+                reminderCheckGroup.setVisibility(View.VISIBLE);
+                reminderCalendarTextLayout.setVisibility(View.GONE);
+                break;
+            case R.id.monthly_btn:
+                reminderCheckGroup.setVisibility(View.GONE);
+                reminderCalendarTextLayout.setVisibility(View.VISIBLE);
+                break;
+            case R.id.yearly_btn:
+                reminderCheckGroup.setVisibility(View.GONE);
+                reminderCalendarTextLayout.setVisibility(View.VISIBLE);
                 break;
         }
     }

@@ -61,15 +61,16 @@
                 android:id="@+id/daily_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/date"
+                android:textColor="@color/colorAccent"
                 android:textSize="15sp"
                 android:text="Daily"
+                android:checked="true"
                 />
             <RadioButton
                 android:id="@+id/weekly_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/date"
+                android:textColor="@color/colorAccent"
                 android:textSize="15sp"
                 android:text="Weekly"
                 />
@@ -77,7 +78,7 @@
                 android:id="@+id/monthly_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/date"
+                android:textColor="@color/colorAccent"
                 android:textSize="15sp"
                 android:text="Monthly"
                 />
@@ -85,11 +86,84 @@
                 android:id="@+id/yearly_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/date"
+                android:textColor="@color/colorAccent"
                 android:textSize="15sp"
                 android:text="Yearly"
                 />
         </RadioGroup>
+
+        <LinearLayout
+            android:id="@+id/check_group_reminder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_below="@+id/radio_group_reminder"
+            >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                >
+            <CheckBox
+                android:id="@+id/mon_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/date"
+                android:text="Mon"
+                android:checked="true"
+                />
+            <CheckBox
+                android:id="@+id/tue_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/date"
+                android:text="Tue"
+                />
+            <CheckBox
+                android:id="@+id/wed_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/date"
+                android:text="Wed"
+                />
+            <CheckBox
+                android:id="@+id/thur_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/date"
+                android:text="Thu"
+                />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal"
+                >
+                <CheckBox
+                    android:id="@+id/fri_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/date"
+                    android:text="Fri"
+                    />
+                <CheckBox
+                    android:id="@+id/sat_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/date"
+                    android:text="Sat"
+                    />
+                <CheckBox
+                    android:id="@+id/sun_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/date"
+                    android:text="Sun"
+                    />
+            </LinearLayout>
+        </LinearLayout>
 
         <!-- Cal-Time Txt Layout START -->
         <LinearLayout
@@ -97,7 +171,7 @@
             android:layout_width="match_parent"
             android:layout_height="25dp"
             android:gravity="bottom|center_horizontal"
-            android:layout_below="@+id/radio_group_reminder"
+            android:layout_below="@+id/check_group_reminder"
             android:orientation="horizontal"
             android:layout_marginTop="@dimen/task_standard_margin"
             >
@@ -185,7 +259,7 @@
             android:clickable="true"
             android:layout_below="@+id/main_reminder_txt_layout"
             >
-            <TimePicker
+            reminderCalendar<TimePicker
                 android:id="@+id/reminder_time_picker_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
