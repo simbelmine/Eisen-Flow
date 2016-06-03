@@ -259,7 +259,7 @@
             android:clickable="true"
             android:layout_below="@+id/main_reminder_txt_layout"
             >
-            reminderCalendar<TimePicker
+            <TimePicker
                 android:id="@+id/reminder_time_picker_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

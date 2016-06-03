@@ -146,7 +146,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
 
         timePickerLayout = (LinearLayout) findViewById(R.id.add_task_time_picker);
         timePickerLayout.setVisibility(View.GONE); // It's causing rendering problems if it's set from the XML
-        timePickerView = (TimePicker) findViewById(R.id.add_task_time_picker_view);
+        timePickerView = (TimePicker) findViewById(R.id.time_picker_view);
         timePickerView.setOnTimeChangedListener(this);
 
         dateTxt = (TextView) findViewById(R.id.add_task_date_txt);
@@ -436,16 +436,33 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
     public void onSelectedDayChange(CalendarView calendarView, int year, int month, int day_of_month) {
         Calendar cal = Calendar.getInstance();
         cal.set(year, month, day_of_month);
+        String dateString = getDateString(cal);
 
-        dateTxt.setText(getDateString(cal));
+        switch (calendarView.getId()) {
+            case R.id.calendar_view:
+                dateTxt.setText(dateString);
+                break;
+            case R.id.reminder_calendar_view:
+                reminderDateTxt.setText(dateString);
+        }
+
     }
 
     @Override
     public void onTimeChanged(TimePicker timePicker, int hour, int minute) {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH, hour, minute);
+        String timeString = getTimeString(cal);
 
-        timeTxt.setText(getTimeString(cal));
+        switch (timePicker.getId()) {
+            case R.id.time_picker_view:
+                timeTxt.setText(timeString);
+                break;
+            case R.id.reminder_time_picker_view:
+                reminderTimeTxt.setText(timeString);
+                break;
+        }
+
     }
 
     private void saveNewTask() {
