@@ -18,6 +18,18 @@
     <string name="time_txt">All day</string>
     <string name="note_txt">Add note</string>
     <string name="reminder_txt">Add reminder</string>
+    <string name="daily_txt">Daily</string>
+    <string name="weekly_txt">Weekly</string>
+    <string name="monthly_txt">Monthly</string>
+    <string name="yearly_txt">Yearly</string>
+    <string name="mon_txt">Mon</string>
+    <string name="tue_txt">Tue</string>
+    <string name="wed_txt">Wed</string>
+    <string name="thu_txt">Thu</string>
+    <string name="fri_txt">Fri</string>
+    <string name="sat_txt">Sat</string>
+    <string name="sun_txt">Sun</string>
+
 
     <!-- Priority Dialog -->
     <string name="u_and_i">Urgent and Important</string>

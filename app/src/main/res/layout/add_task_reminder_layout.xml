@@ -63,7 +63,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorAccent"
                 android:textSize="15sp"
-                android:text="Daily"
+                android:text="@string/daily_txt"
                 android:checked="true"
                 />
             <RadioButton
@@ -72,7 +72,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorAccent"
                 android:textSize="15sp"
-                android:text="Weekly"
+                android:text="@string/weekly_txt"
                 />
             <RadioButton
                 android:id="@+id/monthly_btn"
@@ -80,7 +80,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorAccent"
                 android:textSize="15sp"
-                android:text="Monthly"
+                android:text="@string/monthly_txt"
                 />
             <RadioButton
                 android:id="@+id/yearly_btn"
@@ -88,7 +88,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorAccent"
                 android:textSize="15sp"
-                android:text="Yearly"
+                android:text="@string/yearly_txt"
                 />
         </RadioGroup>
 
@@ -110,7 +110,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/date"
-                android:text="Mon"
+                android:text="@string/mon_txt"
                 android:checked="true"
                 />
             <CheckBox
@@ -118,21 +118,21 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/date"
-                android:text="Tue"
+                android:text="@string/tue_txt"
                 />
             <CheckBox
                 android:id="@+id/wed_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/date"
-                android:text="Wed"
+                android:text="@string/wed_txt"
                 />
             <CheckBox
                 android:id="@+id/thur_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/date"
-                android:text="Thu"
+                android:text="@string/thu_txt"
                 />
             </LinearLayout>
             <LinearLayout
@@ -146,21 +146,21 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/date"
-                    android:text="Fri"
+                    android:text="@string/fri_txt"
                     />
                 <CheckBox
                     android:id="@+id/sat_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/date"
-                    android:text="Sat"
+                    android:text="@string/sat_txt"
                     />
                 <CheckBox
                     android:id="@+id/sun_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/date"
-                    android:text="Sun"
+                    android:text="@string/sun_txt"
                     />
             </LinearLayout>
         </LinearLayout>

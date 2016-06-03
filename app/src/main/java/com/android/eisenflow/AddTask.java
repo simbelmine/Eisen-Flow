@@ -30,6 +30,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -712,10 +713,11 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
     }
 
     private String getWholeStringToSave() {
-        // Priority, Date, Time, Name, Note
+        // Priority, Date, Time, Name, Reminder, Note
         String date = dateTxt.getText().toString();
         String time = timeTxt.getText().toString();
         String name = taskName.getText().toString();
+        String reminder = getReminderString();
         String note = noteTxt.getText().toString();
         String separator = "+";
 
@@ -729,7 +731,9 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
             if(isEditMode(intent)) {
                 progress = dbListUtils.getTaskProgress();
             }
-            stringToReturn = String.valueOf(priorityInt) + separator + date + separator + time + separator + name + separator + note + separator + progress;
+            if(reminder == null) reminder = "";
+
+            stringToReturn = String.valueOf(priorityInt) + separator + date + separator + time + separator + name + separator + reminder + separator + note + separator + progress;
         }
         else {
             stringToReturn = String.valueOf(priorityInt) + separator + date + separator + time + separator + name + separator + note;
@@ -738,6 +742,62 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
         return stringToReturn;
     }
 
+    private String getReminderString() {
+        int radioChoiceId = getCheckedRadioId();
+        if(radioChoiceId != -1) {
+            String radioChoiceLabel = getCheckedRadioLbl(radioChoiceId);
+            String radioChoiceAdditionalInfo = getCheckedRadioAdditionalInfo(radioChoiceId);
+            if(radioChoiceAdditionalInfo != null) {
+                return radioChoiceLabel + ";" + radioChoiceAdditionalInfo;
+            }
+        }
+
+        return null;
+    }
+
+    private int getCheckedRadioId() {
+        if(reminderRadioGroup.getCheckedRadioButtonId() == -1) {
+            return -1;
+        }
+        else {
+            return reminderRadioGroup.getCheckedRadioButtonId();
+        }
+    }
+
+    private String getCheckedRadioLbl(int radioChoiceId) {
+        return ((RadioButton)findViewById(radioChoiceId)).getText().toString();
+    }
+
+    private String getCheckedRadioAdditionalInfo(int radioChoiceId) {
+        switch (radioChoiceId) {
+            case R.id.daily_btn:
+                return reminderTimeTxt.getText().toString();
+            case R.id.weekly_btn:
+                if(getCheckedWeekDays() == null) {
+                    return null;
+                }
+                return getCheckedWeekDays().toString() + ";" + reminderTimeTxt.getText().toString();
+            case R.id.monthly_btn:
+                return reminderDateTxt.getText().toString() + ";" + reminderTimeTxt.getText().toString();
+            case R.id.yearly_btn:
+                return reminderDateTxt.getText().toString() + ";" + reminderTimeTxt.getText().toString();
+        }
+
+        return null;
+    }
+
+    private StringBuffer getCheckedWeekDays() {
+        StringBuffer stringToReturn = new StringBuffer();
+        if(monCheckbox.isChecked()) stringToReturn.append(monCheckbox.getText() + ",");
+        if(tueCheckbox.isChecked()) stringToReturn.append(tueCheckbox.getText() + ",");
+        if(wedCheckbox.isChecked()) stringToReturn.append(wedCheckbox.getText() + ",");
+        if(thuCheckbox.isChecked()) stringToReturn.append(thuCheckbox.getText() + ",");
+        if(friCheckbox.isChecked()) stringToReturn.append(friCheckbox.getText() + ",");
+        if(satCheckbox.isChecked()) stringToReturn.append(satCheckbox.getText() + ",");
+        if(sunCheckbox.isChecked()) stringToReturn.append(sunCheckbox.getText() + ",");
+
+        return stringToReturn;
+    }
 
     private void viewExpand(View view, boolean expanded) {
         view.measure(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
