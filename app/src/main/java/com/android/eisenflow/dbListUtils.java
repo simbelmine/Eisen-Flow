@@ -20,8 +20,9 @@ public class DbListUtils {
     // Date:        1
     // Hour:        2
     // Name:        3
-    // Note:        4
-    // Progress:    5
+    // Reminder:    4
+    // Note:        5
+    // Progress:    6
 
     public DbListUtils(String task){
         this.task = task;
@@ -34,6 +35,12 @@ public class DbListUtils {
         if(task != null) {
             splitStr = task.split("\\+");
         }
+
+//        if(splitStr != null) {
+//            for (int i = 0; i < splitStr.length; i++) {
+//                Log.v("eisen", splitStr[i]);
+//            }
+//        }
     }
 
     public int getTaskPriority() {
@@ -72,25 +79,37 @@ public class DbListUtils {
         return "";
     }
 
-    public String getTaskNote() {
+    public String getTaskReminder() {
         if(splitStr.length > 4) {
+            if(splitStr[4].contains("r")) {
+                return splitStr[4];
+            }
+        }
+
+        return "";
+    }
+
+    public String getTaskNote() {
+        if(splitStr.length > 5) {
+            return splitStr[5];
+        }
+        else if(splitStr.length > 4) {
             return splitStr[4];
         }
         return "";
     }
 
     public int getTaskProgress() {
-        if(splitStr.length > 5 && isNumeric(splitStr[5]) && splitStr[5]!= null) {
-            return Integer.parseInt(splitStr[5]);
+        if(splitStr.length > 6 && isNumeric(splitStr[6]) && splitStr[6]!= null) {
+            return Integer.parseInt(splitStr[6]);
         }
         // If there is no Note
-        else if(splitStr.length > 4 && "".equals(getTaskNote()) && splitStr[4]!= null) {
-            return Integer.parseInt(splitStr[4]);
+        else if(splitStr.length > 5 && "".equals(getTaskNote()) && splitStr[5]!= null) {
+            return Integer.parseInt(splitStr[5]);
         }
 
         return 0;
     }
-
 
 
     // *** Helping Methods *** //

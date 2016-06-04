@@ -45,6 +45,7 @@ import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -232,7 +233,9 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
 
     private void populateLayout() {
         if(isEditMode(intent)) {
-            setBgPriorityColor(dbListUtils.getTaskPriority());
+            int priority = dbListUtils.getTaskPriority();
+            setBgPriorityColor(priority);
+
             taskName.setText(dbListUtils.getTaskName());
             Calendar cal = Calendar.getInstance();
             if(dbListUtils.getTaskDate() != null) {
@@ -242,7 +245,8 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
             calendarView.setDate(cal.getTimeInMillis(), true, true);
 
             timeTxt.setText(dbListUtils.getTaskTime());
-            reminderTimeTxt.setText(dbListUtils.getTaskTime());
+
+            // ### repeating code ###
             if(Build.VERSION.SDK_INT >= MainActivity.NEEDED_API_LEVEL) {
                 Date date = getTime(dbListUtils.getTaskTime());
                 Calendar c = Calendar.getInstance();
@@ -252,6 +256,65 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
                 reminderTimePickerView.setHour(c.get(Calendar.HOUR_OF_DAY));
                 reminderTimePickerView.setMinute(c.get(Calendar.MINUTE));
             }
+
+            // If Green Task
+            if(priority == 1) {
+                reminderLayout.setVisibility(View.VISIBLE);
+                reminderDivider.setVisibility(View.VISIBLE);
+
+                String reminder = dbListUtils.getTaskReminder();
+                if(!"".equals(reminder)) {
+                    String[] splitReminder = getSplitReminder(reminder);
+                    String repeatWhenStr = splitReminder[0];
+                    setTaskRepeatWhen(repeatWhenStr);
+                    String repeatedDaysStr = null;
+                    String dateStr = null;
+                    String timeStr = null;
+
+                    if(isRepeatedDays(splitReminder[1])) {
+                        repeatedDaysStr = splitReminder[1];
+                    }
+                    else if(isDateString(splitReminder[1])) {
+                        dateStr = splitReminder[1];
+                    }
+                    else if(isTimeString(splitReminder[1])) {
+                        timeStr = splitReminder[1];
+                    }
+
+                    if(repeatedDaysStr != null || dateStr != null) {
+                        timeStr = splitReminder[2];
+                    }
+
+
+                    if(repeatedDaysStr != null) {
+                        checkRepeatedDays(repeatedDaysStr);
+                    }
+
+                    if(dateStr != null) {
+                        reminderDateTxt.setText(dateStr);
+                        Calendar reminderCal = Calendar.getInstance();
+                        reminderCal.setTime(getDate(dateStr));
+                        reminderCalendarView.setDate(reminderCal.getTimeInMillis(), true, true);
+                    }
+
+                    if(timeStr != null) {
+                        reminderTimeTxt.setText(timeStr);
+                        if(Build.VERSION.SDK_INT >= MainActivity.NEEDED_API_LEVEL) {
+                            Date date = getTime(timeStr);
+                            Calendar c = Calendar.getInstance();
+                            c.setTime(date);
+                            timePickerView.setHour(c.get(Calendar.HOUR_OF_DAY));
+                            timePickerView.setMinute(c.get(Calendar.MINUTE));
+                            reminderTimePickerView.setHour(c.get(Calendar.HOUR_OF_DAY));
+                            reminderTimePickerView.setMinute(c.get(Calendar.MINUTE));
+                        }
+
+                    }
+
+                }
+            }
+
+
 
             noteTxt.setText(dbListUtils.getTaskNote());
         }
@@ -806,7 +869,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
             String radioChoiceLabel = getCheckedRadioLbl(radioChoiceId);
             String radioChoiceAdditionalInfo = getCheckedRadioAdditionalInfo(radioChoiceId);
             if(radioChoiceAdditionalInfo != null) {
-                return radioChoiceLabel + ";" + radioChoiceAdditionalInfo;
+                return "r" + radioChoiceLabel + ";" + radioChoiceAdditionalInfo;
             }
         }
 
@@ -1048,6 +1111,70 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
         ObjectAnimator anim = ObjectAnimator.ofFloat(v, "rotation",rotationAngle, rotationAngle);
         anim.setDuration(500);
         anim.start();
+    }
+
+    private String[] getSplitReminder(String reminder) {
+        return reminder.split(";");
+    }
+
+    private void setTaskRepeatWhen(String repeatWhenStr) {
+        if(repeatWhenStr.contains("r")) {
+            checkRepeatWhen(repeatWhenStr.substring(1));
+        }
+    }
+
+    private void checkRepeatWhen(String repeatWhenStr) {
+        if(getString(R.string.daily_txt).equals(repeatWhenStr)) {
+            ((RadioButton)findViewById(R.id.daily_btn)).setChecked(true);
+        }
+        else if(getString(R.string.weekly_txt).equals(repeatWhenStr)) {
+            ((RadioButton)findViewById(R.id.weekly_btn)).setChecked(true);
+        }
+        else if(getString(R.string.monthly_txt).equals(repeatWhenStr)) {
+            ((RadioButton)findViewById(R.id.monthly_btn)).setChecked(true);
+        }
+        else if(getString(R.string.yearly_txt).equals(repeatWhenStr)) {
+            ((RadioButton)findViewById(R.id.yearly_btn)).setChecked(true);
+        }
+    }
+
+    private boolean isRepeatedDays(String s) {
+        return s.matches("[a-zA-Z,]+");
+    }
+
+    private boolean isDateString(String s) {
+        return s.matches("(([A-Z].*[0-9]))");
+    }
+
+    private boolean isTimeString(String s) {
+        return s.matches("[0-9:]+");
+    }
+
+    private void checkRepeatedDays(String repeatedDays) {
+        String[] repeatedDaysSplit = repeatedDays.split(",");
+        ArrayList<String> repeatedDaysList = new ArrayList<>(Arrays.asList(repeatedDaysSplit));
+
+        if(repeatedDaysList.contains(getString(R.string.mon_txt))) {
+            ((CheckBox)findViewById(R.id.mon_btn)).setChecked(true);
+        }
+        if(repeatedDaysList.contains(getString(R.string.tue_txt))) {
+            ((CheckBox)findViewById(R.id.tue_btn)).setChecked(true);
+        }
+        if(repeatedDaysList.contains(getString(R.string.wed_txt))){
+            ((CheckBox)findViewById(R.id.wed_btn)).setChecked(true);
+        }
+        if(repeatedDaysList.contains(getString(R.string.thu_txt)) ){
+            ((CheckBox)findViewById(R.id.thur_btn)).setChecked(true);
+        }
+        if(repeatedDaysList.contains(getString(R.string.fri_txt))) {
+            ((CheckBox)findViewById(R.id.fri_btn)).setChecked(true);
+        }
+        if(repeatedDaysList.contains(getString(R.string.sat_txt))) {
+            ((CheckBox)findViewById(R.id.sat_btn)).setChecked(true);
+        }
+        if(repeatedDaysList.contains(getString(R.string.sun_txt))){
+            ((CheckBox)findViewById(R.id.sun_btn)).setChecked(true);
+        }
     }
 }
 
