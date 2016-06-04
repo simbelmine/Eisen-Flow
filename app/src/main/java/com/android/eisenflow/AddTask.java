@@ -62,13 +62,15 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
     private LinearLayout decideItLayout;
     private LinearLayout delegateItLayout;
     private LinearLayout dumpItLayout;
-    private LinearLayout calendarLayout;
+    private RelativeLayout calendarLayout;
     private CalendarView calendarView;
     private LinearLayout timePickerLayout;
     private TimePicker timePickerView;
     private TextView dateTxt;
+    private LinearLayout dateTextLayout;
     private TextView currDateTxt;
     private TextView timeTxt;
+    private LinearLayout timeTextLayout;
     private LinearLayout noteLayout;
     private LinearLayout noteEditLayout;
     private int priorityInt = -1; // from 0 to 3 ; 0 is the highest priority
@@ -82,7 +84,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
     private ImageView arrowNote;
     private boolean isPriority0_tip_shown = false;
     private LinearLayout reminderLayout;
-    private LinearLayout reminderCalendar;
+    private RelativeLayout reminderCalendar;
     private LinearLayout reminderTimePicker;
     private TextView reminderDateTxt;
     private TextView reminderTimeTxt;
@@ -92,6 +94,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
     private CalendarView reminderCalendarView;
     private TimePicker reminderTimePickerView;
     private LinearLayout reminderCalendarTextLayout;
+    private LinearLayout reminderTimeTextLayout;
     private RelativeLayout reminderClickableLayout;
     private ImageView reminderArrow;
     private RelativeLayout reminderContentLayout;
@@ -105,6 +108,9 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
     private CheckBox friCheckbox;
     private CheckBox satCheckbox;
     private CheckBox sunCheckbox;
+    private RelativeLayout mainDueDateLayout;
+    private RelativeLayout mainDueDateTxtLayout;
+    private ImageView arrowDueDate;
 
 
     @Override
@@ -140,7 +146,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
         delegateItLayout.setOnClickListener(this);
         dumpItLayout.setOnClickListener(this);
 
-        calendarLayout = (LinearLayout) findViewById(R.id.add_task_calendar);
+        calendarLayout = (RelativeLayout) findViewById(R.id.add_task_calendar);
         calendarView = (CalendarView) findViewById(R.id.calendar_view);
         calendarView.setOnDateChangeListener(this);
 
@@ -150,11 +156,13 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
         timePickerView.setOnTimeChangedListener(this);
 
         dateTxt = (TextView) findViewById(R.id.add_task_date_txt);
-        dateTxt.setOnClickListener(this);
+        dateTextLayout = (LinearLayout) findViewById(R.id.cal_txt_layout);
+        dateTextLayout.setOnClickListener(this);
         currDateTxt = (TextView) findViewById(R.id.curr_date_txt);
         currDateTxt.setOnClickListener(this);
         timeTxt = (TextView) findViewById(R.id.add_task_time);
-        timeTxt.setOnClickListener(this);
+        timeTextLayout = (LinearLayout) findViewById(R.id.time_txt_layout);
+        timeTextLayout.setOnClickListener(this);
 
         noteLayout = (LinearLayout) findViewById(R.id.note_layout);
         noteLayout.setOnClickListener(this);
@@ -170,13 +178,11 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
 
         reminderLayout = (LinearLayout) findViewById(R.id.reminder_layout);
         reminderLayout.setVisibility(View.GONE);
-        reminderCalendar = (LinearLayout) findViewById(R.id.reminder_calendar);
+        reminderCalendar = (RelativeLayout) findViewById(R.id.reminder_calendar);
         reminderTimePicker = (LinearLayout) findViewById(R.id.reminder_time_picker);
         reminderTimePicker.setVisibility(View.GONE);
         reminderDateTxt = (TextView) findViewById(R.id.reminder_date_txt);
         reminderTimeTxt = (TextView) findViewById(R.id.reminder_time_txt);
-        reminderDateTxt.setOnClickListener(this);
-        reminderTimeTxt.setOnClickListener(this);
         reminderArrowCalendar = (ImageView) findViewById(R.id.arrow_cal_reminder);
         reminderArrowTime = (ImageView) findViewById(R.id.arrow_time_reminder);
         reminderCurrDateTxt = (TextView) findViewById(R.id.reminder_curr_date_txt);
@@ -193,7 +199,10 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
         reminderDivider = (ImageView) findViewById(R.id.reminder_divider);
         reminderDivider.setVisibility(View.GONE);
         reminderCalendarTextLayout = (LinearLayout) findViewById(R.id.reminder_cal_txt_layout);
+        reminderCalendarTextLayout.setOnClickListener(this);
         reminderCalendarTextLayout.setVisibility(View.GONE);
+        reminderTimeTextLayout = (LinearLayout) findViewById(R.id.reminder_time_txt_layout);
+        reminderTimeTextLayout.setOnClickListener(this);
 
         reminderRadioGroup = (RadioGroup) findViewById(R.id.radio_group_reminder);
         reminderRadioGroup.setOnCheckedChangeListener(this);
@@ -213,6 +222,12 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
         friCheckbox.setOnClickListener(this);
         satCheckbox.setOnClickListener(this);
         sunCheckbox.setOnClickListener(this);
+
+        mainDueDateLayout = (RelativeLayout) findViewById(R.id.main_due_date_layout);
+        mainDueDateLayout.setOnClickListener(this);
+        mainDueDateTxtLayout = (RelativeLayout) findViewById(R.id.main_due_date_txt_layout);
+        mainDueDateTxtLayout.setVisibility(View.GONE);
+        arrowDueDate = (ImageView) findViewById(R.id.arrow_due_date);
     }
 
     private void populateLayout() {
@@ -243,6 +258,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
         else {
             dateTxt.setText(getDateString(Calendar.getInstance()));
             currDateTxt.setText(getDateString(Calendar.getInstance()));
+            reminderCurrDateTxt.setText(getDateString(Calendar.getInstance()));
             timeTxt.setText(getTimeString(Calendar.getInstance()));
         }
     }
@@ -296,7 +312,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
                 reminderDivider.setVisibility(View.GONE);
                 priorityInt = 3;
                 break;
-            case R.id.add_task_date_txt:
+            case R.id.cal_txt_layout:
                 hideSoftKbd();
                 if(calendarLayout.getVisibility() == View.VISIBLE) {
                     viewExpand(calendarLayout, false);
@@ -311,7 +327,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
                     setArrowAnimation(arrowCalendar, true);
                 }
                 break;
-            case R.id.add_task_time:
+            case R.id.time_txt_layout:
                 hideSoftKbd();
                 if(isSystem24hFormat()) {
                     timePickerView.setIs24HourView(true);
@@ -340,8 +356,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
                     setArrowAnimation(arrowNote, false);
                 }
                 else {
-                    calendarLayout.setVisibility(View.GONE);
-                    timePickerLayout.setVisibility(View.GONE);
+                    mainDueDateTxtLayout.setVisibility(View.GONE);
                     reminderContentLayout.setVisibility(View.GONE);
                     viewExpand(noteEditLayout, true);
                     setFocusToView(view);
@@ -365,14 +380,13 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
                     setArrowAnimation(reminderArrow, false);
                 }
                 else {
-                    calendarLayout.setVisibility(View.GONE);
-                    timePickerLayout.setVisibility(View.GONE);
+                    mainDueDateTxtLayout.setVisibility(View.GONE);
                     noteEditLayout.setVisibility(View.GONE);
                     viewExpand(reminderContentLayout, true);
                     setArrowAnimation(reminderArrow, true);
                 }
                 break;
-            case R.id.reminder_date_txt:
+            case R.id.reminder_cal_txt_layout:
                 hideSoftKbd();
                 if(reminderCalendar.getVisibility() == View.VISIBLE) {
                     viewExpand(reminderCalendar, false);
@@ -386,7 +400,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
                     setArrowAnimation(reminderArrowCalendar, true);
                 }
                 break;
-            case R.id.reminder_time_txt:
+            case R.id.reminder_time_txt_layout:
                 hideSoftKbd();
                 if(isSystem24hFormat()) {
                     reminderTimePickerView.setIs24HourView(true);
@@ -407,6 +421,23 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
                     setArrowAnimation(reminderArrowTime, true);
                 }
                 break;
+
+            case R.id.main_due_date_layout:
+                if(mainDueDateTxtLayout.getVisibility() == View.VISIBLE) {
+                    hideSoftKbd();
+                    viewExpand(mainDueDateTxtLayout, false);
+                    setArrowAnimation(arrowDueDate, false);
+                }
+                else {
+                    hideSoftKbd();
+                    reminderContentLayout.setVisibility(View.GONE);
+                    noteEditLayout.setVisibility(View.GONE);
+
+
+                    viewExpand(mainDueDateTxtLayout, true);
+                    setArrowAnimation(arrowDueDate, true);
+                }
+                break;
         }
     }
 
@@ -416,10 +447,12 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
             case R.id.daily_btn:
                 reminderCheckGroup.setVisibility(View.GONE);
                 reminderCalendarTextLayout.setVisibility(View.GONE);
+                reminderCalendar.setVisibility(View.GONE);
                 break;
             case R.id.weekly_btn:
                 reminderCheckGroup.setVisibility(View.VISIBLE);
                 reminderCalendarTextLayout.setVisibility(View.GONE);
+                reminderCalendar.setVisibility(View.GONE);
                 break;
             case R.id.monthly_btn:
                 reminderCheckGroup.setVisibility(View.GONE);
@@ -865,6 +898,9 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
                     view.setVisibility(View.GONE);
                     if(view == calendarLayout) {
                         currDateTxt.setVisibility(View.GONE);
+                    }
+                    else if(view == reminderCalendar) {
+                        reminderCurrDateTxt.setVisibility(View.GONE);
                     }
                 }
             });

@@ -169,7 +169,7 @@
         <LinearLayout
             android:id="@+id/main_reminder_txt_layout"
             android:layout_width="match_parent"
-            android:layout_height="25dp"
+            android:layout_height="wrap_content"
             android:gravity="bottom|center_horizontal"
             android:layout_below="@+id/check_group_reminder"
             android:orientation="horizontal"
@@ -181,6 +181,8 @@
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
                 android:layout_marginRight="10dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:padding="10dp"
                 >
                 <TextView
                     android:id="@+id/reminder_date_txt"
@@ -188,15 +190,14 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:textSize="@dimen/task_font_size"
-                    android:clickable="true"
-                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:textColor="@color/colorAccent"
                     android:text="Fri, May 27, 2016"
                     />
                 <ImageView
                     android:id="@+id/arrow_cal_reminder"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    android:src="@mipmap/ic_arrow_up"
+                    android:src="@mipmap/ic_arrow_up_light"
                     />
             </LinearLayout>
             <LinearLayout
@@ -204,20 +205,23 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="10dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:padding="10dp"
                 >
                 <TextView
                     android:id="@+id/reminder_time_txt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="?attr/selectableItemBackgroundBorderless"
                     android:text="07:41"
                     android:layout_toLeftOf="@+id/arrow_time"
+                    android:textSize="@dimen/task_font_size"
+                    android:textColor="@color/colorAccent"
                     />
                 <ImageView
                     android:id="@+id/arrow_time_reminder"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    android:src="@mipmap/ic_arrow_up"
+                    android:src="@mipmap/ic_arrow_up_light"
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="@dimen/task_standard_margin"
                     />
@@ -225,7 +229,7 @@
         </LinearLayout>
         <!-- Cal-Time Txt Layout END -->
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/reminder_calendar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -240,24 +244,27 @@
                 android:layout_height="match_parent"
                 android:clickable="true"
                 />
-        </LinearLayout>
-        <TextView
-            android:id="@+id/reminder_curr_date_txt"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/task_name_buttons_height"
-            android:textColor="@color/colorAccent"
-            android:gravity="center"
-            android:clickable="true"
-            android:visibility="gone"
-            android:textSize="18sp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            />
+            <TextView
+                android:id="@+id/reminder_curr_date_txt"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/task_name_buttons_height"
+                android:textColor="@color/colorAccent"
+                android:gravity="center"
+                android:clickable="true"
+                android:visibility="gone"
+                android:textSize="18sp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="@dimen/task_standard_margin"
+                />
+        </RelativeLayout>
         <LinearLayout
             android:id="@+id/reminder_time_picker"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clickable="true"
             android:layout_below="@+id/main_reminder_txt_layout"
+            android:visibility="visible"
             >
             <TimePicker
                 android:id="@+id/reminder_time_picker_view"

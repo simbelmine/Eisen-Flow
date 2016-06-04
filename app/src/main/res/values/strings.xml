@@ -16,6 +16,7 @@
     <string name="enter_task_hint">Enter task name...</string>
     <string name="task_priority_txt">Task priority</string>
     <string name="time_txt">All day</string>
+    <string name="due_date_txt">Add Due date</string>
     <string name="note_txt">Add note</string>
     <string name="reminder_txt">Add reminder</string>
     <string name="daily_txt">Daily</string>
