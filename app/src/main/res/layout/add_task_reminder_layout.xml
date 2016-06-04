@@ -64,7 +64,6 @@
                 android:textColor="@color/colorAccent"
                 android:textSize="15sp"
                 android:text="@string/daily_txt"
-                android:checked="true"
                 />
             <RadioButton
                 android:id="@+id/weekly_btn"
@@ -111,7 +110,6 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/date"
                 android:text="@string/mon_txt"
-                android:checked="true"
                 />
             <CheckBox
                 android:id="@+id/tue_btn"

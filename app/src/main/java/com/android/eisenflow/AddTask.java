@@ -555,7 +555,6 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
             checkPriority();
         }
 
-
         if(name.length() == 0 || name == null || getResources().getString(R.string.enter_task_hint).equals(name)) {
             showAlertMessage(getResources().getString(R.string.add_task_name_alert), R.color.firstQuadrant);
             return false;
@@ -566,6 +565,14 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
         }
         else if(!isEditMode(intent)) {
             checkDateTime();
+        }
+
+        int radioChoiceId = getCheckedRadioId();
+        if(radioChoiceId != -1 && radioChoiceId == R.id.weekly_btn) {
+            if(getCheckedRadioAdditionalInfo(radioChoiceId) == null) {
+                showAlertMessage(getResources().getString(R.string.add_task_reminder_alert), R.color.firstQuadrant);
+                return false;
+            }
         }
 
         return true;
@@ -792,6 +799,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
         return stringToReturn;
     }
 
+
     private String getReminderString() {
         int radioChoiceId = getCheckedRadioId();
         if(radioChoiceId != -1) {
@@ -823,7 +831,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
             case R.id.daily_btn:
                 return reminderTimeTxt.getText().toString();
             case R.id.weekly_btn:
-                if(getCheckedWeekDays() == null) {
+                if(getCheckedWeekDays() == null || getCheckedWeekDays().length() == 0) {
                     return null;
                 }
                 return getCheckedWeekDays().toString() + ";" + reminderTimeTxt.getText().toString();
