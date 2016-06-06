@@ -233,88 +233,29 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
 
     private void populateLayout() {
         if(isEditMode(intent)) {
+            // #Priority
             int priority = dbListUtils.getTaskPriority();
             setBgPriorityColor(priority);
-
+            // #Task Name
             taskName.setText(dbListUtils.getTaskName());
+            // #Calendar Date
             Calendar cal = Calendar.getInstance();
             if(dbListUtils.getTaskDate() != null) {
                 cal.setTime(dbListUtils.getTaskDate());
             }
             dateTxt.setText(getDateString(cal));
             calendarView.setDate(cal.getTimeInMillis(), true, true);
-
+            // #Time
             timeTxt.setText(dbListUtils.getTaskTime());
+            setTimeToTimePicker(dbListUtils.getTaskTime());
 
-            // ### repeating code ###
-            if(Build.VERSION.SDK_INT >= MainActivity.NEEDED_API_LEVEL) {
-                Date date = getTime(dbListUtils.getTaskTime());
-                Calendar c = Calendar.getInstance();
-                c.setTime(date);
-                timePickerView.setHour(c.get(Calendar.HOUR_OF_DAY));
-                timePickerView.setMinute(c.get(Calendar.MINUTE));
-                reminderTimePickerView.setHour(c.get(Calendar.HOUR_OF_DAY));
-                reminderTimePickerView.setMinute(c.get(Calendar.MINUTE));
-            }
-
-            // If Green Task
-            if(priority == 1) {
+            // #Populate Reminder If Green Task
+            if(isGreenTask(priority)) {
                 reminderLayout.setVisibility(View.VISIBLE);
                 reminderDivider.setVisibility(View.VISIBLE);
 
-                String reminder = dbListUtils.getTaskReminder();
-                if(!"".equals(reminder)) {
-                    String[] splitReminder = getSplitReminder(reminder);
-                    String repeatWhenStr = splitReminder[0];
-                    setTaskRepeatWhen(repeatWhenStr);
-                    String repeatedDaysStr = null;
-                    String dateStr = null;
-                    String timeStr = null;
-
-                    if(isRepeatedDays(splitReminder[1])) {
-                        repeatedDaysStr = splitReminder[1];
-                    }
-                    else if(isDateString(splitReminder[1])) {
-                        dateStr = splitReminder[1];
-                    }
-                    else if(isTimeString(splitReminder[1])) {
-                        timeStr = splitReminder[1];
-                    }
-
-                    if(repeatedDaysStr != null || dateStr != null) {
-                        timeStr = splitReminder[2];
-                    }
-
-
-                    if(repeatedDaysStr != null) {
-                        checkRepeatedDays(repeatedDaysStr);
-                    }
-
-                    if(dateStr != null) {
-                        reminderDateTxt.setText(dateStr);
-                        Calendar reminderCal = Calendar.getInstance();
-                        reminderCal.setTime(getDate(dateStr));
-                        reminderCalendarView.setDate(reminderCal.getTimeInMillis(), true, true);
-                    }
-
-                    if(timeStr != null) {
-                        reminderTimeTxt.setText(timeStr);
-                        if(Build.VERSION.SDK_INT >= MainActivity.NEEDED_API_LEVEL) {
-                            Date date = getTime(timeStr);
-                            Calendar c = Calendar.getInstance();
-                            c.setTime(date);
-                            timePickerView.setHour(c.get(Calendar.HOUR_OF_DAY));
-                            timePickerView.setMinute(c.get(Calendar.MINUTE));
-                            reminderTimePickerView.setHour(c.get(Calendar.HOUR_OF_DAY));
-                            reminderTimePickerView.setMinute(c.get(Calendar.MINUTE));
-                        }
-
-                    }
-
-                }
+                populateReminderTaskData();
             }
-
-
 
             noteTxt.setText(dbListUtils.getTaskNote());
         }
@@ -1175,6 +1116,71 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
         if(repeatedDaysList.contains(getString(R.string.sun_txt))){
             ((CheckBox)findViewById(R.id.sun_btn)).setChecked(true);
         }
+    }
+
+    private void setTimeToTimePicker(String timeStr) {
+        if(Build.VERSION.SDK_INT >= MainActivity.NEEDED_API_LEVEL) {
+            Date date = getTime(timeStr);
+            Calendar c = Calendar.getInstance();
+            c.setTime(date);
+            timePickerView.setHour(c.get(Calendar.HOUR_OF_DAY));
+            timePickerView.setMinute(c.get(Calendar.MINUTE));
+            reminderTimePickerView.setHour(c.get(Calendar.HOUR_OF_DAY));
+            reminderTimePickerView.setMinute(c.get(Calendar.MINUTE));
+        }
+    }
+
+    private boolean isGreenTask(int priority) {
+        if (priority == 1) return true;
+        return false;
+    }
+
+    private void populateReminderTaskData() {
+        String reminder = dbListUtils.getTaskReminder();
+        if(isReminderPresent(reminder)) {
+            String[] splitReminder = getSplitReminder(reminder);
+            String repeatWhenStr = splitReminder[0];
+            setTaskRepeatWhen(repeatWhenStr);
+            String repeatedDaysStr = null;
+            String dateStr = null;
+            String timeStr = null;
+
+            if(isRepeatedDays(splitReminder[1])) {
+                repeatedDaysStr = splitReminder[1];
+            }
+            else if(isDateString(splitReminder[1])) {
+                dateStr = splitReminder[1];
+            }
+            else if(isTimeString(splitReminder[1])) {
+                timeStr = splitReminder[1];
+            }
+
+            if(repeatedDaysStr != null || dateStr != null) {
+                timeStr = splitReminder[2];
+            }
+
+            if(repeatedDaysStr != null) {
+                checkRepeatedDays(repeatedDaysStr);
+            }
+
+            if(dateStr != null) {
+                reminderDateTxt.setText(dateStr);
+                Calendar reminderCal = Calendar.getInstance();
+                reminderCal.setTime(getDate(dateStr));
+                reminderCalendarView.setDate(reminderCal.getTimeInMillis(), true, true);
+            }
+
+            if(timeStr != null) {
+                reminderTimeTxt.setText(timeStr);
+                setTimeToTimePicker(timeStr);
+            }
+
+        }
+    }
+
+    private boolean isReminderPresent(String reminder) {
+        if("".equals(reminder)) return false;
+        return true;
     }
 }
 
