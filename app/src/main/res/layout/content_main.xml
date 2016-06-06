@@ -18,10 +18,9 @@
         android:layout_marginTop="35dp"
         android:layout_marginBottom="5dp"
         >
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
             >
             <TextView
                 android:id="@+id/priority_tip_txt"
@@ -35,8 +34,39 @@
                 android:id="@+id/tasks_recyclerview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_below="@id/priority_tip_txt"
                 android:background="@color/white"
                 />
-        </LinearLayout>
+            <LinearLayout
+                android:id="@+id/no_tasks_tip_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_centerInParent="true"
+                android:paddingBottom="@dimen/task_standard_margin"
+                android:visibility="gone"
+                >
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:src="@drawable/calendar_blank"
+                    />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/no_tasks_msg"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/no_tasks_add_msg"
+                    android:textSize="15sp"
+                    android:gravity="center"
+                    />
+            </LinearLayout>
+        </RelativeLayout>
     </android.support.v4.widget.SwipeRefreshLayout>
 </LinearLayout>

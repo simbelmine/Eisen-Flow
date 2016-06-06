@@ -65,4 +65,8 @@
     <string name="priority_tip_2"><b>DELEGATE</b> \n <i>Share it. Let\'s somebody else to handle it.</i></string>
     <string name="priority_tip_3"><b>DROP</b> \n <i>Unnecessary. Usually a distraction.</i></string>
 
+    <!-- MainActivity -->
+    <string name="no_tasks_msg">No Tasks</string>
+    <string name="no_tasks_add_msg">Create new task or select calendar event.</string>
+
 </resources>

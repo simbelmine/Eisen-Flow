@@ -26,6 +26,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.eisenflow.decorators.EventDecorator;
@@ -79,6 +81,7 @@ public class MainActivity extends AppCompatActivity
     private SwipeRefreshLayout pullToRefreshContainer;
     private SharedPreferences mainSharedPrefs;
     private TextView priorityTipTxt;
+    private LinearLayout noTasksTipLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,6 +156,7 @@ public class MainActivity extends AppCompatActivity
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
         priorityTipTxt = (TextView) findViewById(R.id.priority_tip_txt);
+        noTasksTipLayout = (LinearLayout) findViewById(R.id.no_tasks_tip_layout);
     }
 
 
@@ -317,6 +321,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
+        noTasksTipLayout.setVisibility(View.GONE);
         int id = item.getItemId();
 
         switch (id) {
@@ -385,12 +390,15 @@ public class MainActivity extends AppCompatActivity
         }
 
         if(currentPriorityList != null) {
+            if(currentPriorityList.size() == 0) noTasksTipLayout.setVisibility(View.VISIBLE);
+            else noTasksTipLayout.setVisibility(View.GONE);
+
             tasksAdapter.setList(currentPriorityList);
             setTaskAdapters();
             setPriorityTipTxt(priority);
         }
         else {
-            showAlertSnackbar("No tasks yet to display.");
+            noTasksTipLayout.setVisibility(View.VISIBLE);
         }
     }
 
@@ -637,7 +645,11 @@ public class MainActivity extends AppCompatActivity
         hidePriorityTipMessage();
         showCurrentTasksFromEvent(pressedCalendarDate);
         if(isEventDate(pressedCalendarDate)) {
+            noTasksTipLayout.setVisibility(View.GONE);
             slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+        }
+        else {
+            noTasksTipLayout.setVisibility(View.VISIBLE);
         }
     }
 
