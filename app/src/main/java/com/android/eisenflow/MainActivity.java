@@ -36,8 +36,6 @@ import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
-import org.w3c.dom.Text;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -511,7 +509,7 @@ public class MainActivity extends AppCompatActivity
         return cal.getTime();
     }
 
-    private void updateSlideText(Date date, int color) {
+    private void updateSelectedDateTxtColor(Date date, int color) {
         dateSlideTxt.setText(getDateTxt(date));
         dateSlideTxt.setTextColor(getResources().getColor(color));
     }
@@ -580,7 +578,7 @@ public class MainActivity extends AppCompatActivity
     private void setCurrentDate() {
         materialCalendarView.setCurrentDate(Calendar.getInstance());
         materialCalendarView.setSelectedDate(Calendar.getInstance());
-        updateSlideText(date, R.color.colorAccent);
+        updateSelectedDateTxtColor(date, R.color.colorAccent);
     }
 
     private ArrayList<CalendarObject> getListOfCalendarDates() {
@@ -629,15 +627,15 @@ public class MainActivity extends AppCompatActivity
         CalendarDay currentDate = CalendarDay.from(Calendar.getInstance());
 
         if (!pressedCalendarDate.equals(currentDate)) {
-            updateSlideText(pressedCalendarDate.getDate(), R.color.gray);
+            updateSelectedDateTxtColor(pressedCalendarDate.getDate(), R.color.gray);
         }
         else
         {
-            updateSlideText(currentDate.getDate(), R.color.colorAccent);
+            updateSelectedDateTxtColor(currentDate.getDate(), R.color.colorAccent);
         }
 
+        hidePriorityTipMessage();
         showCurrentTasksFromEvent(pressedCalendarDate);
-
         if(isEventDate(pressedCalendarDate)) {
             slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
         }
@@ -666,5 +664,9 @@ public class MainActivity extends AppCompatActivity
                 }
                 break;
         }
+    }
+
+    private void hidePriorityTipMessage() {
+        priorityTipTxt.setVisibility(View.GONE);
     }
 }
