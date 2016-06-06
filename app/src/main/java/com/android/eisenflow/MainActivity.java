@@ -540,7 +540,6 @@ public class MainActivity extends AppCompatActivity
 
                 if(result) {
                     tasksAdapter.addItem(getLastRowFromDb());
-                    tasksAdapter.notifyDataSetChanged();
                 }
             }
             if (resultCode == Activity.RESULT_CANCELED) {
