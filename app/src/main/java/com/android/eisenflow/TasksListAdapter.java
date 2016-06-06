@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -34,6 +35,7 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListHolder> {
     private static final String DATE_FORMAT_LONG = "EEE, MMM dd, yyyy";
     public static final String EDIT_TASK_INFO_EXTRA = "editTaskInfoExtra";
     public static final String DONE_TASK_PREF_STR = "doneTasks";
+    public static final String ACTION = "deleteTaskAction";
     private Context context;
     private List<String> tasksList;
     private RecyclerView recyclerView;
@@ -283,6 +285,11 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListHolder> {
                     break;
                 case R.id.delete_list_icon_0:
                     deleteItem(view);
+
+                    Intent intent = new Intent(ACTION);
+                    LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+
+
                     break;
                 case R.id.edit_list_icon_1:
                     startActivity(AddTask.class, flags, extra_names, extra_value);

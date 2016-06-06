@@ -2,8 +2,10 @@ package com.android.eisenflow;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -14,6 +16,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -96,6 +99,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
+        IntentFilter iif = new IntentFilter(TasksListAdapter.ACTION);
+        LocalBroadcastManager.getInstance(this).registerReceiver(onTaskDeleted, iif);
 
         initLayout();
 
@@ -115,6 +120,22 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(onTaskDeleted);
+    }
+
+    private BroadcastReceiver onTaskDeleted = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            materialCalendarView.removeDecorators();
+            refreshCalendarDecorators();
+        }
+    } ;
+
+    
     private void initLayout() {
         // Toolbar init
         toolbar = (Toolbar) findViewById(R.id.toolbar);
