@@ -511,27 +511,44 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
 
             permissionHelper.checkForPermissions(permissions);
             if(permissionHelper.isAllPermissionsGranted) {
-                if(!isPriority0()) {
+                if(!isRedTask()) {
                     saveTaskToDB();
                 }
                 else {
-                    showAlertMessage(getResources().getString(R.string.priority_0_tip_snackbar), R.color.date);
+                    if(isScheduledTooInAdvance()) {
+                        showAlertMessage(getResources().getString(R.string.priority_0_tip_snackbar), R.color.date);
+                    }
                 }
             }
         }
         else {
-            if(!isPriority0()) {
+            if(!isRedTask()) {
                 saveTaskToDB();
             }
             else {
-                showAlertMessage(getResources().getString(R.string.priority_0_tip_snackbar), R.color.date);
+                if(isScheduledTooInAdvance()) {
+                    showAlertMessage(getResources().getString(R.string.priority_0_tip_snackbar), R.color.date);
+                }
             }
         }
     }
 
-    private boolean isPriority0() {
+    private boolean isRedTask() {
         if(priorityInt == 0 && !isPriority0_tip_shown) {
             isPriority0_tip_shown = true;
+            return true;
+        }
+
+        return false;
+    }
+
+    private boolean isScheduledTooInAdvance() {
+        Calendar currDate = Calendar.getInstance();
+        Calendar date  = Calendar.getInstance();
+        date.setTime(getDate(dateTxt.getText().toString()));
+
+        if(date.get(Calendar.MONTH) >= currDate.get(Calendar.MONTH) &&
+                date.get(Calendar.DAY_OF_MONTH) >= (currDate.get(Calendar.DAY_OF_MONTH)+2)) {
             return true;
         }
 
@@ -564,10 +581,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
             return false;
         }
 
-        if(isEditMode(intent) && isDateTimeEdited()) {
-            checkDateTime();
-        }
-        else if(!isEditMode(intent)) {
+        if((isEditMode(intent) && isDateTimeEdited()) || !isEditMode(intent)) {
             checkDateTime();
         }
 
@@ -728,7 +742,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
 
             }
             else {
-                showAlertSnackbar("Data file doen\'t exist.", R.color.firstQuadrant);
+                showAlertSnackbar("Data file doesn\'t exist.", R.color.firstQuadrant);
             }
         }
         else {
