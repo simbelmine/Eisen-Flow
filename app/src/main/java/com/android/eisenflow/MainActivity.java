@@ -89,6 +89,8 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         mainSharedPrefs = getSharedPreferences(MAIN_PREFS, Context.MODE_PRIVATE);
+        eventDates = new ArrayList<>();
+        eventsTaskList = new ArrayList<>();
     }
 
     @Override
@@ -163,10 +165,12 @@ public class MainActivity extends AppCompatActivity
     private void onPermissionGranted() {
         feedTaskQuadrants();
 
-        eventDates = new ArrayList<>();
-        eventsTaskList = getListOfCalendarDates();
+        refreshCalendarDecorators();
+    }
+
+    private void refreshCalendarDecorators() {
         materialCalendarView.addDecorators(
-                new EventDecorator(getResources().getColor(R.color.event_color), eventDates),
+                new EventDecorator(getResources().getColor(R.color.event_color), getListOfCalendarDates()),
                 new HighlightWeekendsDecorator()
         );
     }
@@ -359,6 +363,9 @@ public class MainActivity extends AppCompatActivity
                         for(int taskNum = 0; taskNum < tasksList.size(); taskNum++) {
                             if(doneTasks.contains(tasksList.get(taskNum))){
                                 removeItemFromDB(taskNum);
+                                refreshCalendarDecorators();
+                                materialCalendarView.removeDecorators();
+                                refreshCalendarDecorators();
                             }
                         }
                     }
@@ -591,7 +598,24 @@ public class MainActivity extends AppCompatActivity
         updateSelectedDateTxtColor(date, R.color.colorAccent);
     }
 
-    private ArrayList<CalendarObject> getListOfCalendarDates() {
+    private ArrayList<CalendarDay> getListOfCalendarDates() {
+        ArrayList<CalendarDay> dates = new ArrayList<>();
+        DbListUtils dbListUtils;
+        CalendarDay day;
+        Calendar calendar = Calendar.getInstance();
+
+        for(String strTask : tasksList) {
+            dbListUtils = new DbListUtils(strTask);
+            calendar.setTime(dbListUtils.getTaskDate());
+
+            day = CalendarDay.from(calendar);
+            dates.add(day);
+        }
+
+        return dates;
+    }
+
+    private ArrayList<CalendarObject> getListOfEvents() {
         ArrayList<CalendarObject> dates = new ArrayList<>();
         DbListUtils dbListUtils;
         CalendarDay day;
@@ -602,9 +626,7 @@ public class MainActivity extends AppCompatActivity
             calendar.setTime(dbListUtils.getTaskDate());
 
             day = CalendarDay.from(calendar);
-
             dates.add(new CalendarObject(day, strTask));
-            eventDates.add(day);
         }
 
         return dates;
@@ -612,6 +634,7 @@ public class MainActivity extends AppCompatActivity
 
     private void showCurrentTasksFromEvent(CalendarDay pressedCalendarDate) {
         ArrayList<String> currEvents = new ArrayList<>();
+        eventsTaskList = getListOfEvents();
         for(CalendarObject co : eventsTaskList) {
             if(pressedCalendarDate.equals(co.getCalendarDay())) {
                 currEvents.add(co.getTaskStr());
@@ -623,7 +646,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private boolean isEventDate(CalendarDay pressedCalendarDate) {
-        for(CalendarObject co : eventsTaskList) {
+        for(CalendarObject co : getListOfEvents()) {
             if(pressedCalendarDate.equals(co.getCalendarDay())) {
                 return true;
             }
@@ -666,7 +689,7 @@ public class MainActivity extends AppCompatActivity
         tasksAdapter.notifyDataSetChanged();
 
         feedTaskQuadrants();
-        eventsTaskList = getListOfCalendarDates();
+        getListOfCalendarDates();
     }
 
     @Override
