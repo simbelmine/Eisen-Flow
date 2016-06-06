@@ -382,7 +382,7 @@ public class MainActivity extends AppCompatActivity
             }
         }
 
-        if(currentPriorityList.size() == 0) {
+        if(priority == -1) {
             currentPriorityList = tasksList;
         }
 
