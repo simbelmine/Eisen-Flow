@@ -439,6 +439,7 @@ public class MainActivity extends AppCompatActivity
                 pw.close();
 
                 tasksList.remove(position);
+                tasksAdapter.notifyItemRemoved(position);
                 writeTaskInfoToFile(dbFile, tasksList);
             }
             catch (IOException ex) {
