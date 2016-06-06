@@ -322,6 +322,7 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         noTasksTipLayout.setVisibility(View.GONE);
+        slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
         int id = item.getItemId();
 
         switch (id) {
