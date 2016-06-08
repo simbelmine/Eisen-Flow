@@ -65,6 +65,8 @@ public class MainActivity extends AppCompatActivity
     public static final String FILE_DIR = Environment.getExternalStorageDirectory().getAbsolutePath();
     public static final String FILE_FOLDER = ".EisenFlow";
     public static final String FILE_NAME ="eisenDB.txt";
+    private static final int ACTIVITY_CREATE = 0;
+    public static final int ACTIVITY_EDIT = 1;
     private Toolbar toolbar;
     private FloatingActionButton fab;
     private DrawerLayout drawer;
@@ -86,9 +88,13 @@ public class MainActivity extends AppCompatActivity
     private TextView priorityTipTxt;
     private LinearLayout noTasksTipLayout;
 
+    private TasksDbAdapter dbHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        dbHelper = new TasksDbAdapter(this);
+        dbHelper.open();
         setContentView(R.layout.activity_main);
 
         mainSharedPrefs = getSharedPreferences(MAIN_PREFS, Context.MODE_PRIVATE);
@@ -555,16 +561,8 @@ public class MainActivity extends AppCompatActivity
     private static int TASK_SAVED_REQUEST_CODE = 1;
 
     private void startAddTaskActivity() {
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//
-//            }
-//        }, 200);
-
         Intent intent = new Intent(MainActivity.this, AddTask.class);
-//        startActivity(intent);
-        startActivityForResult(intent, TASK_SAVED_REQUEST_CODE);
+        startActivityForResult(intent, ACTIVITY_CREATE);
         overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
     }
 

@@ -113,19 +113,26 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
     private RelativeLayout mainDueDateTxtLayout;
     private ImageView arrowDueDate;
 
+    private TasksDbAdapter dbHelper;
+    private Long rowId;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        dbHelper = new TasksDbAdapter(this);
         setContentView(R.layout.add_task_main_lyout);
+
 
         intent = getIntent();
         String taskInfo = intent.getStringExtra(TasksListAdapter.EDIT_TASK_INFO_EXTRA);
         dbListUtils = new DbListUtils(taskInfo);
 
+        rowId = savedInstanceState != null ? savedInstanceState.getLong(TasksDbAdapter.KEY_ROW_ID)
+                : null;
+
         initLayout();
-        populateLayout();
     }
 
     private void initLayout() {
@@ -264,6 +271,36 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
             currDateTxt.setText(getDateString(Calendar.getInstance()));
             reminderCurrDateTxt.setText(getDateString(Calendar.getInstance()));
             timeTxt.setText(getTimeString(Calendar.getInstance()));
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        dbHelper.open();
+        setRowIdFromIntent();
+        populateLayout();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        dbHelper.close();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putLong(TasksDbAdapter.KEY_ROW_ID, rowId);
+    }
+
+    private void setRowIdFromIntent() {
+        if (rowId == null) {
+            Bundle extras = getIntent().getExtras();
+            rowId = extras != null ? extras.getLong(TasksDbAdapter.KEY_ROW_ID)
+                    : null;
+
         }
     }
 
@@ -513,6 +550,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
             if(permissionHelper.isAllPermissionsGranted) {
                 if(!isRedTask()) {
                     saveTaskToDB();
+                    saveState();
                 }
                 else {
                     if(isScheduledTooInAdvance()) {
@@ -524,6 +562,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
         else {
             if(!isRedTask()) {
                 saveTaskToDB();
+                saveState();
             }
             else {
                 if(isScheduledTooInAdvance()) {
@@ -841,6 +880,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
     }
 
     private String getCheckedRadioLbl(int radioChoiceId) {
+        if(radioChoiceId == -1) return "";
         return ((RadioButton)findViewById(radioChoiceId)).getText().toString();
     }
 
@@ -1195,6 +1235,84 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
     private boolean isReminderPresent(String reminder) {
         if("".equals(reminder)) return false;
         return true;
+    }
+
+    private void saveState() {
+        // Priority, Title, Date, Time, Reminder, Note, Progress
+        String date = dateTxt.getText().toString();
+        String time = timeTxt.getText().toString();
+        String title = taskName.getText().toString();
+
+        int radioChoiceId = getCheckedRadioId();
+        String reminderOccurrence = getCheckedRadioLbl(radioChoiceId);
+        String reminderWhen = getReminderWhen(radioChoiceId);
+        String reminderDate = getReminderDate(radioChoiceId);
+        String reminderTime = getReminderTime();
+
+
+        String note = noteTxt.getText().toString();
+        int progress = 0;
+
+        if(rowId == null) {
+            long id = dbHelper.createReminder(priorityInt, title, date, time,
+                    reminderOccurrence, reminderWhen, reminderDate, reminderTime, note, progress);
+
+            if (id > 0) {
+                rowId = id;
+            }
+        }
+        else {
+            dbHelper.updateReminder(rowId, priorityInt, title, date, time,
+                    reminderOccurrence, reminderWhen, reminderDate, reminderTime, note, progress);
+        }
+
+        //new ReminderManager(this).setReminder(rowId, getCalendar(date , time));
+    }
+
+
+    private String getReminderWhen(int radioChoiceId) {
+        if(radioChoiceId == R.id.weekly_btn) {
+            return getCheckedWeekDaysSimple();
+        }
+        return "";
+    }
+
+    private String getCheckedWeekDaysSimple() {
+        if(monCheckbox.isChecked()) monCheckbox.getText();
+        if(tueCheckbox.isChecked()) tueCheckbox.getText();
+        if(wedCheckbox.isChecked()) wedCheckbox.getText();
+        if(thuCheckbox.isChecked()) thuCheckbox.getText();
+        if(friCheckbox.isChecked()) friCheckbox.getText();
+        if(satCheckbox.isChecked()) satCheckbox.getText();
+        if(sunCheckbox.isChecked()) sunCheckbox.getText();
+
+        return "";
+    }
+
+    private String getReminderDate(int radioChoiceId) {
+        switch (radioChoiceId) {
+            case R.id.monthly_btn:
+                return reminderDateTxt.getText().toString();
+            case R.id.yearly_btn:
+                return reminderDateTxt.getText().toString();
+            default: return "";
+        }
+    }
+
+    private String getReminderTime() {
+        if(reminderTimeTxt.getText().length() <= 0) return "";
+        return reminderTimeTxt.getText().toString();
+    }
+
+    private Calendar getCalendar(String dateStr, String timeStr) {
+        Calendar cal = Calendar.getInstance();
+        Date date = getDate(dateStr);
+        Date time = getTime(timeStr);
+
+        cal.setTime(date);
+        cal.setTime(time);
+
+        return cal;
     }
 }
 

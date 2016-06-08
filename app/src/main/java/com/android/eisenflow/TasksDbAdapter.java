@@ -13,16 +13,19 @@ import android.util.Log;
  * Created by Sve on 6/7/16.
  */
 public class TasksDbAdapter {
-    private static final String DATABASE_NAME = "data";
+    private static final String DATABASE_NAME = "eisendata";
     private static final String DATABASE_TABLE = "tasks";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 3;
 
     public static final String KEY_ROW_ID = "_id";
     public static final String KEY_PRIORITY = "priority";
     public static final String KEY_TITLE = "title";
-    public static final String KEY_BODY = "body";
-    public static final String KEY_DATE_TIME = "date_time";
-    public static final String KEY_REMINDER = "reminder";
+    public static final String KEY_DATE = "date";
+    public static final String KEY_TIME = "time";
+    public static final String KEY_REMINDER_OCCURRENCE = "reminderOccurrence";
+    public static final String KEY_REMINDER_WHEN = "reminderWhen";
+    public static final String KEY_REMINDER_DATE = "reminderDate";
+    public static final String KEY_REMINDER_TIME = "reminderTime";
     public static final String KEY_NOTE = "note";
     public static final String KEY_PROGRESS = "progress";
 
@@ -34,13 +37,16 @@ public class TasksDbAdapter {
      * Database creation SQL statement
      */
     private static final String DATABASE_CREATE =
-            "create table " + DATABASE_TABLE + " ("
+            "CREATE TABLE " + DATABASE_TABLE + " ("
                     + KEY_ROW_ID + " integer primary key autoincrement, "
                     + KEY_PRIORITY + " text not null, "
                     + KEY_TITLE + " text not null, "
-                    + KEY_BODY + " text not null, "
-                    + KEY_DATE_TIME + " text not null, "
-                    + KEY_REMINDER + " text not null, "
+                    + KEY_DATE + " text not null, "
+                    + KEY_TIME + " text not null, "
+                    + KEY_REMINDER_OCCURRENCE + " text not null, "
+                    + KEY_REMINDER_WHEN + " text not null, "
+                    + KEY_REMINDER_DATE + " text not null, "
+                    + KEY_REMINDER_TIME + " text not null, "
                     + KEY_NOTE + " text not null, "
                     + KEY_PROGRESS + " text not null);"
 
@@ -55,6 +61,7 @@ public class TasksDbAdapter {
 
         @Override
         public void onCreate(SQLiteDatabase db) {
+            Log.d(TAG, "Database " + DATABASE_NAME + " was created.");
             db.execSQL(DATABASE_CREATE);
         }
 
@@ -91,6 +98,7 @@ public class TasksDbAdapter {
      */
 
     public TasksDbAdapter open() throws SQLiteException {
+        Log.d(TAG, "Database was OPEN.");
         dbHelper = new DatabaseHelper(context);
         eisenDb = dbHelper.getWritableDatabase();
 
@@ -109,22 +117,34 @@ public class TasksDbAdapter {
      *
      * @param priority the task's priority
      * @param title the task's title
-     * @param body the task's body
-     * @param taskDateTime the date and time the task should remind the user
-     * @param taskReminder if the task is Green priority; this is full reminder's info
+     * @param taskDate the date the task should remind the user
+     * @param taskTime the time the task should remind the user
+     * @param taskReminderOccurrence if the task is Green priority; this is full reminder's info
+     * @param taskReminderWhen if the task is Green priority; this is full reminder's info
+     * @param taskReminderDate if the task is Green priority; this is full reminder's info
+     * @param taskReminderTime if the task is Green priority; this is full reminder's info
      * @param note the task's note
      * @param progress if the task is Green priority; progress of the task
      * @return rowId or -1 if failed
      */
-    public long createReminder(int priority, String title, String body, String taskDateTime, String taskReminder, String note, int progress) {
+    public long createReminder(int priority, String title, String taskDate, String taskTime,
+                               String taskReminderOccurrence, String taskReminderWhen, String taskReminderDate, String taskReminderTime,
+                               String note, int progress) {
+        Log.d(TAG, "Creating Task.");
+
         ContentValues initialValues = new ContentValues();
         initialValues.put(KEY_PRIORITY, priority);
         initialValues.put(KEY_TITLE, title);
-        initialValues.put(KEY_BODY, body);
-        initialValues.put(KEY_DATE_TIME, taskDateTime);
-        initialValues.put(KEY_REMINDER, taskReminder);
+        initialValues.put(KEY_DATE, taskDate);
+        initialValues.put(KEY_TIME, taskTime);
+        initialValues.put(KEY_REMINDER_OCCURRENCE, taskReminderOccurrence);
+        initialValues.put(KEY_REMINDER_WHEN, taskReminderWhen);
+        initialValues.put(KEY_REMINDER_DATE, taskReminderDate);
+        initialValues.put(KEY_REMINDER_TIME, taskReminderTime);
         initialValues.put(KEY_NOTE, note);
         initialValues.put(KEY_PROGRESS, progress);
+
+        Log.v(TAG, "DB = " + eisenDb);
 
         return eisenDb.insert(DATABASE_TABLE, null, initialValues);
     }
@@ -145,8 +165,11 @@ public class TasksDbAdapter {
      * @return Cursor over all reminders
      */
     public Cursor fetchAllTasks() {
+        Log.v("eisen", "Fetchibg All");
+
         return eisenDb.query(DATABASE_TABLE, new String[] {KEY_ROW_ID, KEY_PRIORITY, KEY_TITLE,
-                KEY_BODY, KEY_DATE_TIME, KEY_REMINDER, KEY_NOTE, KEY_PROGRESS}, null, null, null, null, null);
+                KEY_DATE, KEY_TIME, KEY_REMINDER_OCCURRENCE, KEY_REMINDER_WHEN, KEY_REMINDER_DATE, KEY_REMINDER_TIME,
+                KEY_NOTE, KEY_PROGRESS}, null, null, null, null, null);
     }
 
     /**
@@ -159,7 +182,8 @@ public class TasksDbAdapter {
     public Cursor fetchTask(long rowId) throws SQLException {
         Cursor mCursor =
                 eisenDb.query(true, DATABASE_TABLE, new String[] {KEY_ROW_ID,
-                                KEY_PRIORITY, KEY_TITLE, KEY_BODY, KEY_DATE_TIME, KEY_REMINDER, KEY_NOTE, KEY_PROGRESS},
+                                KEY_PRIORITY, KEY_TITLE, KEY_DATE, KEY_TIME, KEY_REMINDER_OCCURRENCE, KEY_REMINDER_WHEN,
+                        KEY_REMINDER_DATE, KEY_REMINDER_TIME, KEY_NOTE, KEY_PROGRESS},
                         KEY_ROW_ID + "=" + rowId, null,
                         null, null, null, null);
         if (mCursor != null) {
@@ -175,20 +199,28 @@ public class TasksDbAdapter {
      *
      * @param priority the task's priority
      * @param title the task's title
-     * @param body the task's body
-     * @param taskDateTime the date and time the task should remind the user
-     * @param taskReminder if the task is Green priority; this is full reminder's info
+     * @param taskDate the date the task should remind the user
+     * @param taskTime the time the task should remind the user
+     * @param taskReminderOccurrence if the task is Green priority; this is full reminder's info
+     * @param taskReminderWhen if the task is Green priority; this is full reminder's info
+     * @param taskReminderDate if the task is Green priority; this is full reminder's info
+     * @param taskReminderTime if the task is Green priority; this is full reminder's info
      * @param note the task's note
      * @param progress if the task is Green priority; progress of the task
      * @return true if the reminder was successfully updated, false otherwise
      */
-    public boolean updateReminder(long rowId, int priority, String title, String body, String taskDateTime, String taskReminder, String note, int progress) {
+    public boolean updateReminder(long rowId, int priority, String title, String taskDate, String taskTime,
+                                  String taskReminderOccurrence, String taskReminderWhen, String taskReminderDate, String taskReminderTime,
+                                  String note, int progress) {
         ContentValues args = new ContentValues();
         args.put(KEY_PRIORITY, priority);
         args.put(KEY_TITLE, title);
-        args.put(KEY_BODY, body);
-        args.put(KEY_DATE_TIME, taskDateTime);
-        args.put(KEY_REMINDER, taskReminder);
+        args.put(KEY_DATE, taskDate);
+        args.put(KEY_TIME, taskTime);
+        args.put(KEY_REMINDER_OCCURRENCE, taskReminderOccurrence);
+        args.put(KEY_REMINDER_WHEN, taskReminderWhen);
+        args.put(KEY_REMINDER_DATE, taskReminderDate);
+        args.put(KEY_REMINDER_TIME, taskReminderTime);
         args.put(KEY_NOTE, note);
         args.put(KEY_PROGRESS, progress);
 
