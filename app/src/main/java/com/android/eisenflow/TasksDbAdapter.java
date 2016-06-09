@@ -61,7 +61,7 @@ public class TasksDbAdapter {
 
         @Override
         public void onCreate(SQLiteDatabase db) {
-            Log.d(TAG, "Database " + DATABASE_NAME + " was created.");
+            Log.d(TAG, "---Database " + DATABASE_NAME + " was created.");
             db.execSQL(DATABASE_CREATE);
         }
 
@@ -98,7 +98,7 @@ public class TasksDbAdapter {
      */
 
     public TasksDbAdapter open() throws SQLiteException {
-        Log.d(TAG, "Database was OPEN.");
+        Log.d(TAG, "---Database was OPEN.");
         dbHelper = new DatabaseHelper(context);
         eisenDb = dbHelper.getWritableDatabase();
 
@@ -130,7 +130,7 @@ public class TasksDbAdapter {
     public long createReminder(int priority, String title, String taskDate, String taskTime,
                                String taskReminderOccurrence, String taskReminderWhen, String taskReminderDate, String taskReminderTime,
                                String note, int progress) {
-        Log.d(TAG, "Creating Task.");
+        Log.d(TAG, "---Creating Task.");
 
         ContentValues initialValues = new ContentValues();
         initialValues.put(KEY_PRIORITY, priority);
@@ -165,7 +165,7 @@ public class TasksDbAdapter {
      * @return Cursor over all reminders
      */
     public Cursor fetchAllTasks() {
-        Log.v("eisen", "Fetchibg All");
+        Log.v("eisen", "---Fetchibg All");
 
         return eisenDb.query(DATABASE_TABLE, new String[] {KEY_ROW_ID, KEY_PRIORITY, KEY_TITLE,
                 KEY_DATE, KEY_TIME, KEY_REMINDER_OCCURRENCE, KEY_REMINDER_WHEN, KEY_REMINDER_DATE, KEY_REMINDER_TIME,

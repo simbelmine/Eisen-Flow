@@ -11,10 +11,16 @@ import java.util.Calendar;
 public class CalendarObject {
     private CalendarDay calendarDay;
     private String taskStr;
+    private Task task;
 
     public CalendarObject(CalendarDay calendarDay, String taskStr) {
         this.calendarDay = calendarDay;
         this.taskStr = taskStr;
+    }
+
+    public CalendarObject(CalendarDay calendarDay, Task task) {
+        this.calendarDay = calendarDay;
+        this.task = task;
     }
 
     public CalendarDay getCalendarDay() {
@@ -31,5 +37,13 @@ public class CalendarObject {
 
     public void setTaskStr(String taskStr) {
         this.taskStr = taskStr;
+    }
+
+    public Task getTask() {
+        return task;
+    }
+
+    public void setTask(Task task) {
+        this.task = task;
     }
 }
