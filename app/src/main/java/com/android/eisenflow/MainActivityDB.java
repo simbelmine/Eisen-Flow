@@ -235,64 +235,66 @@ public class MainActivityDB extends AppCompatActivity
         tasksRecyclerView.setLayoutManager(quadrantOneManager);
     }
 
-    class FeedingAsyncTask extends AsyncTask<Void, Void, Void> {
-        public FeedingAsyncTask(){}
 
+    class FeedingAsyncTask extends AsyncTask<Void, Void, Cursor> {
         @Override
-        protected Void doInBackground(Void... voids) {
-            Cursor tasksCursor = dbHelper.fetchAllTasks();
-            tasks = new ArrayList<>();
-            Task currentTask;
-
-            if (tasksCursor != null) {
-                while (tasksCursor.moveToNext()) {
-
-                    int taskId = tasksCursor.getInt(tasksCursor.getColumnIndex(TasksDbHelper.KEY_ROW_ID));
-                    int priority = tasksCursor.getInt(tasksCursor.getColumnIndex(TasksDbHelper.KEY_PRIORITY));
-                    String title = tasksCursor.getString(tasksCursor.getColumnIndex(TasksDbHelper.KEY_TITLE));
-                    String date = tasksCursor.getString(tasksCursor.getColumnIndex(TasksDbHelper.KEY_DATE));
-                    String time = tasksCursor.getString(tasksCursor.getColumnIndex(TasksDbHelper.KEY_TIME));
-                    String reminderOccurrence = tasksCursor.getString(tasksCursor.getColumnIndex(TasksDbHelper.KEY_REMINDER_OCCURRENCE));
-                    String reminderWhen = tasksCursor.getString(tasksCursor.getColumnIndex(TasksDbHelper.KEY_REMINDER_WHEN));
-                    String reminderDate = tasksCursor.getString(tasksCursor.getColumnIndex(TasksDbHelper.KEY_REMINDER_DATE));
-                    String reminderTime = tasksCursor.getString(tasksCursor.getColumnIndex(TasksDbHelper.KEY_REMINDER_TIME));
-                    String note = tasksCursor.getString(tasksCursor.getColumnIndex(TasksDbHelper.KEY_NOTE));
-                    int progress = tasksCursor.getInt(tasksCursor.getColumnIndex(TasksDbHelper.KEY_PROGRESS));
-
-                    currentTask = new Task();
-                    currentTask.setId(taskId);
-                    currentTask.setPriority(priority);
-                    currentTask.setTitle(title);
-                    currentTask.setDate(date);
-                    currentTask.setTime(time);
-                    currentTask.setReminderOccurrence(reminderOccurrence);
-                    currentTask.setReminderWhen(reminderWhen);
-                    currentTask.setReminderDate(reminderDate);
-                    currentTask.setReminderTime(reminderTime);
-                    currentTask.setNote(note);
-                    currentTask.setProgress(progress);
-
-                    tasks.add(currentTask);
-                }
-            }
-
-
-            if (tasks != null) {
-                tasksList = tasks;
-                int priority = getPriorityFromSharedPrefs();
-                showCurrentTaskPriorityDB(priority);
-                setPriorityTipTxt(priority);
-            }
-            return null;
+        protected Cursor doInBackground(Void... voids) {
+            return dbHelper.fetchAllTasks();
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            pullToRefreshContainer.setRefreshing(false);
-            refreshCalendarDecorators();
+        protected void onPostExecute(Cursor cursor) {
+            super.onPostExecute(cursor);
+
+            if(cursor != null) {
+                tasks = new ArrayList<>();
+                Task currentTask;
+
+                if (cursor != null) {
+                    while (cursor.moveToNext()) {
+                        int taskId = cursor.getInt(cursor.getColumnIndex(TasksDbHelper.KEY_ROW_ID));
+                        int priority = cursor.getInt(cursor.getColumnIndex(TasksDbHelper.KEY_PRIORITY));
+                        String title = cursor.getString(cursor.getColumnIndex(TasksDbHelper.KEY_TITLE));
+                        String date = cursor.getString(cursor.getColumnIndex(TasksDbHelper.KEY_DATE));
+                        String time = cursor.getString(cursor.getColumnIndex(TasksDbHelper.KEY_TIME));
+                        String reminderOccurrence = cursor.getString(cursor.getColumnIndex(TasksDbHelper.KEY_REMINDER_OCCURRENCE));
+                        String reminderWhen = cursor.getString(cursor.getColumnIndex(TasksDbHelper.KEY_REMINDER_WHEN));
+                        String reminderDate = cursor.getString(cursor.getColumnIndex(TasksDbHelper.KEY_REMINDER_DATE));
+                        String reminderTime = cursor.getString(cursor.getColumnIndex(TasksDbHelper.KEY_REMINDER_TIME));
+                        String note = cursor.getString(cursor.getColumnIndex(TasksDbHelper.KEY_NOTE));
+                        int progress = cursor.getInt(cursor.getColumnIndex(TasksDbHelper.KEY_PROGRESS));
+
+                        currentTask = new Task();
+                        currentTask.setId(taskId);
+                        currentTask.setPriority(priority);
+                        currentTask.setTitle(title);
+                        currentTask.setDate(date);
+                        currentTask.setTime(time);
+                        currentTask.setReminderOccurrence(reminderOccurrence);
+                        currentTask.setReminderWhen(reminderWhen);
+                        currentTask.setReminderDate(reminderDate);
+                        currentTask.setReminderTime(reminderTime);
+                        currentTask.setNote(note);
+                        currentTask.setProgress(progress);
+
+                        tasks.add(currentTask);
+                    }
+                }
+
+
+                if (tasks != null) {
+                    tasksList = tasks;
+                    int priority = getPriorityFromSharedPrefs();
+                    showCurrentTaskPriorityDB(priority);
+                    setPriorityTipTxt(priority);
+                }
+
+                pullToRefreshContainer.setRefreshing(false);
+                refreshCalendarDecorators();
+            }
         }
     }
+
 
     private int getPriorityFromSharedPrefs() {
         int priority;

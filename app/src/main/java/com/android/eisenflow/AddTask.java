@@ -717,7 +717,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
     }
 
     private void showAlertMessage(String messageToShow, int colorMsg) {
-        if(Build.VERSION.SDK_INT >= MainActivity.NEEDED_API_LEVEL) {
+        if(Build.VERSION.SDK_INT >= MainActivityDB.NEEDED_API_LEVEL) {
             showAlertSnackbar(messageToShow, colorMsg);
         }
         else {
@@ -959,7 +959,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
     }
 
     private void expand(View view, int width, int height, int cx, int cy) {
-        if(Build.VERSION.SDK_INT >= MainActivity.NEEDED_API_LEVEL) {
+        if(Build.VERSION.SDK_INT >= MainActivityDB.NEEDED_API_LEVEL) {
             int finalRadius = Math.max(width, height);
             Animator anim = ViewAnimationUtils.createCircularReveal(view, cx, cy, 0, finalRadius);
             view.setVisibility(View.VISIBLE);
@@ -968,7 +968,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
     }
 
     private void collapse(final View view, int cx, int cy) {
-        if(Build.VERSION.SDK_INT >= MainActivity.NEEDED_API_LEVEL) {
+        if(Build.VERSION.SDK_INT >= MainActivityDB.NEEDED_API_LEVEL) {
             int initialRadius = view.getWidth();
             Animator anim = ViewAnimationUtils.createCircularReveal(view, cx, cy, initialRadius, 0);
             anim.addListener(new AnimatorListenerAdapter() {
@@ -1188,7 +1188,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
     }
 
     private void setTimeToTimePicker(String timeStr) {
-        if(Build.VERSION.SDK_INT >= MainActivity.NEEDED_API_LEVEL) {
+        if(Build.VERSION.SDK_INT >= MainActivityDB.NEEDED_API_LEVEL) {
             Date date = getTime(timeStr);
             Calendar c = Calendar.getInstance();
             c.setTime(date);

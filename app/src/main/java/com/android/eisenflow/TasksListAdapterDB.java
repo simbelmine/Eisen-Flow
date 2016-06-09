@@ -41,7 +41,7 @@ public class TasksListAdapterDB extends RecyclerView.Adapter<TasksListHolder> {
         this.context = context;
         tasksList = new ArrayList<>();
         doneTasks = new HashSet<>();
-        sharedPreferences = context.getSharedPreferences(MainActivity.MAIN_PREFS, Context.MODE_PRIVATE);
+        sharedPreferences = context.getSharedPreferences(MainActivityDB.MAIN_PREFS, Context.MODE_PRIVATE);
     }
 
     @Override
