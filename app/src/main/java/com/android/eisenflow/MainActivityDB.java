@@ -1,18 +1,22 @@
 package com.android.eisenflow;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -574,9 +578,27 @@ public class MainActivityDB extends AppCompatActivity
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // **** TO Do *****
-        // *** To get the data from db or something ***
-        // *****************
+        if (requestCode == 1) {
+            if(resultCode == Activity.RESULT_OK){
+                boolean result = data.getBooleanExtra("result", false);
+
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+                showAlertSnackbar(getString(R.string.save_alert));
+            }
+        }
+    }
+
+    private void showAlertSnackbar (String messageToShow) {
+        CoordinatorLayout layout = (CoordinatorLayout) findViewById(R.id.main_layout);
+        Snackbar snackbar = Snackbar.make(layout, messageToShow, Snackbar.LENGTH_LONG)
+                .setActionTextColor(Color.WHITE)
+                .setAction(getResources().getString(R.string.ok_btn), null);
+
+        View snackbarView = snackbar.getView();
+        TextView text = (TextView) snackbarView.findViewById(android.support.design.R.id.snackbar_text);
+        text.setTextColor(getResources().getColor(R.color.firstQuadrant));
+        snackbar.show();
     }
 
     private void hidePriorityTipMessage() {

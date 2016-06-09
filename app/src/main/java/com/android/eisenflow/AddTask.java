@@ -1299,20 +1299,30 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
 
             if (id > 0) {
                 rowId = id;
+                closeActivityWithResult(Activity.RESULT_OK);
+            }
+            else {
+                closeActivityWithResult(Activity.RESULT_CANCELED);
             }
         }
         else {
-            dbHelper.updateReminder(rowId, priorityInt, title, date, time,
-                    reminderOccurrence, reminderWhen, reminderDate, reminderTime, note, progress);
+            if (dbHelper.updateReminder(rowId, priorityInt, title, date, time,
+                    reminderOccurrence, reminderWhen, reminderDate, reminderTime, note, progress)) {
+                closeActivityWithResult(Activity.RESULT_OK);
+            }
+            else {
+                closeActivityWithResult(Activity.RESULT_CANCELED);
+            }
         }
 
         //new ReminderManager(this).setReminder(rowId, getCalendar(date , time));
+    }
 
-        returnResult(Activity.RESULT_OK);
+    private void closeActivityWithResult(int result) {
+        returnResult(result);
         finish();
         overridePendingTransition(R.anim.slide_in_back, R.anim.slide_out_back);
     }
-
 
     private String getReminderWhen(int radioChoiceId) {
         if(radioChoiceId == R.id.weekly_btn) {
