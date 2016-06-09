@@ -18,7 +18,6 @@ import android.widget.CompoundButton;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -315,7 +314,7 @@ public class TasksListAdapterDB extends RecyclerView.Adapter<TasksListHolder> {
         int taskCurrentProgress = task.getProgress();
         taskCurrentProgress++;
 
-        if(dbHelper.updateIntColumn(taskId, TasksDbHelper.KEY_PROGRESS, taskCurrentProgress)) {
+        if(dbHelper.updateTaskIntColumn(taskId, TasksDbHelper.KEY_PROGRESS, taskCurrentProgress)) {
             showMessageAddedPercent(view);
             updateTaskProgress(holder, task, taskCurrentProgress);
         }

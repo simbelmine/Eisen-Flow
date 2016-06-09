@@ -127,9 +127,9 @@ public class TasksDbHelper {
      * @param progress if the task is Green priority; progress of the task
      * @return rowId or -1 if failed
      */
-    public long createReminder(int priority, String title, String taskDate, String taskTime,
-                               String taskReminderOccurrence, String taskReminderWhen, String taskReminderDate, String taskReminderTime,
-                               String note, int progress) {
+    public long createTask(int priority, String title, String taskDate, String taskTime,
+                           String taskReminderOccurrence, String taskReminderWhen, String taskReminderDate, String taskReminderTime,
+                           String note, int progress) {
         Log.d(TAG, "---Creating Task.");
 
         ContentValues initialValues = new ContentValues();
@@ -209,9 +209,9 @@ public class TasksDbHelper {
      * @param progress if the task is Green priority; progress of the task
      * @return true if the reminder was successfully updated, false otherwise
      */
-    public boolean updateReminder(long rowId, int priority, String title, String taskDate, String taskTime,
-                                  String taskReminderOccurrence, String taskReminderWhen, String taskReminderDate, String taskReminderTime,
-                                  String note, int progress) {
+    public boolean updateTask(long rowId, int priority, String title, String taskDate, String taskTime,
+                              String taskReminderOccurrence, String taskReminderWhen, String taskReminderDate, String taskReminderTime,
+                              String note, int progress) {
         ContentValues args = new ContentValues();
         args.put(KEY_PRIORITY, priority);
         args.put(KEY_TITLE, title);
@@ -236,7 +236,7 @@ public class TasksDbHelper {
      * @param columnValue integer value of the column
      * @return true if the reminder was successfully updated, false otherwise
      */
-    public boolean updateIntColumn(long rowId, String columnName, int columnValue) {
+    public boolean updateTaskIntColumn(long rowId, String columnName, int columnValue) {
         ContentValues args = new ContentValues();
         args.put(columnName, columnValue);
 
@@ -252,7 +252,7 @@ public class TasksDbHelper {
      * @param columnValue String value of the column
      * @return true if the reminder was successfully updated, false otherwise
      */
-    public boolean updateStringColumn(long rowId, String columnName, String columnValue) {
+    public boolean updateTaskStringColumn(long rowId, String columnName, String columnValue) {
         ContentValues args = new ContentValues();
         args.put(columnName, columnValue);
 

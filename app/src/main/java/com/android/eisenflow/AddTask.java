@@ -1,6 +1,5 @@
 package com.android.eisenflow;
 
-import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
@@ -1294,7 +1293,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
         int progress = 0;
 
         if(rowId == null) {
-            long id = dbHelper.createReminder(priorityInt, title, date, time,
+            long id = dbHelper.createTask(priorityInt, title, date, time,
                     reminderOccurrence, reminderWhen, reminderDate, reminderTime, note, progress);
 
             if (id > 0) {
@@ -1306,7 +1305,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
             }
         }
         else {
-            if (dbHelper.updateReminder(rowId, priorityInt, title, date, time,
+            if (dbHelper.updateTask(rowId, priorityInt, title, date, time,
                     reminderOccurrence, reminderWhen, reminderDate, reminderTime, note, progress)) {
                 closeActivityWithResult(Activity.RESULT_OK);
             }
