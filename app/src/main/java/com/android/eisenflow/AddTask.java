@@ -554,28 +554,28 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
     }
 
     private void saveNewTask() {
-        PermissionHelper permissionHelper = new PermissionHelper(this);
-        if(permissionHelper.isBiggerOrEqualToAPI23()) {
-            String[] permissions = new String[] {
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-            };
-
-            permissionHelper.checkForPermissions(permissions);
-            if(permissionHelper.isAllPermissionsGranted) {
-                if(!isRedTask()) {
-                    saveTaskToDB();
-                    saveState();
-                }
-                else {
-                    if(isScheduledTooInAdvance()) {
-                        showAlertMessage(getResources().getString(R.string.priority_0_tip_snackbar), R.color.date);
-                    }
-                }
-            }
-        }
-        else {
+//        PermissionHelper permissionHelper = new PermissionHelper(this);
+//        if(permissionHelper.isBiggerOrEqualToAPI23()) {
+//            String[] permissions = new String[] {
+//                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+//            };
+//
+//            permissionHelper.checkForPermissions(permissions);
+//            if(permissionHelper.isAllPermissionsGranted) {
+//                if(!isRedTask()) {
+//                    saveTaskToDB();
+//                    saveState();
+//                }
+//                else {
+//                    if(isScheduledTooInAdvance()) {
+//                        showAlertMessage(getResources().getString(R.string.priority_0_tip_snackbar), R.color.date);
+//                    }
+//                }
+//            }
+//        }
+//        else {
             if(!isRedTask()) {
-                saveTaskToDB();
+//                saveTaskToDB();
                 saveState();
             }
             else {
@@ -583,7 +583,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
                     showAlertMessage(getResources().getString(R.string.priority_0_tip_snackbar), R.color.date);
                 }
             }
-        }
+//        }
     }
 
     private boolean isRedTask() {
@@ -1307,6 +1307,10 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
         }
 
         //new ReminderManager(this).setReminder(rowId, getCalendar(date , time));
+
+        returnResult(Activity.RESULT_OK);
+        finish();
+        overridePendingTransition(R.anim.slide_in_back, R.anim.slide_out_back);
     }
 
 

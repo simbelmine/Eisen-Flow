@@ -102,21 +102,22 @@ public class MainActivityDB extends AppCompatActivity
         LocalBroadcastManager.getInstance(this).registerReceiver(onTaskDeleted, iif);
 
         initLayout();
+        onPermissionGranted();
 
-        PermissionHelper permissionHelper = new PermissionHelper(this);
-        if(permissionHelper.isBiggerOrEqualToAPI23()) {
-            String[] permissions = new String[] {
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-            };
-
-            permissionHelper.checkForPermissions(permissions);
-            if(permissionHelper.isAllPermissionsGranted) {
-                onPermissionGranted();
-            }
-        }
-        else {
-            onPermissionGranted();
-        }
+//        PermissionHelper permissionHelper = new PermissionHelper(this);
+//        if(permissionHelper.isBiggerOrEqualToAPI23()) {
+//            String[] permissions = new String[] {
+//                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+//            };
+//
+//            permissionHelper.checkForPermissions(permissions);
+//            if(permissionHelper.isAllPermissionsGranted) {
+//                onPermissionGranted();
+//            }
+//        }
+//        else {
+//            onPermissionGranted();
+//        }
     }
 
     @Override
