@@ -222,7 +222,7 @@ public class MainActivityDB extends AppCompatActivity
 
     private void initTasksAdapter() {
         if(adapterDB == null) {
-            adapterDB = new TasksListAdapterDB(this, getApplicationContext());
+            adapterDB = new TasksListAdapterDB(this, getApplicationContext(), dbHelper);
         }
     }
 

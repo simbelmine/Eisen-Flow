@@ -2,15 +2,20 @@ package com.android.eisenflow;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -35,10 +40,12 @@ public class TasksListAdapterDB extends RecyclerView.Adapter<TasksListHolder> {
     private String booleanStr = "isCalendarPlusTipShown";
     private Set<Task> doneTasks;
     private SharedPreferences sharedPreferences;
+    private TasksDbHelper dbHelper;
 
-    public TasksListAdapterDB(Activity activity, Context context) {
+    public TasksListAdapterDB(Activity activity, Context context, TasksDbHelper dbHelper) {
         this.activity = activity;
         this.context = context;
+        this.dbHelper = dbHelper;
         tasksList = new ArrayList<>();
         doneTasks = new HashSet<>();
         sharedPreferences = context.getSharedPreferences(MainActivityDB.MAIN_PREFS, Context.MODE_PRIVATE);
@@ -92,8 +99,12 @@ public class TasksListAdapterDB extends RecyclerView.Adapter<TasksListHolder> {
         holder.task_time_txt.setTextColor(context.getResources().getColor(R.color.gray_light));
         if(taskRow.getPriority() == 1) {
             holder.task_p1_progress.setVisibility(View.VISIBLE);
-            holder.task_p1_progress.setText(taskRow.getProgress() + "%");
+            holder.task_p1_progress.setText(setProgressValue(taskRow.getProgress()));
         }
+    }
+
+    private String setProgressValue(int progress) {
+        return progress + "%";
     }
 
     public void setRecyclerView(RecyclerView recyclerView) {
@@ -120,7 +131,7 @@ public class TasksListAdapterDB extends RecyclerView.Adapter<TasksListHolder> {
     }
 
     private void setOnClickListeners(TasksListHolder holder, Task task, int position) {
-        PositionBasedOnClickListener positionListener = new PositionBasedOnClickListener(task, position);
+        PositionBasedOnClickListener positionListener = new PositionBasedOnClickListener(holder, task, position);
         holder.timerIconLayout.setOnClickListener(positionListener);
         holder.calendarPlusIconLayout.setOnClickListener(positionListener);
         holder.editIconLayout_0.setOnClickListener(positionListener);
@@ -137,9 +148,12 @@ public class TasksListAdapterDB extends RecyclerView.Adapter<TasksListHolder> {
     }
 
     private class PositionBasedOnClickListener implements View.OnClickListener {
+        private TasksListHolder holder;
         private Task task;
         private int position;
-        public PositionBasedOnClickListener(Task task, int position) {
+
+        public PositionBasedOnClickListener(TasksListHolder holder, Task task, int position) {
+            this.holder = holder;
             this.task = task;
             this.position = position;
         }
@@ -157,13 +171,13 @@ public class TasksListAdapterDB extends RecyclerView.Adapter<TasksListHolder> {
                     startActivity(TimerActivity.class, flags, null, null);
                     break;
                 case R.id.calendar_plus_list_icon:
-                   // saveProgressToDb(view, dbListUtils, position);
+                    saveProgressToDb(view, holder, task);
                     break;
                 case R.id.edit_list_icon_0:
                     startActivity(AddTask.class, flags, extra_names, extra_value);
                     break;
                 case R.id.delete_list_icon_0:
-                   // deleteItem(view);
+                    // deleteItem(view);
 
                     Intent intent = new Intent(ACTION);
                     LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
@@ -174,7 +188,7 @@ public class TasksListAdapterDB extends RecyclerView.Adapter<TasksListHolder> {
                     startActivity(AddTask.class, flags, extra_names, extra_value);
                     break;
                 case R.id.delete_list_icon_1:
-                   // deleteItem(view);
+                    // deleteItem(view);
                     break;
                 case R.id.delete_list_icon_2:
                     //deleteItem(view);
@@ -183,7 +197,7 @@ public class TasksListAdapterDB extends RecyclerView.Adapter<TasksListHolder> {
                     startActivity(AddTask.class, flags, extra_names, extra_value);
                     break;
                 case R.id.delete_list_icon_3:
-                  //  deleteItem(view);
+                    //  deleteItem(view);
                     break;
                 case R.id.edit_list_icon_3:
                     startActivity(AddTask.class, flags, extra_names, extra_value);
@@ -294,5 +308,76 @@ public class TasksListAdapterDB extends RecyclerView.Adapter<TasksListHolder> {
                 }
             }
         }
+    }
+
+    private void saveProgressToDb(View view, TasksListHolder holder, Task task) {
+        int taskId = task.getId();
+        int taskCurrentProgress = task.getProgress();
+        taskCurrentProgress++;
+
+        if(dbHelper.updateIntColumn(taskId, TasksDbHelper.KEY_PROGRESS, taskCurrentProgress)) {
+            showMessageAddedPercent(view);
+            updateTaskProgress(holder, task, taskCurrentProgress);
+        }
+        else {
+            Log.v("eisen", "Column Update UNsuccessful!");
+        }
+    }
+
+    private void updateTaskProgress(TasksListHolder holder, Task task, int taskCurrentProgress) {
+        task.setProgress(taskCurrentProgress);
+        holder.task_p1_progress.setText(setProgressValue(taskCurrentProgress));
+    }
+
+    private void showMessageAddedPercent(View view) {
+        getSharedPrefs();
+        if(!mainSharedPrefs.contains(booleanStr) || !mainSharedPrefs.getBoolean(booleanStr, false)) {
+            showTipMessageDialog(context.getResources().getString(R.string.tip_calendar_plus_msg));
+        }
+        else {
+            // TO Do : add progress to the task
+            showTipMessage(view, context.getResources().getString(R.string.progress_added));
+        }
+    }
+
+    private void getSharedPrefs() {
+        mainSharedPrefs = context.getSharedPreferences(MainActivityDB.MAIN_PREFS, Context.MODE_PRIVATE);
+    }
+
+    private void setBooleanToSharedPrefs(String name, boolean value) {
+        mainSharedPrefs.edit().putBoolean(name, value).commit();
+    }
+
+    private void showTipMessage(View view, String messageToShow) {
+        if(Build.VERSION.SDK_INT >= MainActivity.NEEDED_API_LEVEL) {
+            showTipMessageSnakcbar(view, messageToShow);
+        }
+        else {
+            showTipMessageToast(messageToShow);
+        }
+    }
+
+    private void showTipMessageSnakcbar(View view, String message) {
+        Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
+    }
+
+    private void showTipMessageToast(String messageToShow) {
+        Toast.makeText(context, messageToShow, Toast.LENGTH_LONG).show();
+    }
+
+    private void showTipMessageDialog(String message) {
+        AlertDialog.Builder builder =
+                new AlertDialog.Builder(activity, R.style.MyTipDialogStyle);
+        builder.setTitle(context.getResources().getString(R.string.tip_title));
+        builder.setMessage(message);
+        builder.setPositiveButton(context.getResources().getString(R.string.ok_btn), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int itemPosition) {
+                setBooleanToSharedPrefs(booleanStr, true);
+                // TO Do : add progress to the task
+            }
+        });
+        builder.setNegativeButton(context.getResources().getString(R.string.cancel_btn), null);
+        builder.show();
     }
 }

@@ -226,4 +226,36 @@ public class TasksDbHelper {
 
         return eisenDb.update(DATABASE_TABLE, args, KEY_ROW_ID + "=" + rowId, null) > 0;
     }
+
+    /**
+     * Update the reminder using the details provided. The reminder to be updated is
+     * specified using the rowId, and it is altered to use specific column name with
+     * values passed in
+     *
+     * @param columnName the column's name
+     * @param columnValue integer value of the column
+     * @return true if the reminder was successfully updated, false otherwise
+     */
+    public boolean updateIntColumn(long rowId, String columnName, int columnValue) {
+        ContentValues args = new ContentValues();
+        args.put(columnName, columnValue);
+
+        return eisenDb.update(DATABASE_TABLE, args, KEY_ROW_ID + "=" + rowId, null) > 0;
+    }
+
+    /**
+     * Update the reminder using the details provided. The reminder to be updated is
+     * specified using the rowId, and it is altered to use specific column name with
+     * values passed in
+     *
+     * @param columnName the column's name
+     * @param columnValue String value of the column
+     * @return true if the reminder was successfully updated, false otherwise
+     */
+    public boolean updateStringColumn(long rowId, String columnName, String columnValue) {
+        ContentValues args = new ContentValues();
+        args.put(columnName, columnValue);
+
+        return eisenDb.update(DATABASE_TABLE, args, KEY_ROW_ID + "=" + rowId, null) > 0;
+    }
 }
