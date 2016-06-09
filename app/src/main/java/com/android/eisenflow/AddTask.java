@@ -1383,6 +1383,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
                 // #Priority
                 int priority = cursor.getInt(cursor.getColumnIndexOrThrow(TasksDbHelper.KEY_PRIORITY));
                 setBgPriorityColor(priority);
+                priorityInt = priority;
 
                 // #Task Name
                 String title = cursor.getString(cursor.getColumnIndexOrThrow(TasksDbHelper.KEY_TITLE));
