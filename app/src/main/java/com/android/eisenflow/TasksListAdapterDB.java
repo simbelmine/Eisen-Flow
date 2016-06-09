@@ -148,9 +148,9 @@ public class TasksListAdapterDB extends RecyclerView.Adapter<TasksListHolder> {
         public void onClick(View view) {
             int[] flags = new int[] {Intent.FLAG_ACTIVITY_NEW_TASK};
             String[] extra_names;
-            String[] extra_value;
-            extra_names = new String[]{EDIT_TASK_INFO_EXTRA};
-            //extra_value = new String[]{tasksList.get(position)};
+            long[] extra_value;
+            extra_names = new String[]{TasksDbHelper.KEY_ROW_ID};
+            extra_value = new long[]{tasksList.get(position).getId()};
 
             switch (view.getId()) {
                 case R.id.timer_list_icon:
@@ -160,7 +160,7 @@ public class TasksListAdapterDB extends RecyclerView.Adapter<TasksListHolder> {
                    // saveProgressToDb(view, dbListUtils, position);
                     break;
                 case R.id.edit_list_icon_0:
-                    startActivity(AddTask.class, flags, extra_names, null);
+                    startActivity(AddTask.class, flags, extra_names, extra_value);
                     break;
                 case R.id.delete_list_icon_0:
                    // deleteItem(view);
@@ -171,7 +171,7 @@ public class TasksListAdapterDB extends RecyclerView.Adapter<TasksListHolder> {
 
                     break;
                 case R.id.edit_list_icon_1:
-                    startActivity(AddTask.class, flags, extra_names, null);
+                    startActivity(AddTask.class, flags, extra_names, extra_value);
                     break;
                 case R.id.delete_list_icon_1:
                    // deleteItem(view);
@@ -180,13 +180,13 @@ public class TasksListAdapterDB extends RecyclerView.Adapter<TasksListHolder> {
                     //deleteItem(view);
                     break;
                 case R.id.edit_list_icon_2:
-                    startActivity(AddTask.class, flags, extra_names, null);
+                    startActivity(AddTask.class, flags, extra_names, extra_value);
                     break;
                 case R.id.delete_list_icon_3:
                   //  deleteItem(view);
                     break;
                 case R.id.edit_list_icon_3:
-                    startActivity(AddTask.class, flags, extra_names, null);
+                    startActivity(AddTask.class, flags, extra_names, extra_value);
                     break;
                 case R.id.share_icon:
                     showShareOptions(task);
@@ -230,7 +230,7 @@ public class TasksListAdapterDB extends RecyclerView.Adapter<TasksListHolder> {
 //        sharedPreferences.edit().putStringSet(DONE_TASK_PREF_STR, doneTasks).commit();
     }
 
-    private void startActivity(Class<?> activityClass, int[] flags, String[] extras_names, String[] extras_values) {
+    private void startActivity(Class<?> activityClass, int[] flags, String[] extras_names, long[] extras_values) {
         Intent intent = new Intent(context, activityClass);
         if(flags != null) {
             for(int i = 0; i < flags.length; i++) {

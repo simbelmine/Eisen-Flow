@@ -79,14 +79,14 @@ public class MainActivityDB extends AppCompatActivity
     private TextView priorityTipTxt;
     private LinearLayout noTasksTipLayout;
 
-    private TasksDbAdapter dbHelper;
+    private TasksDbHelper dbHelper;
     private ArrayList<Task> tasks;
     private TasksListAdapterDB adapterDB;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        dbHelper = new TasksDbAdapter(this);
+        dbHelper = new TasksDbHelper(this);
         dbHelper.open();
         setContentView(R.layout.activity_main);
 
@@ -247,17 +247,17 @@ public class MainActivityDB extends AppCompatActivity
             if (tasksCursor != null) {
                 while (tasksCursor.moveToNext()) {
 
-                    int taskId = tasksCursor.getInt(tasksCursor.getColumnIndex(TasksDbAdapter.KEY_ROW_ID));
-                    int priority = tasksCursor.getInt(tasksCursor.getColumnIndex(TasksDbAdapter.KEY_PRIORITY));
-                    String title = tasksCursor.getString(tasksCursor.getColumnIndex(TasksDbAdapter.KEY_TITLE));
-                    String date = tasksCursor.getString(tasksCursor.getColumnIndex(TasksDbAdapter.KEY_DATE));
-                    String time = tasksCursor.getString(tasksCursor.getColumnIndex(TasksDbAdapter.KEY_TIME));
-                    String reminderOccurrence = tasksCursor.getString(tasksCursor.getColumnIndex(TasksDbAdapter.KEY_REMINDER_OCCURRENCE));
-                    String reminderWhen = tasksCursor.getString(tasksCursor.getColumnIndex(TasksDbAdapter.KEY_REMINDER_WHEN));
-                    String reminderDate = tasksCursor.getString(tasksCursor.getColumnIndex(TasksDbAdapter.KEY_REMINDER_DATE));
-                    String reminderTime = tasksCursor.getString(tasksCursor.getColumnIndex(TasksDbAdapter.KEY_REMINDER_TIME));
-                    String note = tasksCursor.getString(tasksCursor.getColumnIndex(TasksDbAdapter.KEY_NOTE));
-                    int progress = tasksCursor.getInt(tasksCursor.getColumnIndex(TasksDbAdapter.KEY_PROGRESS));
+                    int taskId = tasksCursor.getInt(tasksCursor.getColumnIndex(TasksDbHelper.KEY_ROW_ID));
+                    int priority = tasksCursor.getInt(tasksCursor.getColumnIndex(TasksDbHelper.KEY_PRIORITY));
+                    String title = tasksCursor.getString(tasksCursor.getColumnIndex(TasksDbHelper.KEY_TITLE));
+                    String date = tasksCursor.getString(tasksCursor.getColumnIndex(TasksDbHelper.KEY_DATE));
+                    String time = tasksCursor.getString(tasksCursor.getColumnIndex(TasksDbHelper.KEY_TIME));
+                    String reminderOccurrence = tasksCursor.getString(tasksCursor.getColumnIndex(TasksDbHelper.KEY_REMINDER_OCCURRENCE));
+                    String reminderWhen = tasksCursor.getString(tasksCursor.getColumnIndex(TasksDbHelper.KEY_REMINDER_WHEN));
+                    String reminderDate = tasksCursor.getString(tasksCursor.getColumnIndex(TasksDbHelper.KEY_REMINDER_DATE));
+                    String reminderTime = tasksCursor.getString(tasksCursor.getColumnIndex(TasksDbHelper.KEY_REMINDER_TIME));
+                    String note = tasksCursor.getString(tasksCursor.getColumnIndex(TasksDbHelper.KEY_NOTE));
+                    int progress = tasksCursor.getInt(tasksCursor.getColumnIndex(TasksDbHelper.KEY_PROGRESS));
 
                     currentTask = new Task();
                     currentTask.setId(taskId);
@@ -391,25 +391,6 @@ public class MainActivityDB extends AppCompatActivity
         }
         catch (ParseException ex) {
             Log.e("eisen", "String to Date Formatting Exception : " + ex.getMessage());
-        }
-
-        return null;
-    }
-
-    private Date getTime(String timeStr) {
-        SimpleDateFormat postFormater;
-        if(isSystem24hFormat()) {
-            postFormater = new SimpleDateFormat("kk:mm");
-        }
-        else {
-            postFormater = new SimpleDateFormat("hh:mm a");
-        }
-
-        try {
-            return postFormater.parse(timeStr);
-        }
-        catch (ParseException ex) {
-            Log.e("eisen", "String to Time Formatting Exception : " + ex.getMessage());
         }
 
         return null;

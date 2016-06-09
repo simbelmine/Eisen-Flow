@@ -30,7 +30,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.eisenflow.decorators.EventDecorator;
@@ -88,12 +87,12 @@ public class MainActivity extends AppCompatActivity
     private TextView priorityTipTxt;
     private LinearLayout noTasksTipLayout;
 
-    private TasksDbAdapter dbHelper;
+    private TasksDbHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        dbHelper = new TasksDbAdapter(this);
+        dbHelper = new TasksDbHelper(this);
         dbHelper.open();
         setContentView(R.layout.activity_main);
 

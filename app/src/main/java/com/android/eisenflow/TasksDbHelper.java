@@ -12,7 +12,7 @@ import android.util.Log;
 /**
  * Created by Sve on 6/7/16.
  */
-public class TasksDbAdapter {
+public class TasksDbHelper {
     private static final String DATABASE_NAME = "eisendata";
     private static final String DATABASE_TABLE = "tasks";
     private static final int DATABASE_VERSION = 3;
@@ -82,7 +82,7 @@ public class TasksDbAdapter {
      *
      * @param ctx the Context within which to work
      */
-    public TasksDbAdapter(Context ctx) {
+    public TasksDbHelper(Context ctx) {
         this.context = ctx;
     }
 
@@ -97,7 +97,7 @@ public class TasksDbAdapter {
      * @throws SQLException if the database could be neither opened or created
      */
 
-    public TasksDbAdapter open() throws SQLiteException {
+    public TasksDbHelper open() throws SQLiteException {
         Log.d(TAG, "---Database was OPEN.");
         dbHelper = new DatabaseHelper(context);
         eisenDb = dbHelper.getWritableDatabase();

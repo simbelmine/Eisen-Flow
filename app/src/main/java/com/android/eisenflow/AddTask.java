@@ -9,9 +9,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -113,7 +115,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
     private RelativeLayout mainDueDateTxtLayout;
     private ImageView arrowDueDate;
 
-    private TasksDbAdapter dbHelper;
+    private TasksDbHelper dbHelper;
     private Long rowId;
 
 
@@ -121,7 +123,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        dbHelper = new TasksDbAdapter(this);
+        dbHelper = new TasksDbHelper(this);
         setContentView(R.layout.add_task_main_lyout);
 
 
@@ -129,7 +131,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
         String taskInfo = intent.getStringExtra(TasksListAdapter.EDIT_TASK_INFO_EXTRA);
         dbListUtils = new DbListUtils(taskInfo);
 
-        rowId = savedInstanceState != null ? savedInstanceState.getLong(TasksDbAdapter.KEY_ROW_ID)
+        rowId = savedInstanceState != null ? savedInstanceState.getLong(TasksDbHelper.KEY_ROW_ID)
                 : null;
 
         initLayout();
@@ -239,32 +241,8 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
     }
 
     private void populateLayout() {
-        if(isEditMode(intent)) {
-            // #Priority
-            int priority = dbListUtils.getTaskPriority();
-            setBgPriorityColor(priority);
-            // #Task Name
-            taskName.setText(dbListUtils.getTaskName());
-            // #Calendar Date
-            Calendar cal = Calendar.getInstance();
-            if(dbListUtils.getTaskDate() != null) {
-                cal.setTime(dbListUtils.getTaskDate());
-            }
-            dateTxt.setText(getDateString(cal));
-            calendarView.setDate(cal.getTimeInMillis(), true, true);
-            // #Time
-            timeTxt.setText(dbListUtils.getTaskTime());
-            setTimeToTimePicker(dbListUtils.getTaskTime());
-
-            // #Populate Reminder If Green Task
-            if(isGreenTask(priority)) {
-                reminderLayout.setVisibility(View.VISIBLE);
-                reminderDivider.setVisibility(View.VISIBLE);
-
-                populateReminderTaskData();
-            }
-
-            noteTxt.setText(dbListUtils.getTaskNote());
+        if (rowId != null) {
+            new FetchAsyncTaskToEdit().execute();
         }
         else {
             dateTxt.setText(getDateString(Calendar.getInstance()));
@@ -272,6 +250,42 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
             reminderCurrDateTxt.setText(getDateString(Calendar.getInstance()));
             timeTxt.setText(getTimeString(Calendar.getInstance()));
         }
+
+
+
+//        if(isEditMode(intent)) {
+//            // #Priority
+//            int priority = dbListUtils.getTaskPriority();
+//            setBgPriorityColor(priority);
+//            // #Task Name
+//            taskName.setText(dbListUtils.getTaskName());
+//            // #Calendar Date
+//            Calendar cal = Calendar.getInstance();
+//            if(dbListUtils.getTaskDate() != null) {
+//                cal.setTime(dbListUtils.getTaskDate());
+//            }
+//            dateTxt.setText(getDateString(cal));
+//            calendarView.setDate(cal.getTimeInMillis(), true, true);
+//            // #Time
+//            timeTxt.setText(dbListUtils.getTaskTime());
+//            setTimeToTimePicker(dbListUtils.getTaskTime());
+//
+//            // #Populate Reminder If Green Task
+//            if(isGreenTask(priority)) {
+//                reminderLayout.setVisibility(View.VISIBLE);
+//                reminderDivider.setVisibility(View.VISIBLE);
+//
+//                populateReminderTaskData();
+//            }
+//
+//            noteTxt.setText(dbListUtils.getTaskNote());
+//        }
+//        else {
+//            dateTxt.setText(getDateString(Calendar.getInstance()));
+//            currDateTxt.setText(getDateString(Calendar.getInstance()));
+//            reminderCurrDateTxt.setText(getDateString(Calendar.getInstance()));
+//            timeTxt.setText(getTimeString(Calendar.getInstance()));
+//        }
     }
 
     @Override
@@ -292,13 +306,13 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putLong(TasksDbAdapter.KEY_ROW_ID, rowId);
+        outState.putLong(TasksDbHelper.KEY_ROW_ID, rowId);
     }
 
     private void setRowIdFromIntent() {
         if (rowId == null) {
             Bundle extras = getIntent().getExtras();
-            rowId = extras != null ? extras.getLong(TasksDbAdapter.KEY_ROW_ID)
+            rowId = extras != null ? extras.getLong(TasksDbHelper.KEY_ROW_ID)
                     : null;
 
         }
@@ -1032,12 +1046,13 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
     }
 
     private Date getDate(String dateStr) {
-        SimpleDateFormat postFormater = new SimpleDateFormat(DATE_FORMAT);
-        try {
-            return postFormater.parse(dateStr);
-        }
-        catch (ParseException ex) {
-            Log.e("eisen", "String to Date Formatting Exception : " + ex.getMessage());
+        if(dateStr != null && !"".equals(dateStr)) {
+            SimpleDateFormat postFormater = new SimpleDateFormat(DATE_FORMAT);
+            try {
+                return postFormater.parse(dateStr);
+            } catch (ParseException ex) {
+                Log.e("eisen", "String to Date Formatting Exception : " + ex.getMessage());
+            }
         }
 
         return null;
@@ -1114,11 +1129,11 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
 
     private void setTaskRepeatWhen(String repeatWhenStr) {
         if(repeatWhenStr.contains("r")) {
-            checkRepeatWhen(repeatWhenStr.substring(1));
+            checkOccurrenceRadioBtn(repeatWhenStr.substring(1));
         }
     }
 
-    private void checkRepeatWhen(String repeatWhenStr) {
+    private void checkOccurrenceRadioBtn(String repeatWhenStr) {
         if(getString(R.string.daily_txt).equals(repeatWhenStr)) {
             ((RadioButton)findViewById(R.id.daily_btn)).setChecked(true);
         }
@@ -1189,50 +1204,75 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
         return false;
     }
 
-    private void populateReminderTaskData() {
-        String reminder = dbListUtils.getTaskReminder();
-        if(isReminderPresent(reminder)) {
-            String[] splitReminder = getSplitReminder(reminder);
-            String repeatWhenStr = splitReminder[0];
-            setTaskRepeatWhen(repeatWhenStr);
-            String repeatedDaysStr = null;
-            String dateStr = null;
-            String timeStr = null;
+    private void populateReminderTaskData(Cursor cursor) {
+        if(cursor != null) {
+            String reminderOccurrence = cursor.getString(cursor.getColumnIndexOrThrow(TasksDbHelper.KEY_REMINDER_OCCURRENCE));
+            String reminderWhen = cursor.getString(cursor.getColumnIndexOrThrow(TasksDbHelper.KEY_REMINDER_WHEN));
+            String reminderDate = cursor.getString(cursor.getColumnIndexOrThrow(TasksDbHelper.KEY_REMINDER_DATE));
+            String reminderTime = cursor.getString(cursor.getColumnIndexOrThrow(TasksDbHelper.KEY_REMINDER_TIME));
 
-            if(isRepeatedDays(splitReminder[1])) {
-                repeatedDaysStr = splitReminder[1];
-            }
-            else if(isDateString(splitReminder[1])) {
-                dateStr = splitReminder[1];
-            }
-            else if(isTimeString(splitReminder[1])) {
-                timeStr = splitReminder[1];
-            }
+            checkOccurrenceRadioBtn(reminderOccurrence);
+            checkRepeatedDays(reminderWhen);
 
-            if(repeatedDaysStr != null || dateStr != null) {
-                timeStr = splitReminder[2];
-            }
 
-            if(repeatedDaysStr != null) {
-                checkRepeatedDays(repeatedDaysStr);
-            }
-
-            if(dateStr != null) {
-                reminderDateTxt.setText(dateStr);
+            if(reminderDate != null) {
+                reminderDateTxt.setText(reminderDate);
                 Calendar reminderCal = Calendar.getInstance();
-                reminderCal.setTime(getDate(dateStr));
-                reminderCalendarView.setDate(reminderCal.getTimeInMillis(), true, true);
+                Date date = getDate(reminderDate);
+                if(date != null) {
+                    reminderCal.setTime(date);
+                    reminderCalendarView.setDate(reminderCal.getTimeInMillis(), true, true);
+                }
             }
 
-            if(timeStr != null) {
-                reminderTimeTxt.setText(timeStr);
-                setTimeToTimePicker(timeStr);
+            if(reminderTime != null) {
+                reminderTimeTxt.setText(reminderTime);
+                setTimeToTimePicker(reminderTime);
             }
+        }
+        else {
+            String reminder = dbListUtils.getTaskReminder();
+            if (isReminderExists(reminder)) {
+                String[] splitReminder = getSplitReminder(reminder);
+                String repeatWhenStr = splitReminder[0];
+                setTaskRepeatWhen(repeatWhenStr);
+                String repeatedDaysStr = null;
+                String dateStr = null;
+                String timeStr = null;
 
+                if (isRepeatedDays(splitReminder[1])) {
+                    repeatedDaysStr = splitReminder[1];
+                } else if (isDateString(splitReminder[1])) {
+                    dateStr = splitReminder[1];
+                } else if (isTimeString(splitReminder[1])) {
+                    timeStr = splitReminder[1];
+                }
+
+                if (repeatedDaysStr != null || dateStr != null) {
+                    timeStr = splitReminder[2];
+                }
+
+                if (repeatedDaysStr != null) {
+                    checkRepeatedDays(repeatedDaysStr);
+                }
+
+                if (dateStr != null) {
+                    reminderDateTxt.setText(dateStr);
+                    Calendar reminderCal = Calendar.getInstance();
+                    reminderCal.setTime(getDate(dateStr));
+                    reminderCalendarView.setDate(reminderCal.getTimeInMillis(), true, true);
+                }
+
+                if (timeStr != null) {
+                    reminderTimeTxt.setText(timeStr);
+                    setTimeToTimePicker(timeStr);
+                }
+
+            }
         }
     }
 
-    private boolean isReminderPresent(String reminder) {
+    private boolean isReminderExists(String reminder) {
         if("".equals(reminder)) return false;
         return true;
     }
@@ -1313,6 +1353,54 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
         cal.setTime(time);
 
         return cal;
+    }
+
+    class FetchAsyncTaskToEdit extends AsyncTask<Void, Void, Cursor> {
+        @Override
+        protected Cursor doInBackground(Void... voids) {
+            return dbHelper.fetchTask(rowId);
+        }
+
+        @Override
+        protected void onPostExecute(Cursor cursor) {
+            super.onPostExecute(cursor);
+
+            if (cursor != null) {
+                // #Priority
+                int priority = cursor.getInt(cursor.getColumnIndexOrThrow(TasksDbHelper.KEY_PRIORITY));
+                setBgPriorityColor(priority);
+
+                // #Task Name
+                String title = cursor.getString(cursor.getColumnIndexOrThrow(TasksDbHelper.KEY_TITLE));
+                taskName.setText(title);
+
+                // #Calendar Date
+                Calendar cal = Calendar.getInstance();
+                String date =  cursor.getString(cursor.getColumnIndexOrThrow(TasksDbHelper.KEY_DATE));
+                if (date != null) {
+                    cal.setTime(getDate(date));
+                }
+                dateTxt.setText(date);
+                calendarView.setDate(cal.getTimeInMillis(), true, true);
+
+                // #Time
+                String time = cursor.getString(cursor.getColumnIndexOrThrow(TasksDbHelper.KEY_TIME));
+                timeTxt.setText(time);
+                setTimeToTimePicker(time);
+
+                // #Populate Reminder If Green Task
+                if (isGreenTask(priority)) {
+                    reminderLayout.setVisibility(View.VISIBLE);
+                    reminderDivider.setVisibility(View.VISIBLE);
+
+                    populateReminderTaskData(cursor);
+                }
+
+                // #Note
+                String note = cursor.getString(cursor.getColumnIndexOrThrow(TasksDbHelper.KEY_NOTE));
+                noteTxt.setText(note);
+            }
+        }
     }
 }
 
