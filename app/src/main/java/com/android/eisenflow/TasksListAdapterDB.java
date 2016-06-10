@@ -19,9 +19,7 @@ import android.widget.Toast;
 import com.android.eisenflow.oldClasses.MainActivity;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by Sve on 6/8/16.
@@ -32,22 +30,20 @@ public class TasksListAdapterDB extends RecyclerView.Adapter<TasksListHolder> {
     public static final String EDIT_TASK_INFO_EXTRA = "editTaskInfoExtra";
     public static final String DONE_TASK_PREF_STR = "doneTasks";
     public static final String ACTION = "deleteTaskAction";
+    private static final String PROGRESS_TIP = "isProgressTipShown";
     private Context context;
     private List<Task> tasksList;
     private RecyclerView recyclerView;
     private SharedPreferences mainSharedPrefs;
     private Activity activity;
-    private String booleanStr = "isCalendarPlusTipShown";
-    private Set<Task> doneTasks;
     private SharedPreferences sharedPreferences;
-    private TasksDbHelper dbHelper;
+    private LocalDataBaseHelper dbHelper;
 
-    public TasksListAdapterDB(Activity activity, Context context, TasksDbHelper dbHelper) {
+    public TasksListAdapterDB(Activity activity, Context context, LocalDataBaseHelper dbHelper) {
         this.activity = activity;
         this.context = context;
         this.dbHelper = dbHelper;
         tasksList = new ArrayList<>();
-        doneTasks = new HashSet<>();
         sharedPreferences = context.getSharedPreferences(MainActivityDB.MAIN_PREFS, Context.MODE_PRIVATE);
     }
 
@@ -163,7 +159,7 @@ public class TasksListAdapterDB extends RecyclerView.Adapter<TasksListHolder> {
             int[] flags = new int[] {Intent.FLAG_ACTIVITY_NEW_TASK};
             String[] extra_names;
             long[] extra_value;
-            extra_names = new String[]{TasksDbHelper.KEY_ROW_ID};
+            extra_names = new String[]{LocalDataBaseHelper.KEY_ROW_ID};
             extra_value = new long[]{tasksList.get(position).getId()};
 
             switch (view.getId()) {
@@ -222,25 +218,23 @@ public class TasksListAdapterDB extends RecyclerView.Adapter<TasksListHolder> {
         @Override
         public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
             int position = (int)compoundButton.getTag();
+            int taskId = tasksList.get(position).getId();
 
             if(compoundButton.isChecked()) {
                 holder.task_done_line.setVisibility(View.VISIBLE);
-                doneTasks.add(tasksList.get(position));
+
+                // Save isDone = 1 to DB and update Task list
+                dbHelper.updateTaskIntColumn(taskId, LocalDataBaseHelper.KEY_DONE, 1);
+                tasksList.get(position).setIsDone(1);
             }
             else {
                 holder.task_done_line.setVisibility(View.GONE);
 
-                if(doneTasks.size() > 0 && doneTasks.contains(tasksList.get(position))) {
-                    doneTasks.remove(tasksList.get(position));
-                }
+                // Save isDone = 1 to DB and update Task list
+                dbHelper.updateTaskIntColumn(taskId, LocalDataBaseHelper.KEY_DONE, 0);
+                tasksList.get(position).setIsDone(0);
             }
-
-            saveDoneTasks();
         }
-    }
-
-    private void saveDoneTasks() {
-//        sharedPreferences.edit().putStringSet(DONE_TASK_PREF_STR, doneTasks).commit();
     }
 
     private void startActivity(Class<?> activityClass, int[] flags, String[] extras_names, long[] extras_values) {
@@ -298,14 +292,9 @@ public class TasksListAdapterDB extends RecyclerView.Adapter<TasksListHolder> {
     }
 
     private void crossTaskIfDone(TasksListHolder holder, int position) {
-        if(sharedPreferences.contains(DONE_TASK_PREF_STR)) {
-            Set<String> doneTasksSet = sharedPreferences.getStringSet(DONE_TASK_PREF_STR, null);
-            if(doneTasksSet!= null) {
-                if (doneTasksSet.contains(tasksList.get(position))) {
-                    holder.task_check.setChecked(true);
-                    holder.task_done_line.setVisibility(View.VISIBLE);
-                }
-            }
+        if(tasksList.get(position).getIsDone() == 1) {
+            holder.task_check.setChecked(true);
+            holder.task_done_line.setVisibility(View.VISIBLE);
         }
     }
 
@@ -314,7 +303,7 @@ public class TasksListAdapterDB extends RecyclerView.Adapter<TasksListHolder> {
         int taskCurrentProgress = task.getProgress();
         taskCurrentProgress++;
 
-        if(dbHelper.updateTaskIntColumn(taskId, TasksDbHelper.KEY_PROGRESS, taskCurrentProgress)) {
+        if(dbHelper.updateTaskIntColumn(taskId, LocalDataBaseHelper.KEY_PROGRESS, taskCurrentProgress)) {
             showMessageAddedPercent(view);
             updateTaskProgress(holder, task, taskCurrentProgress);
         }
@@ -330,7 +319,7 @@ public class TasksListAdapterDB extends RecyclerView.Adapter<TasksListHolder> {
 
     private void showMessageAddedPercent(View view) {
         getSharedPrefs();
-        if(!mainSharedPrefs.contains(booleanStr) || !mainSharedPrefs.getBoolean(booleanStr, false)) {
+        if(!mainSharedPrefs.contains(PROGRESS_TIP) || !mainSharedPrefs.getBoolean(PROGRESS_TIP, false)) {
             showTipMessageDialog(context.getResources().getString(R.string.tip_calendar_plus_msg));
         }
         else {
@@ -372,7 +361,7 @@ public class TasksListAdapterDB extends RecyclerView.Adapter<TasksListHolder> {
         builder.setPositiveButton(context.getResources().getString(R.string.ok_btn), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int itemPosition) {
-                setBooleanToSharedPrefs(booleanStr, true);
+                setBooleanToSharedPrefs(PROGRESS_TIP, true);
                 // TO Do : add progress to the task
             }
         });
@@ -380,7 +369,7 @@ public class TasksListAdapterDB extends RecyclerView.Adapter<TasksListHolder> {
         builder.show();
     }
 
-    private void deleteItem(TasksDbHelper dbHelper, int taskId, int position) {
+    private void deleteItem(LocalDataBaseHelper dbHelper, int taskId, int position) {
         dbHelper.deleteTask(taskId);
         tasksList.remove(position);
         notifyItemRemoved(position);
@@ -391,4 +380,6 @@ public class TasksListAdapterDB extends RecyclerView.Adapter<TasksListHolder> {
         intent.putExtra("taskPosition", position);
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
+
+
 }

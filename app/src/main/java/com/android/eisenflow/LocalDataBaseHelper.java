@@ -7,12 +7,11 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 /**
  * Created by Sve on 6/7/16.
  */
-public class TasksDbHelper {
+public class LocalDataBaseHelper {
     private static final String DATABASE_NAME = "eisendata";
     private static final String DATABASE_TABLE = "tasks";
     private static final int DATABASE_VERSION = 3;
@@ -28,6 +27,7 @@ public class TasksDbHelper {
     public static final String KEY_REMINDER_TIME = "reminderTime";
     public static final String KEY_NOTE = "note";
     public static final String KEY_PROGRESS = "progress";
+    public static final String KEY_DONE = "done";
 
     private static final String TAG = "eisen";
     private DatabaseHelper dbHelper;
@@ -48,7 +48,8 @@ public class TasksDbHelper {
                     + KEY_REMINDER_DATE + " text not null, "
                     + KEY_REMINDER_TIME + " text not null, "
                     + KEY_NOTE + " text not null, "
-                    + KEY_PROGRESS + " text not null);"
+                    + KEY_PROGRESS + " text not null, "
+                    + KEY_DONE + " integer default 0);"
 
             ;
 
@@ -82,7 +83,7 @@ public class TasksDbHelper {
      *
      * @param ctx the Context within which to work
      */
-    public TasksDbHelper(Context ctx) {
+    public LocalDataBaseHelper(Context ctx) {
         this.context = ctx;
     }
 
@@ -97,7 +98,7 @@ public class TasksDbHelper {
      * @throws SQLException if the database could be neither opened or created
      */
 
-    public TasksDbHelper open() throws SQLiteException {
+    public LocalDataBaseHelper open() throws SQLiteException {
 //        Log.d(TAG, "---Database was OPEN.");
         dbHelper = new DatabaseHelper(context);
         eisenDb = dbHelper.getWritableDatabase();
@@ -169,7 +170,7 @@ public class TasksDbHelper {
 
         return eisenDb.query(DATABASE_TABLE, new String[] {KEY_ROW_ID, KEY_PRIORITY, KEY_TITLE,
                 KEY_DATE, KEY_TIME, KEY_REMINDER_OCCURRENCE, KEY_REMINDER_WHEN, KEY_REMINDER_DATE, KEY_REMINDER_TIME,
-                KEY_NOTE, KEY_PROGRESS}, null, null, null, null, null);
+                KEY_NOTE, KEY_PROGRESS, KEY_DONE}, null, null, null, null, null);
     }
 
     /**
@@ -183,7 +184,7 @@ public class TasksDbHelper {
         Cursor mCursor =
                 eisenDb.query(true, DATABASE_TABLE, new String[] {KEY_ROW_ID,
                                 KEY_PRIORITY, KEY_TITLE, KEY_DATE, KEY_TIME, KEY_REMINDER_OCCURRENCE, KEY_REMINDER_WHEN,
-                        KEY_REMINDER_DATE, KEY_REMINDER_TIME, KEY_NOTE, KEY_PROGRESS},
+                        KEY_REMINDER_DATE, KEY_REMINDER_TIME, KEY_NOTE, KEY_PROGRESS, KEY_DONE},
                         KEY_ROW_ID + "=" + rowId, null,
                         null, null, null, null);
         if (mCursor != null) {
@@ -211,7 +212,7 @@ public class TasksDbHelper {
      */
     public boolean updateTask(long rowId, int priority, String title, String taskDate, String taskTime,
                               String taskReminderOccurrence, String taskReminderWhen, String taskReminderDate, String taskReminderTime,
-                              String note, int progress) {
+                              String note, int progress, int isDone) {
         ContentValues args = new ContentValues();
         args.put(KEY_PRIORITY, priority);
         args.put(KEY_TITLE, title);
@@ -223,6 +224,7 @@ public class TasksDbHelper {
         args.put(KEY_REMINDER_TIME, taskReminderTime);
         args.put(KEY_NOTE, note);
         args.put(KEY_PROGRESS, progress);
+        args.put(KEY_DONE, isDone);
 
         return eisenDb.update(DATABASE_TABLE, args, KEY_ROW_ID + "=" + rowId, null) > 0;
     }

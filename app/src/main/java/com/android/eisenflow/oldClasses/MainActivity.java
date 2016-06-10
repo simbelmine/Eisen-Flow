@@ -34,7 +34,7 @@ import android.widget.TextView;
 
 import com.android.eisenflow.CalendarObject;
 import com.android.eisenflow.R;
-import com.android.eisenflow.TasksDbHelper;
+import com.android.eisenflow.LocalDataBaseHelper;
 import com.android.eisenflow.decorators.EventDecorator;
 import com.android.eisenflow.decorators.HighlightWeekendsDecorator;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
@@ -90,12 +90,12 @@ public class MainActivity extends AppCompatActivity
     private TextView priorityTipTxt;
     private LinearLayout noTasksTipLayout;
 
-    private TasksDbHelper dbHelper;
+    private LocalDataBaseHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        dbHelper = new TasksDbHelper(this);
+        dbHelper = new LocalDataBaseHelper(this);
         dbHelper.open();
         setContentView(R.layout.activity_main);
 

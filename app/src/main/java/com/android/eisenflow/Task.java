@@ -15,6 +15,7 @@ public class Task {
     String reminderTime;
     String note;
     int progress;
+    int isDone;
 
     public int getId() {
         return id;
@@ -102,5 +103,13 @@ public class Task {
 
     public void setProgress(int progress) {
         this.progress = progress;
+    }
+
+    public int getIsDone() {
+        return isDone;
+    }
+
+    public void setIsDone(int isDone) {
+        this.isDone = isDone;
     }
 }

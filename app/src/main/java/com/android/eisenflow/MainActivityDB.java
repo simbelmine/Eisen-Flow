@@ -82,7 +82,7 @@ public class MainActivityDB extends AppCompatActivity
     private TextView priorityTipTxt;
     private LinearLayout noTasksTipLayout;
 
-    private TasksDbHelper dbHelper;
+    private LocalDataBaseHelper dbHelper;
     private ArrayList<Task> tasks;
     private TasksListAdapterDB adapterDB;
     private boolean justRefreshDecorators = false;
@@ -90,7 +90,7 @@ public class MainActivityDB extends AppCompatActivity
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        dbHelper = new TasksDbHelper(this);
+        dbHelper = new LocalDataBaseHelper(this);
         dbHelper.open();
         setContentView(R.layout.activity_main);
 
@@ -118,7 +118,6 @@ public class MainActivityDB extends AppCompatActivity
     private BroadcastReceiver onTaskDeleted = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            materialCalendarView.removeDecorators();
             justRefreshDecorators = true;
             startListFeedingTask();
         }
@@ -175,6 +174,10 @@ public class MainActivityDB extends AppCompatActivity
                 new EventDecorator(getResources().getColor(R.color.event_color), getListOfCalendarDates()),
                 new HighlightWeekendsDecorator()
         );
+    }
+
+    private void removeCalendarDecorators() {
+        materialCalendarView.removeDecorators();
     }
 
     private ArrayList<CalendarDay> getListOfCalendarDates() {
@@ -260,17 +263,18 @@ public class MainActivityDB extends AppCompatActivity
 
                 if (cursor != null) {
                     while (cursor.moveToNext()) {
-                        int taskId = cursor.getInt(cursor.getColumnIndex(TasksDbHelper.KEY_ROW_ID));
-                        int priority = cursor.getInt(cursor.getColumnIndex(TasksDbHelper.KEY_PRIORITY));
-                        String title = cursor.getString(cursor.getColumnIndex(TasksDbHelper.KEY_TITLE));
-                        String date = cursor.getString(cursor.getColumnIndex(TasksDbHelper.KEY_DATE));
-                        String time = cursor.getString(cursor.getColumnIndex(TasksDbHelper.KEY_TIME));
-                        String reminderOccurrence = cursor.getString(cursor.getColumnIndex(TasksDbHelper.KEY_REMINDER_OCCURRENCE));
-                        String reminderWhen = cursor.getString(cursor.getColumnIndex(TasksDbHelper.KEY_REMINDER_WHEN));
-                        String reminderDate = cursor.getString(cursor.getColumnIndex(TasksDbHelper.KEY_REMINDER_DATE));
-                        String reminderTime = cursor.getString(cursor.getColumnIndex(TasksDbHelper.KEY_REMINDER_TIME));
-                        String note = cursor.getString(cursor.getColumnIndex(TasksDbHelper.KEY_NOTE));
-                        int progress = cursor.getInt(cursor.getColumnIndex(TasksDbHelper.KEY_PROGRESS));
+                        int taskId = cursor.getInt(cursor.getColumnIndex(LocalDataBaseHelper.KEY_ROW_ID));
+                        int priority = cursor.getInt(cursor.getColumnIndex(LocalDataBaseHelper.KEY_PRIORITY));
+                        String title = cursor.getString(cursor.getColumnIndex(LocalDataBaseHelper.KEY_TITLE));
+                        String date = cursor.getString(cursor.getColumnIndex(LocalDataBaseHelper.KEY_DATE));
+                        String time = cursor.getString(cursor.getColumnIndex(LocalDataBaseHelper.KEY_TIME));
+                        String reminderOccurrence = cursor.getString(cursor.getColumnIndex(LocalDataBaseHelper.KEY_REMINDER_OCCURRENCE));
+                        String reminderWhen = cursor.getString(cursor.getColumnIndex(LocalDataBaseHelper.KEY_REMINDER_WHEN));
+                        String reminderDate = cursor.getString(cursor.getColumnIndex(LocalDataBaseHelper.KEY_REMINDER_DATE));
+                        String reminderTime = cursor.getString(cursor.getColumnIndex(LocalDataBaseHelper.KEY_REMINDER_TIME));
+                        String note = cursor.getString(cursor.getColumnIndex(LocalDataBaseHelper.KEY_NOTE));
+                        int progress = cursor.getInt(cursor.getColumnIndex(LocalDataBaseHelper.KEY_PROGRESS));
+                        int isDone = cursor.getInt(cursor.getColumnIndex(LocalDataBaseHelper.KEY_DONE));
 
                         currentTask = new Task();
                         currentTask.setId(taskId);
@@ -284,6 +288,7 @@ public class MainActivityDB extends AppCompatActivity
                         currentTask.setReminderTime(reminderTime);
                         currentTask.setNote(note);
                         currentTask.setProgress(progress);
+                        currentTask.setIsDone(isDone);
 
                         tasks.add(currentTask);
                     }
@@ -291,15 +296,17 @@ public class MainActivityDB extends AppCompatActivity
 
                 if (tasks != null) {
                     tasksList = tasks;
+                    setCurrentDate();
+                    removeCalendarDecorators();
+                    refreshCalendarDecorators();
+
                     if(justRefreshDecorators) {
-                        refreshCalendarDecorators();
                         justRefreshDecorators = false;
                     }
                     else {
                         int priority = getPriorityFromSharedPrefs();
                         showCurrentTaskPriorityDB(priority);
                         setPriorityTipTxt(priority);
-                        refreshCalendarDecorators();
                     }
                 }
 
@@ -523,33 +530,31 @@ public class MainActivityDB extends AppCompatActivity
                 closeDrawer();
                 return true;
             case R.id.clear_all_done:
-                Set<String> doneTasks;
-
-                // ***** To DO ******
-                // **  To find another way to pass Set/List of Task objects between activities **
-                // ******************
-
-
-
-
-//                if(mainSharedPrefs.contains(TasksListAdapter.DONE_TASK_PREF_STR)) {
-//                    doneTasks = mainSharedPrefs.getStringSet(TasksListAdapter.DONE_TASK_PREF_STR, null);
-//                    if(doneTasks != null) {
-//                        for(int taskNum = 0; taskNum < tasksList.size(); taskNum++) {
-//                            if(doneTasks.contains(tasksList.get(taskNum))){
-//                                removeItemFromDB(taskNum);
-//                                refreshCalendarDecorators();
-//                                materialCalendarView.removeDecorators();
-//                                refreshCalendarDecorators();
-//                            }
-//                        }
-//                    }
-//                }
+                deleteDoneTasks();
+                justRefreshDecorators = true;
+                startListFeedingTask();
                 closeDrawer();
                 return true;
         }
 
         return true;
+    }
+
+    private void deleteDoneTasks() {
+        ArrayList<Task> tasksToKeep = new ArrayList<>();
+        for(int i = 0; i < tasksList.size(); i++) {
+            Task currentTask = tasksList.get(i);
+            if(currentTask.isDone == 1) {
+                dbHelper.deleteTask(currentTask.getId());
+            }
+            else {
+                tasksToKeep.add(currentTask);
+            }
+        }
+        tasksList.clear();
+        tasksList = tasksToKeep;
+        adapterDB.setList(tasksList);
+        adapterDB.notifyDataSetChanged();
     }
 
     private void savePriorityToSharedPrefs(int priority) {

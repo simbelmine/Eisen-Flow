@@ -39,7 +39,7 @@ import android.widget.TimePicker;
 
 import com.android.eisenflow.MainActivityDB;
 import com.android.eisenflow.R;
-import com.android.eisenflow.TasksDbHelper;
+import com.android.eisenflow.LocalDataBaseHelper;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -119,7 +119,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
     private RelativeLayout mainDueDateTxtLayout;
     private ImageView arrowDueDate;
 
-    private TasksDbHelper dbHelper;
+    private LocalDataBaseHelper dbHelper;
     private Long rowId;
 
 
@@ -127,7 +127,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        dbHelper = new TasksDbHelper(this);
+        dbHelper = new LocalDataBaseHelper(this);
         setContentView(R.layout.add_task_main_lyout);
 
 
@@ -135,7 +135,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
         String taskInfo = intent.getStringExtra(TasksListAdapter.EDIT_TASK_INFO_EXTRA);
         dbListUtils = new DbListUtils(taskInfo);
 
-        rowId = savedInstanceState != null ? savedInstanceState.getLong(TasksDbHelper.KEY_ROW_ID)
+        rowId = savedInstanceState != null ? savedInstanceState.getLong(LocalDataBaseHelper.KEY_ROW_ID)
                 : null;
 
         initLayout();
@@ -310,13 +310,13 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putLong(TasksDbHelper.KEY_ROW_ID, rowId);
+        outState.putLong(LocalDataBaseHelper.KEY_ROW_ID, rowId);
     }
 
     private void setRowIdFromIntent() {
         if (rowId == null) {
             Bundle extras = getIntent().getExtras();
-            rowId = extras != null ? extras.getLong(TasksDbHelper.KEY_ROW_ID)
+            rowId = extras != null ? extras.getLong(LocalDataBaseHelper.KEY_ROW_ID)
                     : null;
 
         }
@@ -1209,10 +1209,10 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
 
     private void populateReminderTaskData(Cursor cursor) {
         if(cursor != null) {
-            String reminderOccurrence = cursor.getString(cursor.getColumnIndexOrThrow(TasksDbHelper.KEY_REMINDER_OCCURRENCE));
-            String reminderWhen = cursor.getString(cursor.getColumnIndexOrThrow(TasksDbHelper.KEY_REMINDER_WHEN));
-            String reminderDate = cursor.getString(cursor.getColumnIndexOrThrow(TasksDbHelper.KEY_REMINDER_DATE));
-            String reminderTime = cursor.getString(cursor.getColumnIndexOrThrow(TasksDbHelper.KEY_REMINDER_TIME));
+            String reminderOccurrence = cursor.getString(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_REMINDER_OCCURRENCE));
+            String reminderWhen = cursor.getString(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_REMINDER_WHEN));
+            String reminderDate = cursor.getString(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_REMINDER_DATE));
+            String reminderTime = cursor.getString(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_REMINDER_TIME));
 
             checkOccurrenceRadioBtn(reminderOccurrence);
             checkRepeatedDays(reminderWhen);
@@ -1309,7 +1309,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
         }
         else {
             if (dbHelper.updateTask(rowId, priorityInt, title, date, time,
-                    reminderOccurrence, reminderWhen, reminderDate, reminderTime, note, progress)) {
+                    reminderOccurrence, reminderWhen, reminderDate, reminderTime, note, progress, 0)) {
                 closeActivityWithResult(Activity.RESULT_OK);
             }
             else {
@@ -1371,17 +1371,17 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
 
             if (cursor != null) {
                 // #Priority
-                int priority = cursor.getInt(cursor.getColumnIndexOrThrow(TasksDbHelper.KEY_PRIORITY));
+                int priority = cursor.getInt(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_PRIORITY));
                 setBgPriorityColor(priority);
                 priorityInt = priority;
 
                 // #Task Name
-                String title = cursor.getString(cursor.getColumnIndexOrThrow(TasksDbHelper.KEY_TITLE));
+                String title = cursor.getString(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_TITLE));
                 taskName.setText(title);
 
                 // #Calendar Date
                 Calendar cal = Calendar.getInstance();
-                String date =  cursor.getString(cursor.getColumnIndexOrThrow(TasksDbHelper.KEY_DATE));
+                String date =  cursor.getString(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_DATE));
                 if (date != null) {
                     cal.setTime(getDate(date));
                 }
@@ -1389,7 +1389,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
                 calendarView.setDate(cal.getTimeInMillis(), true, true);
 
                 // #Time
-                String time = cursor.getString(cursor.getColumnIndexOrThrow(TasksDbHelper.KEY_TIME));
+                String time = cursor.getString(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_TIME));
                 timeTxt.setText(time);
                 setTimeToTimePicker(time);
 
@@ -1402,11 +1402,11 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
                 }
 
                 // #Note
-                String note = cursor.getString(cursor.getColumnIndexOrThrow(TasksDbHelper.KEY_NOTE));
+                String note = cursor.getString(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_NOTE));
                 noteTxt.setText(note);
 
                 // #Progress
-                progress = cursor.getInt(cursor.getColumnIndexOrThrow(TasksDbHelper.KEY_PROGRESS));
+                progress = cursor.getInt(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_PROGRESS));
             }
         }
     }
