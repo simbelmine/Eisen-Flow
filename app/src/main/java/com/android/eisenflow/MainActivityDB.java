@@ -86,6 +86,7 @@ public class MainActivityDB extends AppCompatActivity
     private TasksDbHelper dbHelper;
     private ArrayList<Task> tasks;
     private TasksListAdapterDB adapterDB;
+    private boolean justRefreshDecorators = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -133,8 +134,22 @@ public class MainActivityDB extends AppCompatActivity
     private BroadcastReceiver onTaskDeleted = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+//            if(intent.hasExtra("taskPosition")) {
+//                int taskPosition = intent.getIntExtra("taskPosition", -1);
+//                if(taskPosition != -1) {
+//                    Log.v("eisen", "length = " + tasksList.size() + ";   index = " + taskPosition);
+//                    Log.v("eisen", "");
+//                    for(Task t : tasksList) {
+//                        Log.v("eisen", t.getId() + "   " + t.getTitle());
+//                    }
+//
+//                    //tasksList.remove(taskPosition-1);
+//                }
+//            }
+
             materialCalendarView.removeDecorators();
-            refreshCalendarDecorators();
+            justRefreshDecorators = true;
+            startListFeedingTask();
         }
     };
 
@@ -189,6 +204,23 @@ public class MainActivityDB extends AppCompatActivity
                 new EventDecorator(getResources().getColor(R.color.event_color), getListOfCalendarDates()),
                 new HighlightWeekendsDecorator()
         );
+    }
+
+    private ArrayList<CalendarDay> getListOfCalendarDates() {
+        ArrayList<CalendarDay> dates = new ArrayList<>();
+        CalendarDay day;
+        Calendar calendar = Calendar.getInstance();
+
+        if(tasksList != null) {
+            for (Task task : tasksList) {
+                calendar.setTime(getDate(task.getDate()));
+
+                day = CalendarDay.from(calendar);
+                dates.add(day);
+            }
+        }
+
+        return dates;
     }
 
     private String getMonthName() {
@@ -286,16 +318,21 @@ public class MainActivityDB extends AppCompatActivity
                     }
                 }
 
-
                 if (tasks != null) {
                     tasksList = tasks;
-                    int priority = getPriorityFromSharedPrefs();
-                    showCurrentTaskPriorityDB(priority);
-                    setPriorityTipTxt(priority);
+                    if(justRefreshDecorators) {
+                        refreshCalendarDecorators();
+                        justRefreshDecorators = false;
+                    }
+                    else {
+                        int priority = getPriorityFromSharedPrefs();
+                        showCurrentTaskPriorityDB(priority);
+                        setPriorityTipTxt(priority);
+                        refreshCalendarDecorators();
+                    }
                 }
 
                 pullToRefreshContainer.setRefreshing(false);
-                refreshCalendarDecorators();
             }
         }
     }
@@ -372,23 +409,6 @@ public class MainActivityDB extends AppCompatActivity
                 priorityTipTxt.setBackgroundColor(getResources().getColor(R.color.fourthQuadrant));
                 break;
         }
-    }
-
-    private ArrayList<CalendarDay> getListOfCalendarDates() {
-        ArrayList<CalendarDay> dates = new ArrayList<>();
-        CalendarDay day;
-        Calendar calendar = Calendar.getInstance();
-
-        if(tasksList != null) {
-            for (Task task : tasksList) {
-                calendar.setTime(getDate(task.getDate()));
-
-                day = CalendarDay.from(calendar);
-                dates.add(day);
-            }
-        }
-
-        return dates;
     }
 
     private Date getDate(String dateStr) {

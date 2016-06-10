@@ -61,14 +61,14 @@ public class TasksDbHelper {
 
         @Override
         public void onCreate(SQLiteDatabase db) {
-            Log.d(TAG, "---Database " + DATABASE_NAME + " was created.");
+//            Log.d(TAG, "---Database " + DATABASE_NAME + " was created.");
             db.execSQL(DATABASE_CREATE);
         }
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            Log.w(TAG, "Upgrading database from version " + oldVersion + " to "
-                    + newVersion + ", which will destroy all old data");
+//            Log.w(TAG, "Upgrading database from version " + oldVersion + " to "
+//                    + newVersion + ", which will destroy all old data");
 
             db.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE);
             onCreate(db);
@@ -98,7 +98,7 @@ public class TasksDbHelper {
      */
 
     public TasksDbHelper open() throws SQLiteException {
-        Log.d(TAG, "---Database was OPEN.");
+//        Log.d(TAG, "---Database was OPEN.");
         dbHelper = new DatabaseHelper(context);
         eisenDb = dbHelper.getWritableDatabase();
 
@@ -130,7 +130,7 @@ public class TasksDbHelper {
     public long createTask(int priority, String title, String taskDate, String taskTime,
                            String taskReminderOccurrence, String taskReminderWhen, String taskReminderDate, String taskReminderTime,
                            String note, int progress) {
-        Log.d(TAG, "---Creating Task.");
+//        Log.d(TAG, "---Creating Task.");
 
         ContentValues initialValues = new ContentValues();
         initialValues.put(KEY_PRIORITY, priority);
@@ -155,7 +155,7 @@ public class TasksDbHelper {
      * @param rowId id of reminder to delete
      * @return true if deleted, false otherwise
      */
-    public boolean deleteReminder(long rowId) {
+    public boolean deleteTask(long rowId) {
         return eisenDb.delete(DATABASE_TABLE, KEY_ROW_ID + "=" + rowId, null) > 0;
     }
 
@@ -165,7 +165,7 @@ public class TasksDbHelper {
      * @return Cursor over all reminders
      */
     public Cursor fetchAllTasks() {
-        Log.v("eisen", "---Fetchibg All");
+//        Log.v("eisen", "---Fetchibg All");
 
         return eisenDb.query(DATABASE_TABLE, new String[] {KEY_ROW_ID, KEY_PRIORITY, KEY_TITLE,
                 KEY_DATE, KEY_TIME, KEY_REMINDER_OCCURRENCE, KEY_REMINDER_WHEN, KEY_REMINDER_DATE, KEY_REMINDER_TIME,

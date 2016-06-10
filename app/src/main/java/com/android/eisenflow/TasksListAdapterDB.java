@@ -176,30 +176,29 @@ public class TasksListAdapterDB extends RecyclerView.Adapter<TasksListHolder> {
                     startActivity(AddTask.class, flags, extra_names, extra_value);
                     break;
                 case R.id.delete_list_icon_0:
-                    // deleteItem(view);
-
-                    Intent intent = new Intent(ACTION);
-                    LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
-
-
+                    deleteItem(dbHelper, task.getId(), position);
+                    sendBroadcastDeleted(position);
                     break;
                 case R.id.edit_list_icon_1:
                     startActivity(AddTask.class, flags, extra_names, extra_value);
                     break;
                 case R.id.delete_list_icon_1:
-                    // deleteItem(view);
-                    break;
-                case R.id.delete_list_icon_2:
-                    //deleteItem(view);
+                    deleteItem(dbHelper, task.getId(), position);
+                    sendBroadcastDeleted(position);
                     break;
                 case R.id.edit_list_icon_2:
                     startActivity(AddTask.class, flags, extra_names, extra_value);
                     break;
-                case R.id.delete_list_icon_3:
-                    //  deleteItem(view);
+                case R.id.delete_list_icon_2:
+                    deleteItem(dbHelper, task.getId(), position);
+                    sendBroadcastDeleted(position);
                     break;
                 case R.id.edit_list_icon_3:
                     startActivity(AddTask.class, flags, extra_names, extra_value);
+                    break;
+                case R.id.delete_list_icon_3:
+                    deleteItem(dbHelper, task.getId(), position);
+                    sendBroadcastDeleted(position);
                     break;
                 case R.id.share_icon:
                     showShareOptions(task);
@@ -378,5 +377,17 @@ public class TasksListAdapterDB extends RecyclerView.Adapter<TasksListHolder> {
         });
         builder.setNegativeButton(context.getResources().getString(R.string.cancel_btn), null);
         builder.show();
+    }
+
+    private void deleteItem(TasksDbHelper dbHelper, int taskId, int position) {
+        dbHelper.deleteTask(taskId);
+        tasksList.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    private void sendBroadcastDeleted(int position) {
+        Intent intent = new Intent(ACTION);
+        intent.putExtra("taskPosition", position);
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
 }
