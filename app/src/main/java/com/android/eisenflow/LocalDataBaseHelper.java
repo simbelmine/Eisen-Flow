@@ -39,7 +39,7 @@ public class LocalDataBaseHelper {
     private static final String DATABASE_CREATE =
             "CREATE TABLE " + DATABASE_TABLE + " ("
                     + KEY_ROW_ID + " integer primary key autoincrement, "
-                    + KEY_PRIORITY + " text not null, "
+                    + KEY_PRIORITY + " integer, "
                     + KEY_TITLE + " text not null, "
                     + KEY_DATE + " text not null, "
                     + KEY_TIME + " text not null, "
@@ -48,7 +48,7 @@ public class LocalDataBaseHelper {
                     + KEY_REMINDER_DATE + " text not null, "
                     + KEY_REMINDER_TIME + " text not null, "
                     + KEY_NOTE + " text not null, "
-                    + KEY_PROGRESS + " text not null, "
+                    + KEY_PROGRESS + " integer default 0, "
                     + KEY_DONE + " integer default 0);"
 
             ;
