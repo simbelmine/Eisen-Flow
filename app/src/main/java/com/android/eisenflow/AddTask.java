@@ -1324,20 +1324,8 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
 
     private String getReminderWhen(int radioChoiceId) {
         if(radioChoiceId == R.id.weekly_btn) {
-            return getCheckedWeekDaysSimple();
+            return getCheckedWeekDays().toString();
         }
-        return "";
-    }
-
-    private String getCheckedWeekDaysSimple() {
-        if(monCheckbox.isChecked()) monCheckbox.getText();
-        if(tueCheckbox.isChecked()) tueCheckbox.getText();
-        if(wedCheckbox.isChecked()) wedCheckbox.getText();
-        if(thuCheckbox.isChecked()) thuCheckbox.getText();
-        if(friCheckbox.isChecked()) friCheckbox.getText();
-        if(satCheckbox.isChecked()) satCheckbox.getText();
-        if(sunCheckbox.isChecked()) sunCheckbox.getText();
-
         return "";
     }
 
