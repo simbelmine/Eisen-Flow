@@ -144,7 +144,7 @@ public class TasksDbHelper {
         initialValues.put(KEY_NOTE, note);
         initialValues.put(KEY_PROGRESS, progress);
 
-        Log.v(TAG, "DB = " + eisenDb);
+//        Log.v(TAG, "DB = " + eisenDb);
 
         return eisenDb.insert(DATABASE_TABLE, null, initialValues);
     }

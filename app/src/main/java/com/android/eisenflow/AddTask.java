@@ -75,7 +75,8 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
     private LinearLayout timeTextLayout;
     private LinearLayout noteLayout;
     private LinearLayout noteEditLayout;
-    private int priorityInt = -1; // from 0 to 3 ; 0 is the highest priority
+    private int priorityInt = -1;   // from 0 to 3 ; 0 is the highest priority
+    private int progress = 0;       // by default is 0 for all non Green Tasks
     private TextView taskName;
     private EditText noteTxt;
     private CoordinatorLayout snakbarLayout;
@@ -854,7 +855,6 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
 
         String stringToReturn;
         if(priorityInt == 1) {
-            int progress = 0;
             if(isEditMode(intent)) {
                 progress = dbListUtils.getTaskProgress();
             }
@@ -1290,7 +1290,6 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
 
 
         String note = noteTxt.getText().toString();
-        int progress = 0;
 
         if(rowId == null) {
             long id = dbHelper.createTask(priorityInt, title, date, time,
@@ -1413,6 +1412,9 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
                 // #Note
                 String note = cursor.getString(cursor.getColumnIndexOrThrow(TasksDbHelper.KEY_NOTE));
                 noteTxt.setText(note);
+
+                // #Progress
+                progress = cursor.getInt(cursor.getColumnIndexOrThrow(TasksDbHelper.KEY_PROGRESS));
             }
         }
     }
