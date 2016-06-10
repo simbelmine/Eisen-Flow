@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.Toast;
+import com.android.eisenflow.oldClasses.MainActivity;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -173,28 +174,28 @@ public class TasksListAdapterDB extends RecyclerView.Adapter<TasksListHolder> {
                     saveProgressToDb(view, holder, task);
                     break;
                 case R.id.edit_list_icon_0:
-                    startActivity(AddTask.class, flags, extra_names, extra_value);
+                    startActivity(AddTaskDB.class, flags, extra_names, extra_value);
                     break;
                 case R.id.delete_list_icon_0:
                     deleteItem(dbHelper, task.getId(), position);
                     sendBroadcastDeleted(position);
                     break;
                 case R.id.edit_list_icon_1:
-                    startActivity(AddTask.class, flags, extra_names, extra_value);
+                    startActivity(AddTaskDB.class, flags, extra_names, extra_value);
                     break;
                 case R.id.delete_list_icon_1:
                     deleteItem(dbHelper, task.getId(), position);
                     sendBroadcastDeleted(position);
                     break;
                 case R.id.edit_list_icon_2:
-                    startActivity(AddTask.class, flags, extra_names, extra_value);
+                    startActivity(AddTaskDB.class, flags, extra_names, extra_value);
                     break;
                 case R.id.delete_list_icon_2:
                     deleteItem(dbHelper, task.getId(), position);
                     sendBroadcastDeleted(position);
                     break;
                 case R.id.edit_list_icon_3:
-                    startActivity(AddTask.class, flags, extra_names, extra_value);
+                    startActivity(AddTaskDB.class, flags, extra_names, extra_value);
                     break;
                 case R.id.delete_list_icon_3:
                     deleteItem(dbHelper, task.getId(), position);

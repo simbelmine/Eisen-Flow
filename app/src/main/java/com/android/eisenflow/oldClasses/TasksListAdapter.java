@@ -1,4 +1,4 @@
-package com.android.eisenflow;
+package com.android.eisenflow.oldClasses;
 
 import android.app.Activity;
 import android.content.Context;
@@ -17,12 +17,16 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.Toast;
 
+import com.android.eisenflow.R;
+import com.android.eisenflow.SwipeDetector;
+import com.android.eisenflow.TasksListHolder;
+import com.android.eisenflow.TimerActivity;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;

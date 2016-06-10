@@ -28,10 +28,11 @@
                 <data android:mimeType="text/plain"/>
             </intent-filter>
         </activity>
-        <activity android:name=".AddTask"/>
+        <activity android:name=".oldClasses.AddTask"/>
+        <activity android:name=".AddTaskDB"/>
         <activity android:name=".TimerActivity"/>
 
-        <activity android:name=".MainActivity"/>
+        <activity android:name=".oldClasses.MainActivity"/>
     </application>
 
 </manifest>

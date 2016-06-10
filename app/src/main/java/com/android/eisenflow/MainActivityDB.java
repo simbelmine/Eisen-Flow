@@ -1,6 +1,5 @@
 package com.android.eisenflow;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -103,26 +102,11 @@ public class MainActivityDB extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        IntentFilter iif = new IntentFilter(TasksListAdapter.ACTION);
+        IntentFilter iif = new IntentFilter(TasksListAdapterDB.ACTION);
         LocalBroadcastManager.getInstance(this).registerReceiver(onTaskDeleted, iif);
 
         initLayout();
         onPermissionGranted();
-
-//        PermissionHelper permissionHelper = new PermissionHelper(this);
-//        if(permissionHelper.isBiggerOrEqualToAPI23()) {
-//            String[] permissions = new String[] {
-//                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-//            };
-//
-//            permissionHelper.checkForPermissions(permissions);
-//            if(permissionHelper.isAllPermissionsGranted) {
-//                onPermissionGranted();
-//            }
-//        }
-//        else {
-//            onPermissionGranted();
-//        }
     }
 
     @Override
@@ -134,19 +118,6 @@ public class MainActivityDB extends AppCompatActivity
     private BroadcastReceiver onTaskDeleted = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-//            if(intent.hasExtra("taskPosition")) {
-//                int taskPosition = intent.getIntExtra("taskPosition", -1);
-//                if(taskPosition != -1) {
-//                    Log.v("eisen", "length = " + tasksList.size() + ";   index = " + taskPosition);
-//                    Log.v("eisen", "");
-//                    for(Task t : tasksList) {
-//                        Log.v("eisen", t.getId() + "   " + t.getTitle());
-//                    }
-//
-//                    //tasksList.remove(taskPosition-1);
-//                }
-//            }
-
             materialCalendarView.removeDecorators();
             justRefreshDecorators = true;
             startListFeedingTask();
@@ -591,7 +562,7 @@ public class MainActivityDB extends AppCompatActivity
     }
 
     private void startAddTaskActivity() {
-        Intent intent = new Intent(MainActivityDB.this, AddTask.class);
+        Intent intent = new Intent(MainActivityDB.this, AddTaskDB.class);
         startActivityForResult(intent, ACTIVITY_CREATE);
         overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
     }

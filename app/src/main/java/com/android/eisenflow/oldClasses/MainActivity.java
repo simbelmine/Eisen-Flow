@@ -1,4 +1,4 @@
-package com.android.eisenflow;
+package com.android.eisenflow.oldClasses;
 
 import android.Manifest;
 import android.app.Activity;
@@ -32,6 +32,9 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.eisenflow.CalendarObject;
+import com.android.eisenflow.R;
+import com.android.eisenflow.TasksDbHelper;
 import com.android.eisenflow.decorators.EventDecorator;
 import com.android.eisenflow.decorators.HighlightWeekendsDecorator;
 import com.prolificinteractive.materialcalendarview.CalendarDay;

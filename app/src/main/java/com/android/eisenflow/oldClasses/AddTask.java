@@ -1,4 +1,4 @@
-package com.android.eisenflow;
+package com.android.eisenflow.oldClasses;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -36,6 +36,10 @@ import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
+
+import com.android.eisenflow.MainActivityDB;
+import com.android.eisenflow.R;
+import com.android.eisenflow.TasksDbHelper;
 
 import java.io.BufferedReader;
 import java.io.File;
