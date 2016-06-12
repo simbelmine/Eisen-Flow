@@ -33,6 +33,9 @@
         <activity android:name=".TimerActivity"/>
 
         <activity android:name=".oldClasses.MainActivity"/>
+
+
+        <receiver android:name=".reminders.OnAlarmReceiver" />
     </application>
 
 </manifest>
