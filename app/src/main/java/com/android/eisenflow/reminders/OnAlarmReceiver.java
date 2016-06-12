@@ -3,6 +3,7 @@ package com.android.eisenflow.reminders;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.android.eisenflow.LocalDataBaseHelper;
@@ -24,5 +25,7 @@ public class OnAlarmReceiver extends BroadcastReceiver {
         Intent intentReminderService = new Intent(context, ReminderService.class);
         intentReminderService.putExtra(LocalDataBaseHelper.KEY_ROW_ID, rowId);
         context.startService(intentReminderService);
+
+        LocalBroadcastManager.getInstance(context).unregisterReceiver(this);
     }
 }
