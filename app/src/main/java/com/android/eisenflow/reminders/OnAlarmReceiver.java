@@ -19,7 +19,7 @@ public class OnAlarmReceiver extends BroadcastReceiver {
 
         long rowId = intent.getExtras().getLong(LocalDataBaseHelper.KEY_ROW_ID);
 
-//        WakeReminderIntentService.acquireStaticLock(context);
+        WakeReminderIntentService.acquireStaticLock(context);
 
         Intent intentReminderService = new Intent(context, ReminderService.class);
         intentReminderService.putExtra(LocalDataBaseHelper.KEY_ROW_ID, rowId);
