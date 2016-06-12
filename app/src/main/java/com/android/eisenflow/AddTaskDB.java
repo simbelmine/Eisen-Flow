@@ -35,6 +35,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.android.eisenflow.reminders.ReminderManager;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -1029,7 +1031,7 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
             }
         }
 
-        //new ReminderManager(this).setReminder(rowId, getCalendar(date , time));
+        setReminder(date, time);
     }
 
     private void closeActivityWithResult(int result) {
@@ -1120,6 +1122,29 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
                 isDone = cursor.getInt(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_DONE));
             }
         }
+    }
+
+    private void setReminder(String date, String time) {
+        Calendar calReminder = getCalendar(date , time);
+        if(calReminder != null) {
+            new ReminderManager(this).setReminder(rowId, calReminder);
+        }
+    }
+
+    private Calendar getCalendar(String date, String time) {
+        Calendar cal = Calendar.getInstance();
+        Date calDate = getDate(date);
+        Date calTime = getTime(time);
+
+        if(calDate != null) {
+            cal.setTime(calDate);
+            if(calTime != null) {
+                cal.setTime(calTime);
+            }
+        }
+        else return null;
+
+        return cal;
     }
 }
 

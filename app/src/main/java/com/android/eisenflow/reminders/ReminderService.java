@@ -1,4 +1,4 @@
-package com.android.eisenflow;
+package com.android.eisenflow.reminders;
 
 /**
  * Created by Sve on 6/7/16.
