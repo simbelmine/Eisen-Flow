@@ -36,6 +36,7 @@
 
 
         <receiver android:name=".reminders.OnAlarmReceiver" />
+        <service android:name=".reminders.ReminderService" />
     </application>
 
 </manifest>

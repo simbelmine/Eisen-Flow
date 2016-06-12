@@ -70,4 +70,8 @@
     <string name="no_tasks_msg">No Tasks</string>
     <string name="no_tasks_add_msg">Create new task or select calendar event.</string>
 
+    <!-- Reminders -->
+    <string name="notify_new_task_message">A task needs to be reviewed!</string>
+    <string name="notify_new_task_title">Task Reminder!</string>
+
 </resources>
