@@ -46,7 +46,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-import java.util.Set;
 
 /**
  * Created by Sve on 6/8/16.
@@ -82,6 +81,7 @@ public class MainActivityDB extends AppCompatActivity
     private TextView priorityTipTxt;
     private LinearLayout noTasksTipLayout;
 
+    private DateTimeHelper dateTimeHelper;
     private LocalDataBaseHelper dbHelper;
     private ArrayList<Task> tasks;
     private TasksListAdapterDB adapterDB;
@@ -90,6 +90,7 @@ public class MainActivityDB extends AppCompatActivity
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        dateTimeHelper = new DateTimeHelper(this);
         dbHelper = new LocalDataBaseHelper(this);
         dbHelper.open();
         setContentView(R.layout.activity_main);
@@ -131,7 +132,7 @@ public class MainActivityDB extends AppCompatActivity
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         // Toolbar Month Name
         month = (TextView)findViewById(R.id.toolbar_month);
-        month.setText(getMonthName());
+        month.setText(dateTimeHelper.getMonthName());
         month.setOnClickListener(this);
         // FAB init
         fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -153,10 +154,10 @@ public class MainActivityDB extends AppCompatActivity
         // Date Day Txt on slide
         dateSlideTxt = (TextView) findViewById(R.id.day_date_txt);
         date = Calendar.getInstance().getTime();
-        dateSlideTxt.setText(getDateTxt(date));
+        dateSlideTxt.setText(getDateSliderTxt(date));
 
         materialCalendarView = (MaterialCalendarView) findViewById(R.id.materialCalendarView);
-        setCurrentDate();
+        setCalendarCurrentDate();
         materialCalendarView.setOnDateChangedListener(this);
         materialCalendarView.setOnMonthChangedListener(this);
         pullToRefreshContainer = (SwipeRefreshLayout) findViewById(R.id.pull_to_refresh_container);
@@ -187,7 +188,7 @@ public class MainActivityDB extends AppCompatActivity
 
         if(tasksList != null) {
             for (Task task : tasksList) {
-                calendar.setTime(getDate(task.getDate()));
+                calendar.setTime(dateTimeHelper.getDate(task.getDate()));
 
                 day = CalendarDay.from(calendar);
                 dates.add(day);
@@ -197,12 +198,12 @@ public class MainActivityDB extends AppCompatActivity
         return dates;
     }
 
-    private String getMonthName() {
-        Calendar cal = Calendar.getInstance();
-        return cal.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault());
-    }
+//    private String getMonthName() {
+//        Calendar cal = Calendar.getInstance();
+//        return cal.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault());
+//    }
 
-    private String getDateTxt(Date date) {
+    private String getDateSliderTxt(Date date) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
         String weekDay = cal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault());
@@ -210,14 +211,14 @@ public class MainActivityDB extends AppCompatActivity
         return weekDay + " " + day;
     }
 
-    private void setCurrentDate() {
+    private void setCalendarCurrentDate() {
         materialCalendarView.setCurrentDate(Calendar.getInstance());
         materialCalendarView.setSelectedDate(Calendar.getInstance());
-        updateSelectedDateTxtColor(date, R.color.colorAccent);
+        updateCalendarSelectedDateTxtColor(date, R.color.colorAccent);
     }
 
-    private void updateSelectedDateTxtColor(Date date, int color) {
-        dateSlideTxt.setText(getDateTxt(date));
+    private void updateCalendarSelectedDateTxtColor(Date date, int color) {
+        dateSlideTxt.setText(getDateSliderTxt(date));
         dateSlideTxt.setTextColor(getResources().getColor(color));
     }
 
@@ -296,7 +297,7 @@ public class MainActivityDB extends AppCompatActivity
 
                 if (tasks != null) {
                     tasksList = tasks;
-                    setCurrentDate();
+                    setCalendarCurrentDate();
                     removeCalendarDecorators();
                     refreshCalendarDecorators();
 
@@ -389,24 +390,24 @@ public class MainActivityDB extends AppCompatActivity
         }
     }
 
-    private Date getDate(String dateStr) {
-        SimpleDateFormat postFormater = new SimpleDateFormat(DATE_FORMAT);
-        try {
-            return postFormater.parse(dateStr);
-        }
-        catch (ParseException ex) {
-            Log.e("eisen", "String to Date Formatting Exception : " + ex.getMessage());
-        }
-
-        return null;
-    }
-
-    private boolean isSystem24hFormat() {
-        if(android.text.format.DateFormat.is24HourFormat(getApplicationContext()))
-            return true;
-
-        return false;
-    }
+//    private Date getDate(String dateStr) {
+//        SimpleDateFormat postFormater = new SimpleDateFormat(DATE_FORMAT);
+//        try {
+//            return postFormater.parse(dateStr);
+//        }
+//        catch (ParseException ex) {
+//            Log.e("eisen", "String to Date Formatting Exception : " + ex.getMessage());
+//        }
+//
+//        return null;
+//    }
+//
+//    private boolean isSystem24hFormat() {
+//        if(android.text.format.DateFormat.is24HourFormat(getApplicationContext()))
+//            return true;
+//
+//        return false;
+//    }
 
 
     @Override
@@ -418,7 +419,7 @@ public class MainActivityDB extends AppCompatActivity
             }
             case R.id.toolbar_month: {
                 // Return Calendar to Current Date
-                setCurrentDate();
+                setCalendarCurrentDate();
                 break;
             }
         }
@@ -429,11 +430,11 @@ public class MainActivityDB extends AppCompatActivity
         CalendarDay currentDate = CalendarDay.from(Calendar.getInstance());
 
         if (!pressedCalendarDate.equals(currentDate)) {
-            updateSelectedDateTxtColor(pressedCalendarDate.getDate(), R.color.gray);
+            updateCalendarSelectedDateTxtColor(pressedCalendarDate.getDate(), R.color.gray);
         }
         else
         {
-            updateSelectedDateTxtColor(currentDate.getDate(), R.color.colorAccent);
+            updateCalendarSelectedDateTxtColor(currentDate.getDate(), R.color.colorAccent);
         }
 
         hidePriorityTipMessage();
@@ -620,7 +621,7 @@ public class MainActivityDB extends AppCompatActivity
         Calendar calendar = Calendar.getInstance();
 
         for(Task task : tasksList) {
-            calendar.setTime(getDate(task.getDate()));
+            calendar.setTime(dateTimeHelper.getDate(task.getDate()));
 
             day = CalendarDay.from(calendar);
             dates.add(new CalendarObject(day, task));

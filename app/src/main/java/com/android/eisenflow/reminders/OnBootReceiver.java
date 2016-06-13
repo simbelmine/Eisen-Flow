@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.util.Log;
 
+import com.android.eisenflow.DateTimeHelper;
 import com.android.eisenflow.LocalDataBaseHelper;
 
 import java.text.ParseException;
@@ -18,12 +19,13 @@ import java.util.Date;
  */
 public class OnBootReceiver extends BroadcastReceiver {
     private static final String TAG = "eisen";
-    private static final String DATE_FORMAT = "EEE, MMM dd, yyyy";
+    private DateTimeHelper dateTimeHelper;
 
     @Override
     public void onReceive(Context context, Intent intent) {
         ReminderManager reminderManager = new ReminderManager(context);
 
+        dateTimeHelper = new DateTimeHelper(context);
         LocalDataBaseHelper dbHelper = new LocalDataBaseHelper(context);
         dbHelper.open();
 
@@ -47,8 +49,8 @@ public class OnBootReceiver extends BroadcastReceiver {
 
                 Calendar cal = Calendar.getInstance();
                 try {
-                    cal.setTime(getDate(date));
-                    cal.setTime(getTime(context, time));
+                    cal.setTime(dateTimeHelper.getDate(date));
+                    cal.setTime(dateTimeHelper.getTime(time));
 
                     reminderManager.setReminder(rowId, cal);
                 } catch (Exception e) {
@@ -60,44 +62,5 @@ public class OnBootReceiver extends BroadcastReceiver {
             cursor.close();
         }
         dbHelper.close();
-    }
-
-    private Date getDate(String dateStr) {
-        if(dateStr != null && !"".equals(dateStr)) {
-            SimpleDateFormat postFormater = new SimpleDateFormat(DATE_FORMAT);
-            try {
-                return postFormater.parse(dateStr);
-            } catch (ParseException ex) {
-                Log.e("eisen", "String to Date Formatting Exception : " + ex.getMessage());
-            }
-        }
-
-        return null;
-    }
-
-    private Date getTime(Context context, String timeStr) {
-        SimpleDateFormat postFormater;
-        if(isSystem24hFormat(context)) {
-            postFormater = new SimpleDateFormat("kk:mm");
-        }
-        else {
-            postFormater = new SimpleDateFormat("hh:mm a");
-        }
-
-        try {
-            return postFormater.parse(timeStr);
-        }
-        catch (ParseException ex) {
-            Log.e("eisen", "String to Time Formatting Exception : " + ex.getMessage());
-        }
-
-        return null;
-    }
-
-    private boolean isSystem24hFormat(Context context) {
-        if(android.text.format.DateFormat.is24HourFormat(context))
-            return true;
-
-        return false;
     }
 }

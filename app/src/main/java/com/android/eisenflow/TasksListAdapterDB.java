@@ -25,10 +25,6 @@ import java.util.List;
  * Created by Sve on 6/8/16.
  */
 public class TasksListAdapterDB extends RecyclerView.Adapter<TasksListHolder> {
-    private static final String DATE_FORMAT = "MMM dd";
-    private static final String DATE_FORMAT_LONG = "EEE, MMM dd, yyyy";
-    public static final String EDIT_TASK_INFO_EXTRA = "editTaskInfoExtra";
-    public static final String DONE_TASK_PREF_STR = "doneTasks";
     public static final String ACTION = "deleteTaskAction";
     private static final String PROGRESS_TIP = "isProgressTipShown";
     private Context context;

@@ -49,7 +49,6 @@ import java.util.Date;
  */
 public class AddTaskDB extends AppCompatActivity implements View.OnClickListener,
         CalendarView.OnDateChangeListener, TimePicker.OnTimeChangedListener, RadioGroup.OnCheckedChangeListener {
-    private static final String DATE_FORMAT = "EEE, MMM dd, yyyy";
     private LinearLayout closeBtn;
     private TextView saveBtn;
     private LinearLayout priorityLayout;
@@ -110,6 +109,7 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
     private String oldTimeStr;
     private int isDone;
 
+    private DateTimeHelper dateTimeHelper;
     private LocalDataBaseHelper dbHelper;
     private Long rowId;
 
@@ -118,6 +118,7 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        dateTimeHelper = new DateTimeHelper(this);
         dbHelper = new LocalDataBaseHelper(this);
         setContentView(R.layout.add_task_main_lyout);
 
@@ -235,10 +236,13 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
             new FetchAsyncTaskToEdit().execute();
         }
         else {
-            dateTxt.setText(getDateString(Calendar.getInstance()));
-            currDateTxt.setText(getDateString(Calendar.getInstance()));
-            reminderCurrDateTxt.setText(getDateString(Calendar.getInstance()));
-            timeTxt.setText(getTimeString(Calendar.getInstance()));
+            String dateStr = dateTimeHelper.getDateString(Calendar.getInstance());
+            String timeStr = dateTimeHelper.getTimeString(Calendar.getInstance());
+            dateTxt.setText(dateStr);
+            currDateTxt.setText(dateStr);
+            reminderCurrDateTxt.setText(dateStr);
+            timeTxt.setText(timeStr);
+            reminderTimeTxt.setText(timeStr);
         }
     }
 
@@ -338,7 +342,7 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
                 break;
             case R.id.time_txt_layout:
                 hideSoftKbd();
-                if(isSystem24hFormat()) {
+                if(dateTimeHelper.isSystem24hFormat()) {
                     timePickerView.setIs24HourView(true);
                 }
                 else {
@@ -374,11 +378,11 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
                 break;
             case R.id.curr_date_txt:
                 calendarView.setDate(Calendar.getInstance().getTimeInMillis(), true, true);
-                dateTxt.setText(getDateString(Calendar.getInstance()));
+                dateTxt.setText(dateTimeHelper.getDateString(Calendar.getInstance()));
                 break;
             case R.id.reminder_curr_date_txt:
                 reminderCalendarView.setDate(Calendar.getInstance().getTimeInMillis(), true, true);
-                reminderDateTxt.setText(getDateString(Calendar.getInstance()));
+                reminderDateTxt.setText(dateTimeHelper.getDateString(Calendar.getInstance()));
                 break;
 
 
@@ -411,7 +415,7 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
                 break;
             case R.id.reminder_time_txt_layout:
                 hideSoftKbd();
-                if(isSystem24hFormat()) {
+                if(dateTimeHelper.isSystem24hFormat()) {
                     reminderTimePickerView.setIs24HourView(true);
                 }
                 else {
@@ -478,7 +482,7 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
     public void onSelectedDayChange(CalendarView calendarView, int year, int month, int day_of_month) {
         Calendar cal = Calendar.getInstance();
         cal.set(year, month, day_of_month);
-        String dateString = getDateString(cal);
+        String dateString = dateTimeHelper.getDateString(cal);
 
         switch (calendarView.getId()) {
             case R.id.calendar_view:
@@ -494,7 +498,7 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
     public void onTimeChanged(TimePicker timePicker, int hour, int minute) {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH, hour, minute);
-        String timeString = getTimeString(cal);
+        String timeString = dateTimeHelper.getTimeString(cal);
 
         switch (timePicker.getId()) {
             case R.id.time_picker_view:
@@ -530,7 +534,7 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
     private boolean isScheduledTooInAdvance() {
         Calendar currDate = Calendar.getInstance();
         Calendar date  = Calendar.getInstance();
-        date.setTime(getDate(dateTxt.getText().toString()));
+        date.setTime(dateTimeHelper.getDate(dateTxt.getText().toString()));
 
         if(date.get(Calendar.MONTH) >= currDate.get(Calendar.MONTH) &&
                 date.get(Calendar.DAY_OF_MONTH) >= (currDate.get(Calendar.DAY_OF_MONTH)+2)) {
@@ -574,12 +578,15 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
     }
 
     private boolean checkDateTime() {
-        if (!isDateValid()) {
+        String dateStr = dateTxt.getText().toString();
+        String timeStr = timeTxt.getText().toString();
+
+        if (!dateTimeHelper.isDateValid(dateStr)) {
             showAlertMessage(getResources().getString(R.string.add_task_date_alert), R.color.firstQuadrant);
             return false;
         }
 
-        if (!isTimeValid()) {
+        if (!dateTimeHelper.isTimeValid(dateStr, timeStr)) {
             showAlertMessage(getResources().getString(R.string.add_task_time_alert), R.color.firstQuadrant);
             return false;
         }
@@ -590,37 +597,6 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
     private boolean checkPriority() {
         if(priorityInt == -1) {
             showAlertMessage(getResources().getString(R.string.add_task_priority_alert), R.color.firstQuadrant);
-            return false;
-        }
-
-        return true;
-    }
-
-    private boolean isDateValid() {
-        Calendar currDate = Calendar.getInstance();
-        Calendar date  = Calendar.getInstance();
-        date.setTime(getDate(dateTxt.getText().toString()));
-
-        if(date.get(Calendar.MONTH) == currDate.get(Calendar.MONTH) &&
-                date.get(Calendar.DAY_OF_MONTH) < currDate.get(Calendar.DAY_OF_MONTH)) {
-            return false;
-        }
-
-        return true;
-    }
-
-    private boolean isTimeValid() {
-        Calendar currDate = Calendar.getInstance();
-        Calendar currTime = Calendar.getInstance();
-        currTime.setTime(getTime(getTimeString(Calendar.getInstance())));
-        Calendar date  = Calendar.getInstance();
-        date.setTime(getDate(dateTxt.getText().toString()));
-        Calendar time  = Calendar.getInstance();
-        time.setTime(getTime(timeTxt.getText().toString()));
-
-        if(date.get(Calendar.MONTH) == currDate.get(Calendar.MONTH) &&
-                date.get(Calendar.DAY_OF_MONTH) == currDate.get(Calendar.DAY_OF_MONTH) &&
-                time.getTimeInMillis() < currTime.getTimeInMillis()) {
             return false;
         }
 
@@ -824,61 +800,6 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
         return Color.rgb((int) r, (int) g, (int) b);
     }
 
-    private String getDateString(Calendar cal) {
-        SimpleDateFormat postFormater = new SimpleDateFormat(DATE_FORMAT);
-        return postFormater.format(cal.getTime());
-    }
-
-    private Date getDate(String dateStr) {
-        if(dateStr != null && !"".equals(dateStr)) {
-            SimpleDateFormat postFormater = new SimpleDateFormat(DATE_FORMAT);
-            try {
-                return postFormater.parse(dateStr);
-            } catch (ParseException ex) {
-                Log.e("eisen", "String to Date Formatting Exception : " + ex.getMessage());
-            }
-        }
-
-        return null;
-    }
-
-    private String getTimeString(Calendar cal) {
-        SimpleDateFormat postFormater;
-        if(isSystem24hFormat()) {
-            postFormater = new SimpleDateFormat("kk:mm");
-        }
-        else {
-            postFormater = new SimpleDateFormat("hh:mm a");
-        }
-        return postFormater.format(cal.getTime());
-    }
-
-    private Date getTime(String timeStr) {
-        SimpleDateFormat postFormater;
-        if(isSystem24hFormat()) {
-            postFormater = new SimpleDateFormat("kk:mm");
-        }
-        else {
-            postFormater = new SimpleDateFormat("hh:mm a");
-        }
-
-        try {
-            return postFormater.parse(timeStr);
-        }
-        catch (ParseException ex) {
-            Log.e("eisen", "String to Time Formatting Exception : " + ex.getMessage());
-        }
-
-        return null;
-    }
-
-    private boolean isSystem24hFormat() {
-        if(android.text.format.DateFormat.is24HourFormat(getApplicationContext()))
-            return true;
-
-        return false;
-    }
-
     private void hideSoftKbd() {
         InputMethodManager inputManager = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
         inputManager.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
@@ -951,7 +872,7 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
 
     private void setTimeToTimePicker(String timeStr) {
         if(Build.VERSION.SDK_INT >= MainActivityDB.NEEDED_API_LEVEL) {
-            Date date = getTime(timeStr);
+            Date date = dateTimeHelper.getTime(timeStr);
             Calendar c = Calendar.getInstance();
             c.setTime(date);
             timePickerView.setHour(c.get(Calendar.HOUR_OF_DAY));
@@ -980,7 +901,7 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
             if(reminderDate != null) {
                 reminderDateTxt.setText(reminderDate);
                 Calendar reminderCal = Calendar.getInstance();
-                Date date = getDate(reminderDate);
+                Date date = dateTimeHelper.getDate(reminderDate);
                 if(date != null) {
                     reminderCal.setTime(date);
                     reminderCalendarView.setDate(reminderCal.getTimeInMillis(), true, true);
@@ -1091,7 +1012,7 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
                 Calendar cal = Calendar.getInstance();
                 String date =  cursor.getString(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_DATE));
                 if (date != null) {
-                    cal.setTime(getDate(date));
+                    cal.setTime(dateTimeHelper.getDate(date));
                 }
                 oldDateStr = date;
                 dateTxt.setText(date);
@@ -1125,26 +1046,10 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
     }
 
     private void setReminder(String date, String time) {
-        Calendar calReminder = getCalendar(date , time);
+        Calendar calReminder = dateTimeHelper.getCalendar(date , time);
         if(calReminder != null) {
             new ReminderManager(this).setReminder(rowId, calReminder);
         }
-    }
-
-    private Calendar getCalendar(String date, String time) {
-        Calendar cal = Calendar.getInstance();
-        Date calDate = getDate(date);
-        Date calTime = getTime(time);
-
-        if(calDate != null) {
-            cal.setTime(calDate);
-            if(calTime != null) {
-                cal.setTime(calTime);
-            }
-        }
-        else return null;
-
-        return cal;
     }
 }
 
