@@ -75,6 +75,6 @@
     <string name="notify_new_task_title">Task Reminder!</string>
 
     <!-- Notification -->
-    <string name="notification_"></string>
+    <string name="notification_done">Done</string>
 
 </resources>

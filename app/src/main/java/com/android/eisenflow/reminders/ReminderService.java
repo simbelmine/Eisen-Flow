@@ -9,6 +9,8 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.android.eisenflow.AddTaskDB;
@@ -19,6 +21,7 @@ import com.android.eisenflow.R;
  * Created by Sve on 6/7/16.
  */
 public class ReminderService extends WakeReminderIntentService {
+    private static final int NEEDED_API_LEVEL = 20;
     private LocalDataBaseHelper dbHelper;
 
     public ReminderService() {
@@ -70,7 +73,7 @@ public class ReminderService extends WakeReminderIntentService {
                 String date = cursor.getString(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_DATE));
                 String time = cursor.getString(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_TIME));
 
-                Notification notification = new Notification.Builder(ReminderService.this)
+                NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(ReminderService.this)
                         .setSmallIcon(R.mipmap.ic_stat_fish_icon)
                         .setContentTitle(getString(R.string.app_name))
                         .setContentText(title)
@@ -79,14 +82,24 @@ public class ReminderService extends WakeReminderIntentService {
                         .setAutoCancel(true)
                         .setLights(Color.CYAN, 500, 500)
                         .setContentIntent(pendingIntent)
-                        . addAction(R.drawable.check_done, "Done", pendingIntent)
-                        .build()
+                        .addAction(R.drawable.check_done, getString(R.string.notification_done), pendingIntent)
                         ;
+
+                if(Build.VERSION.SDK_INT >= NEEDED_API_LEVEL) {
+                    // Wearable-only actions.
+                    NotificationCompat.WearableExtender wearableExtender = new NotificationCompat.WearableExtender();
+                    wearableExtender.addAction(new NotificationCompat.Action.Builder(
+                            R.mipmap.check_done,
+                            getString(R.string.notification_done),
+                            pendingIntent)
+                            .build());
+                    notificationBuilder.extend(wearableExtender);
+                }
 
                 // An issue could occur if user ever enters over 2,147,483,647 tasks. (Max int value).
                 // I highly doubt this will ever happen. But is good to note.
                 int id = (int)((long)rowId);
-                notificationManager.notify(id, notification);
+                notificationManager.notify(id, notificationBuilder.build());
                 dbHelper.close();
             }
 
