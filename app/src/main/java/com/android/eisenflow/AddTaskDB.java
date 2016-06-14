@@ -1045,15 +1045,6 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
 
     private void setTaskReminder(String date, String time) {
         Calendar calReminder = dateTimeHelper.getCalendar(date , time);
-
-//        Log.v("eisen", "*** setTaskReminder ***");
-//        Log.v("eisen", "*******");
-//        Log.v("eisen", " " + dateTimeHelper.getDateString(calReminder));
-//        Log.v("eisen", " " + dateTimeHelper.getTimeString(calReminder));
-//        Log.v("eisen", "*******");
-//        Log.v("eisen", "  ");
-
-
         if(calReminder != null) {
             new ReminderManager(this).setReminder(rowId, calReminder);
         }

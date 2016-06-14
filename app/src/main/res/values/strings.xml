@@ -74,4 +74,7 @@
     <string name="notify_new_task_message">A task needs to be reviewed!</string>
     <string name="notify_new_task_title">Task Reminder!</string>
 
+    <!-- Notification -->
+    <string name="notification_"></string>
+
 </resources>

@@ -3,23 +3,24 @@ package com.android.eisenflow.reminders;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
-import android.provider.Settings;
+import android.os.AsyncTask;
 import android.util.Log;
 
 import com.android.eisenflow.AddTaskDB;
-import com.android.eisenflow.DateTimeHelper;
 import com.android.eisenflow.LocalDataBaseHelper;
 import com.android.eisenflow.R;
-
-import java.util.Calendar;
 
 /**
  * Created by Sve on 6/7/16.
  */
 public class ReminderService extends WakeReminderIntentService {
+    private LocalDataBaseHelper dbHelper;
+
     public ReminderService() {
         super("ReminderService");
     }
@@ -30,28 +31,65 @@ public class ReminderService extends WakeReminderIntentService {
 
         Long rowId = intent.getExtras().getLong(LocalDataBaseHelper.KEY_ROW_ID);
 
-        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        Intent notificationIntent = new Intent(this, AddTaskDB.class);
-        notificationIntent.putExtra(LocalDataBaseHelper.KEY_ROW_ID, rowId);
+        dbHelper = new LocalDataBaseHelper(this);
+        dbHelper.open();
+        new StartFeedingNotificationAsyncTask(this, rowId).execute();
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_ONE_SHOT);
+    }
 
-        Uri notificationSoundUri = Uri.parse("android.resource://"
-                + getPackageName() + "/" + R.raw.task_notification);
+    private class StartFeedingNotificationAsyncTask extends AsyncTask<Void, Void, Cursor> {
+        private Context context;
+        private long rowId;
 
-        Notification notification = new Notification.Builder(ReminderService.this)
-                .setSmallIcon(R.mipmap.ic_stat_fish_icon)
-                .setContentTitle(getString(R.string.notify_new_task_message))
-                .setSound(notificationSoundUri)
-                .setAutoCancel(true)
-                .setLights(Color.CYAN, 500, 500)
-                .setContentIntent(pendingIntent)
-                .build()
-        ;
-        
-        // An issue could occur if user ever enters over 2,147,483,647 tasks. (Max int value).
-        // I highly doubt this will ever happen. But is good to note.
-        int id = (int)((long)rowId);
-        notificationManager.notify(id, notification);
+        public StartFeedingNotificationAsyncTask(Context context, long rowId) {
+            this.context = context;
+            this.rowId = rowId;
+        }
+
+        @Override
+        protected Cursor doInBackground(Void... voids) {
+            return dbHelper.fetchTask(rowId);
+        }
+
+        @Override
+        protected void onPostExecute(Cursor cursor) {
+            super.onPostExecute(cursor);
+
+            if (cursor != null) {
+
+                NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                Intent notificationIntent = new Intent(context, AddTaskDB.class);
+                notificationIntent.putExtra(LocalDataBaseHelper.KEY_ROW_ID, rowId);
+
+                PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_ONE_SHOT);
+
+                Uri notificationSoundUri = Uri.parse("android.resource://"
+                        + getPackageName() + "/" + R.raw.task_notification);
+
+                String title = cursor.getString(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_TITLE));
+                String date = cursor.getString(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_DATE));
+                String time = cursor.getString(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_TIME));
+
+                Notification notification = new Notification.Builder(ReminderService.this)
+                        .setSmallIcon(R.mipmap.ic_stat_fish_icon)
+                        .setContentTitle(getString(R.string.app_name))
+                        .setContentText(title)
+                        .setContentInfo(date + " @ " + time)
+                        .setSound(notificationSoundUri)
+                        .setAutoCancel(true)
+                        .setLights(Color.CYAN, 500, 500)
+                        .setContentIntent(pendingIntent)
+                        . addAction(R.drawable.check_done, "Done", pendingIntent)
+                        .build()
+                        ;
+
+                // An issue could occur if user ever enters over 2,147,483,647 tasks. (Max int value).
+                // I highly doubt this will ever happen. But is good to note.
+                int id = (int)((long)rowId);
+                notificationManager.notify(id, notification);
+                dbHelper.close();
+            }
+
+        }
     }
 }
