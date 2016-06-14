@@ -1,6 +1,5 @@
 package com.android.eisenflow.reminders;
 
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -15,6 +14,7 @@ import android.util.Log;
 
 import com.android.eisenflow.AddTaskDB;
 import com.android.eisenflow.LocalDataBaseHelper;
+import com.android.eisenflow.MainActivityDB;
 import com.android.eisenflow.R;
 
 /**
@@ -61,13 +61,13 @@ public class ReminderService extends WakeReminderIntentService {
             if (cursor != null) {
 
                 NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                Intent notificationIntent = new Intent(context, AddTaskDB.class);
-                notificationIntent.putExtra(LocalDataBaseHelper.KEY_ROW_ID, rowId);
+                Intent taskIntent = new Intent(context, AddTaskDB.class);
+                taskIntent.putExtra(LocalDataBaseHelper.KEY_ROW_ID, rowId);
+                Intent doneTaskIntent = new Intent(context, ReminderDoneReceiver.class);
+                doneTaskIntent.putExtra(LocalDataBaseHelper.KEY_ROW_ID, rowId);
 
-                PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_ONE_SHOT);
-
-                Uri notificationSoundUri = Uri.parse("android.resource://"
-                        + getPackageName() + "/" + R.raw.task_notification);
+                PendingIntent pendingIntentOpenTask = PendingIntent.getActivity(context, 0, taskIntent, PendingIntent.FLAG_ONE_SHOT);
+                PendingIntent pendingIntentDoneTask = PendingIntent.getBroadcast(context, 0, doneTaskIntent, PendingIntent.FLAG_ONE_SHOT);
 
                 String title = cursor.getString(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_TITLE));
                 String date = cursor.getString(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_DATE));
@@ -78,11 +78,11 @@ public class ReminderService extends WakeReminderIntentService {
                         .setContentTitle(getString(R.string.app_name))
                         .setContentText(title)
                         .setContentInfo(date + " @ " + time)
-                        .setSound(notificationSoundUri)
+                        .setSound(getNotificationSoundUri())
                         .setAutoCancel(true)
                         .setLights(Color.CYAN, 500, 500)
-                        .setContentIntent(pendingIntent)
-                        .addAction(R.drawable.check_done, getString(R.string.notification_done), pendingIntent)
+                        .setContentIntent(pendingIntentOpenTask)
+                        .addAction(R.drawable.check_done, getString(R.string.notification_done), pendingIntentDoneTask)
                         ;
 
                 if(Build.VERSION.SDK_INT >= NEEDED_API_LEVEL) {
@@ -91,7 +91,7 @@ public class ReminderService extends WakeReminderIntentService {
                     wearableExtender.addAction(new NotificationCompat.Action.Builder(
                             R.mipmap.check_done,
                             getString(R.string.notification_done),
-                            pendingIntent)
+                            pendingIntentDoneTask)
                             .build());
                     notificationBuilder.extend(wearableExtender);
                 }
@@ -102,7 +102,10 @@ public class ReminderService extends WakeReminderIntentService {
                 notificationManager.notify(id, notificationBuilder.build());
                 dbHelper.close();
             }
-
         }
+    }
+
+    private Uri getNotificationSoundUri() {
+        return Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.task_notification);
     }
 }
