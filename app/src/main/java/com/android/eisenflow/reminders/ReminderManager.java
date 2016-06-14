@@ -4,7 +4,9 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
+import com.android.eisenflow.DateTimeHelper;
 import com.android.eisenflow.LocalDataBaseHelper;
 
 import java.util.Calendar;
@@ -26,6 +28,7 @@ public class ReminderManager {
         intent.putExtra(LocalDataBaseHelper.KEY_ROW_ID, (long)taskId);
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_ONE_SHOT);
+
 
         alarmManager.set(AlarmManager.RTC_WAKEUP, when.getTimeInMillis(), pendingIntent);
     }

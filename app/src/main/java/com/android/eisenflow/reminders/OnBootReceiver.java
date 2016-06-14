@@ -47,10 +47,9 @@ public class OnBootReceiver extends BroadcastReceiver {
                 String date = cursor.getString(dateColumnIndex);
                 String time = cursor.getString(timeColumnIndex);
 
-                Calendar cal = Calendar.getInstance();
+                Calendar cal;
                 try {
-                    cal.setTime(dateTimeHelper.getDate(date));
-                    cal.setTime(dateTimeHelper.getTime(time));
+                    cal = dateTimeHelper.getCalendar(date, time);
 
                     reminderManager.setReminder(rowId, cal);
                 } catch (Exception e) {

@@ -4,12 +4,17 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
+import android.provider.Settings;
 import android.util.Log;
 
 import com.android.eisenflow.AddTaskDB;
+import com.android.eisenflow.DateTimeHelper;
 import com.android.eisenflow.LocalDataBaseHelper;
 import com.android.eisenflow.R;
+
+import java.util.Calendar;
 
 /**
  * Created by Sve on 6/7/16.
@@ -35,10 +40,11 @@ public class ReminderService extends WakeReminderIntentService {
                 + getPackageName() + "/" + R.raw.task_notification);
 
         Notification notification = new Notification.Builder(ReminderService.this)
-                .setSmallIcon(R.drawable.notification_template_icon_bg)
+                .setSmallIcon(R.mipmap.ic_stat_fish_icon)
                 .setContentTitle(getString(R.string.notify_new_task_message))
                 .setSound(notificationSoundUri)
-                .setWhen(System.currentTimeMillis())
+                .setAutoCancel(true)
+                .setLights(Color.CYAN, 500, 500)
                 .setContentIntent(pendingIntent)
                 .build()
         ;

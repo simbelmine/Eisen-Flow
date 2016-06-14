@@ -14,6 +14,9 @@ import java.util.Locale;
  */
 public class DateTimeHelper {
     private static final String DATE_FORMAT = "EEE, MMM dd, yyyy";
+    private static final String TIME_FORMAT_24 = "kk:mm";
+    private static final String TIME_FORMAT_AP_PM = "hh:mm a";
+
     private Context context;
 
     public DateTimeHelper(Context context) {
@@ -72,10 +75,10 @@ public class DateTimeHelper {
     public String getTimeString(Calendar cal) {
         SimpleDateFormat postFormatter;
         if(isSystem24hFormat()) {
-            postFormatter = new SimpleDateFormat("kk:mm");
+            postFormatter = new SimpleDateFormat(TIME_FORMAT_24);
         }
         else {
-            postFormatter = new SimpleDateFormat("hh:mm a");
+            postFormatter = new SimpleDateFormat(TIME_FORMAT_AP_PM);
         }
         return postFormatter.format(cal.getTime());
     }
@@ -83,10 +86,10 @@ public class DateTimeHelper {
     public Date getTime(String timeStr) {
         SimpleDateFormat postFormatter;
         if(isSystem24hFormat()) {
-            postFormatter = new SimpleDateFormat("kk:mm");
+            postFormatter = new SimpleDateFormat(TIME_FORMAT_24);
         }
         else {
-            postFormatter = new SimpleDateFormat("hh:mm a");
+            postFormatter = new SimpleDateFormat(TIME_FORMAT_AP_PM);
         }
 
         try {
@@ -107,19 +110,50 @@ public class DateTimeHelper {
     }
 
     public Calendar getCalendar(String date, String time) {
-        Calendar cal = Calendar.getInstance();
-        Date calDate = getDate(date);
-        Date calTime = getTime(time);
+        return strToCalendar(date + " " + time);
+    }
 
-        if(calDate != null) {
-            cal.setTime(calDate);
-            if(calTime != null) {
-                cal.setTime(calTime);
+    public String calendarToStr(Calendar cal) {
+        SimpleDateFormat postFormatter;
+        String newFormat;
+
+        if(isSystem24hFormat()) {
+            newFormat = DATE_FORMAT + " " + TIME_FORMAT_24;
+            postFormatter = new SimpleDateFormat(newFormat);
+        }
+        else {
+            newFormat = DATE_FORMAT + " " + TIME_FORMAT_AP_PM;
+            postFormatter = new SimpleDateFormat(newFormat);
+        }
+
+        return postFormatter.format(cal.getTime());
+    }
+
+    public Calendar strToCalendar(String calStr) {
+        SimpleDateFormat postFormatter;
+        String newFormat;
+        if(isSystem24hFormat()) {
+            newFormat = DATE_FORMAT + TIME_FORMAT_24;
+            postFormatter = new SimpleDateFormat(newFormat);
+        }
+        else {
+            newFormat = DATE_FORMAT + TIME_FORMAT_AP_PM;
+            postFormatter = new SimpleDateFormat(newFormat);
+        }
+
+        try {
+            Calendar cal = Calendar.getInstance();
+            Date calDate = postFormatter.parse(calStr);
+            if(calDate != null) {
+                cal.setTime(calDate);
+                return cal;
             }
         }
-        else return null;
+        catch (ParseException ex) {
+            Log.e("eisen", "String to Time Formatting Exception : " + ex.getMessage());
+        }
 
-        return cal;
+        return null;
     }
 
     public String getMonthName() {

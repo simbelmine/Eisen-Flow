@@ -37,8 +37,6 @@ import android.widget.TimePicker;
 
 import com.android.eisenflow.reminders.ReminderManager;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -952,7 +950,7 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
             }
         }
 
-        setReminder(date, time);
+        setTaskReminder(date, time);
     }
 
     private void closeActivityWithResult(int result) {
@@ -1045,8 +1043,17 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
         }
     }
 
-    private void setReminder(String date, String time) {
+    private void setTaskReminder(String date, String time) {
         Calendar calReminder = dateTimeHelper.getCalendar(date , time);
+
+//        Log.v("eisen", "*** setTaskReminder ***");
+//        Log.v("eisen", "*******");
+//        Log.v("eisen", " " + dateTimeHelper.getDateString(calReminder));
+//        Log.v("eisen", " " + dateTimeHelper.getTimeString(calReminder));
+//        Log.v("eisen", "*******");
+//        Log.v("eisen", "  ");
+
+
         if(calReminder != null) {
             new ReminderManager(this).setReminder(rowId, calReminder);
         }
