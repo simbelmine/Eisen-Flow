@@ -953,9 +953,8 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
         if(isGreenTask(priorityInt)) {
             setTaskRepeatingReminder(reminderOccurrence, reminderWhen, reminderDate, reminderTime);
         }
-        else {
-            setTaskReminder(date, time);
-        }
+
+        setTaskReminder(date, time);
     }
 
     private void closeActivityWithResult(int result) {

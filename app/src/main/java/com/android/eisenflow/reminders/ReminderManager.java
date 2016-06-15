@@ -77,9 +77,15 @@ public class ReminderManager {
         Calendar whenToRepeat = dateTimeHelper.getCalendarTime(reminderTime);
         Calendar now = Calendar.getInstance();
 
+        Log.v("eisen", "    B Date = " + dateTimeHelper.getDateString(whenToRepeat));
+        Log.v("eisen", "    B Time = " + dateTimeHelper.getTimeString(whenToRepeat));
+
         if(whenToRepeat.before(now)) {
             whenToRepeat.add(Calendar.DATE, 1);
         }
+
+        Log.v("eisen", "    A Date = " + dateTimeHelper.getDateString(whenToRepeat));
+        Log.v("eisen", "    A Time = " + dateTimeHelper.getTimeString(whenToRepeat));
 
         alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, whenToRepeat.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
     }
