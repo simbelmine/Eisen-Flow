@@ -78,7 +78,7 @@ public class ReminderManager {
             whenToRepeat.add(Calendar.DATE, 1);
         }
 
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, whenToRepeat.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, whenToRepeat.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
     }
 
     private void setUpWeeklyAlarm(String reminderTime, int weekDayInt, PendingIntent pendingIntent) {
