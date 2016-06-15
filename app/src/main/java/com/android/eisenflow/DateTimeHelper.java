@@ -218,7 +218,7 @@ public class DateTimeHelper {
     private int get12HoursAM_PM(String s) {
         String[] split = s.split(" ");
         if("AM".equals(split[1])) return Calendar.AM;
-        else if("PM".equals(split[1])) return Calendar.AM;
+        else if("PM".equals(split[1])) return Calendar.PM;
 
         return Calendar.AM;
     }
