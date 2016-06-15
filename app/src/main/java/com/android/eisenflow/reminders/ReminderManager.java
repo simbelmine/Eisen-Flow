@@ -46,6 +46,9 @@ public class ReminderManager {
 
                 break;
             case DateTimeHelper.WEEKLY_REMINDER:
+
+                // *** NOT WORKING YET ****
+
                 String[] splitReminderWhen = reminderWhen.split(",");
                 for(int i = 0; i < splitReminderWhen.length; i++) {
                     String weekDay = splitReminderWhen[i];
@@ -107,14 +110,21 @@ public class ReminderManager {
 
     private void setUpYearlyAlarm(String reminderDate, String reminderTime, PendingIntent pendingIntent) {
         Calendar whenToRepeat = dateTimeHelper.getCalendarDateWithTime(reminderDate, reminderTime);
+        Calendar now = Calendar.getInstance();
+        int daysToAdd = 365;
 
-        if(dateTimeHelper.isLeapYear(dateTimeHelper.getYear(reminderDate))) {
-            whenToRepeat.add(Calendar.DATE, 366);
-            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, whenToRepeat.getTimeInMillis(), AlarmManager.INTERVAL_DAY * 366, pendingIntent);
+        Log.v("eisen", "    B Date = " + dateTimeHelper.getDateString(whenToRepeat));
+        Log.v("eisen", "    B Time = " + dateTimeHelper.getTimeString(whenToRepeat));
+
+        if(whenToRepeat.before(now)) {
+            whenToRepeat.add(Calendar.DATE, daysToAdd);
         }
-        else {
-            whenToRepeat.add(Calendar.DATE, 365);
-            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, whenToRepeat.getTimeInMillis(), AlarmManager.INTERVAL_DAY * 365, pendingIntent);
-        }
+        
+        Log.v("eisen", "    A Date = " + dateTimeHelper.getDateString(whenToRepeat));
+        Log.v("eisen", "    A Time = " + dateTimeHelper.getTimeString(whenToRepeat));
+        Log.v("eisen", "    ---- days = " + daysToAdd);
+
+
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, whenToRepeat.getTimeInMillis(), AlarmManager.INTERVAL_DAY * daysToAdd, pendingIntent);
     }
 }
