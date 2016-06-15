@@ -190,19 +190,37 @@ public class DateTimeHelper {
     public Calendar getCalendarTime(String time) {
         Calendar cal = Calendar.getInstance();
         String[] splitTimeStr = time.split(":");
-        String hours = getNonLeadingZeroInt(splitTimeStr[0]);
-        String mins = getNonLeadingZeroInt(splitTimeStr[1]);
+        String hours = getNonLeadingZero(splitTimeStr[0]);
+        String mins;
 
         if(isSystem24hFormat()) {
+            mins = getNonLeadingZero(splitTimeStr[1]);
             cal.set(Calendar.HOUR_OF_DAY, Integer.parseInt(hours));
         }
         else {
+            mins = getNonLeadingZero(get12HoursMins(splitTimeStr[1]));
+            int am_pm = get12HoursAM_PM(splitTimeStr[1]);
+            cal.set(Calendar.AM_PM, am_pm);
             cal.set(Calendar.HOUR, Integer.parseInt(hours));
         }
         cal.set(Calendar.MINUTE, Integer.parseInt(mins));
         cal.set(Calendar.SECOND, 0);
 
         return cal;
+    }
+
+    private String get12HoursMins(String s) {
+        String[] split = s.split(" ");
+        return split[0];
+    }
+
+
+    private int get12HoursAM_PM(String s) {
+        String[] split = s.split(" ");
+        if("AM".equals(split[1])) return Calendar.AM;
+        else if("PM".equals(split[1])) return Calendar.AM;
+
+        return Calendar.AM;
     }
 
     // Thu, Aug 18, 2016
@@ -220,7 +238,7 @@ public class DateTimeHelper {
         return cal;
     }
 
-    private String getNonLeadingZeroInt(String str) {
+    private String getNonLeadingZero(String str) {
         return str.replaceFirst("^0+(?!$)", "");
     }
 
