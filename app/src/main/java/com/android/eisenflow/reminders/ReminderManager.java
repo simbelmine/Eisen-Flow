@@ -93,13 +93,16 @@ public class ReminderManager {
 
     private void setUpMonthlyAlarm(String reminderDate, String reminderTime, PendingIntent pendingIntent) {
         Calendar whenToRepeat = dateTimeHelper.getCalendarDateWithTime(reminderDate, reminderTime);
+        Calendar now = Calendar.getInstance();
 
         // Check we aren't setting it in the past which would trigger it to fire instantly
-        if(whenToRepeat.getTimeInMillis() > System.currentTimeMillis()) {
-            int daysInMonth = dateTimeHelper.getMonthDays(reminderDate);
-            whenToRepeat.add(Calendar.DATE, daysInMonth);
-            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, whenToRepeat.getTimeInMillis(), AlarmManager.INTERVAL_DAY * daysInMonth, pendingIntent);
+        int daysInMonth = dateTimeHelper.getMonthDays(reminderDate);
+
+        if(whenToRepeat.before(now)) {
+            whenToRepeat.add(Calendar.DAY_OF_MONTH, daysInMonth);
         }
+
+        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, whenToRepeat.getTimeInMillis(), AlarmManager.INTERVAL_DAY * daysInMonth, pendingIntent);
     }
 
     private void setUpYearlyAlarm(String reminderDate, String reminderTime, PendingIntent pendingIntent) {
