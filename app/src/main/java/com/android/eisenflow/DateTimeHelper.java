@@ -7,6 +7,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.Locale;
 
 /**
@@ -16,11 +18,28 @@ public class DateTimeHelper {
     private static final String DATE_FORMAT = "EEE, MMM dd, yyyy";
     private static final String TIME_FORMAT_24 = "kk:mm";
     private static final String TIME_FORMAT_AP_PM = "hh:mm a";
+    public static final String DAILY_REMINDER = "Daily";
+    public static final String WEEKLY_REMINDER = "Weekly";
+    public static final String MONTHLY_REMINDER = "Monthly";
+    public static final String YEARLY_REMINDER = "Yearly";
+    public HashMap<String, Integer> dayOfMonthsMap = new HashMap<>();
 
     private Context context;
 
     public DateTimeHelper(Context context) {
         this.context = context;
+
+        populateDayOfMonthsMap();
+    }
+
+    private void populateDayOfMonthsMap() {
+        dayOfMonthsMap.put("Mon", Calendar.MONDAY);
+        dayOfMonthsMap.put("Tue", Calendar.TUESDAY);
+        dayOfMonthsMap.put("Wed", Calendar.WEDNESDAY);
+        dayOfMonthsMap.put("Thu", Calendar.THURSDAY);
+        dayOfMonthsMap.put("Fri", Calendar.FRIDAY);
+        dayOfMonthsMap.put("Sat", Calendar.SATURDAY);
+        dayOfMonthsMap.put("Sun", Calendar.SUNDAY);
     }
 
     public boolean isDateValid(String dateStr) {
@@ -160,4 +179,61 @@ public class DateTimeHelper {
         Calendar cal = Calendar.getInstance();
         return cal.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault());
     }
+
+    public int getMonthDays(String date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(getDate(date));
+
+        return cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+    }
+
+    public Calendar getCalendarTime(String time) {
+        Calendar cal = Calendar.getInstance();
+        String[] splitTimeStr = time.split(":");
+        String hours = getNonLeadingZeroInt(splitTimeStr[0]);
+        String mins = getNonLeadingZeroInt(splitTimeStr[1]);
+
+        if(isSystem24hFormat()) {
+            cal.set(Calendar.HOUR_OF_DAY, Integer.parseInt(hours));
+        }
+        else {
+            cal.set(Calendar.HOUR, Integer.parseInt(hours));
+        }
+        cal.set(Calendar.MINUTE, Integer.parseInt(mins));
+        cal.set(Calendar.SECOND, 0);
+
+        return cal;
+    }
+
+    // Thu, Aug 18, 2016
+    public Calendar getCalendarDateWithTime(String date, String time) {
+        Calendar cal = getCalendarTime(time);
+
+        String[] splitDateStr = date.split(",");
+        String dateStr = splitDateStr[1];
+        String trimStr = dateStr.substring(1);
+        String[] splitStr = trimStr.split(" ");
+        String dateNum = splitStr[1];
+
+        cal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(dateNum));
+
+        return cal;
+    }
+
+    private String getNonLeadingZeroInt(String str) {
+        return str.replaceFirst("^0+(?!$)", "");
+    }
+
+    public boolean isLeapYear(int year) {
+        GregorianCalendar cal = new GregorianCalendar();
+        return cal.isLeapYear(year);
+    }
+
+    public int getYear(String date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(getDate(date));
+
+        return cal.get(Calendar.YEAR);
+    }
+
 }

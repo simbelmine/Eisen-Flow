@@ -66,6 +66,7 @@ public class ReminderService extends WakeReminderIntentService {
                 Intent doneTaskIntent = new Intent(context, ReminderDoneReceiver.class);
                 doneTaskIntent.putExtra(LocalDataBaseHelper.KEY_ROW_ID, rowId);
 
+
                 PendingIntent pendingIntentOpenTask = PendingIntent.getActivity(context, 0, taskIntent, PendingIntent.FLAG_ONE_SHOT);
                 PendingIntent pendingIntentDoneTask = PendingIntent.getBroadcast(context, 0, doneTaskIntent, PendingIntent.FLAG_ONE_SHOT);
 

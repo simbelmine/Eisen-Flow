@@ -950,7 +950,12 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
             }
         }
 
-        setTaskReminder(date, time);
+        if(isGreenTask(priorityInt)) {
+            setTaskRepeatingReminder(reminderOccurrence, reminderWhen, reminderDate, reminderTime);
+        }
+        else {
+            setTaskReminder(date, time);
+        }
     }
 
     private void closeActivityWithResult(int result) {
@@ -1048,6 +1053,10 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
         if(calReminder != null) {
             new ReminderManager(this).setReminder(rowId, calReminder);
         }
+    }
+
+    private void setTaskRepeatingReminder(String reminderOccurrence, String reminderWhen, String reminderDate, String reminderTime) {
+        new ReminderManager(this).setRepeatingReminder(rowId, reminderOccurrence, reminderWhen, reminderDate, reminderTime);
     }
 }
 

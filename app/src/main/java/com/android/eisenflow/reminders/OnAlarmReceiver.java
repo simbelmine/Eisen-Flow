@@ -19,8 +19,6 @@ public class OnAlarmReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d(TAG, "Received wake up from alarm manager.");
-
         long rowId = intent.getExtras().getLong(LocalDataBaseHelper.KEY_ROW_ID);
 
         WakeReminderIntentService.acquireStaticLock(context);
