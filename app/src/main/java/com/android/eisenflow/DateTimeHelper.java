@@ -227,13 +227,14 @@ public class DateTimeHelper {
     public Calendar getCalendarDateWithTime(String date, String time) {
         Calendar cal = getCalendarTime(time);
 
-        String[] splitDateStr = date.split(",");
-        String dateStr = splitDateStr[1];
-        String trimStr = dateStr.substring(1);
-        String[] splitStr = trimStr.split(" ");
-        String dateNum = splitStr[1];
+        Calendar dateCal = Calendar.getInstance();
+        dateCal.setTime(getDate(date));
+        int monthNum = dateCal.get(Calendar.MONTH);
+        int dateNum = dateCal.get(Calendar.DAY_OF_MONTH);
 
-        cal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(dateNum));
+
+        cal.set(Calendar.MONTH, monthNum);
+        cal.set(Calendar.DAY_OF_MONTH, dateNum);
 
         return cal;
     }
