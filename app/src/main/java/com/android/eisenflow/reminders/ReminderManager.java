@@ -38,7 +38,7 @@ public class ReminderManager {
         Intent intent = new Intent(context, OnAlarmReceiver.class);
         intent.putExtra(LocalDataBaseHelper.KEY_ROW_ID, (long)taskId);
 
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_ONE_SHOT);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         switch (reminderOccurrence) {
             case DateTimeHelper.DAILY_REMINDER:
@@ -72,11 +72,13 @@ public class ReminderManager {
 
     private void setUpDailyAlarm(String reminderTime, PendingIntent pendingIntent) {
         Calendar whenToRepeat = dateTimeHelper.getCalendarTime(reminderTime);
-        // Check we aren't setting it in the past which would trigger it to fire instantly
+        Calendar now = Calendar.getInstance();
 
-        if(whenToRepeat.getTimeInMillis() > System.currentTimeMillis()) {
-            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, whenToRepeat.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+        if(whenToRepeat.before(now)) {
+            whenToRepeat.add(Calendar.DATE, 1);
         }
+
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, whenToRepeat.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
     }
 
     private void setUpWeeklyAlarm(String reminderTime, int weekDayInt, PendingIntent pendingIntent) {
