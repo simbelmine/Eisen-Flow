@@ -40,6 +40,14 @@
             android:layout_gravity="bottom"
             android:layout_toRightOf="@+id/reminder_label"
             />
+        <TextView
+            android:id="@+id/reminder_day_time_lbl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:textColor="@color/gray_light"
+            android:textStyle="italic"
+            />
     </RelativeLayout>
 
     <RelativeLayout

@@ -63,6 +63,7 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
     private LinearLayout dateTextLayout;
     private TextView currDateTxt;
     private TextView timeTxt;
+    private TextView dueDateTimeLbl;
     private LinearLayout timeTextLayout;
     private LinearLayout noteLayout;
     private LinearLayout noteEditLayout;
@@ -80,6 +81,7 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
     private LinearLayout reminderTimePicker;
     private TextView reminderDateTxt;
     private TextView reminderTimeTxt;
+    private TextView reminderDateTimeLbl;
     private ImageView reminderArrowCalendar;
     private ImageView reminderArrowTime;
     private TextView reminderCurrDateTxt;
@@ -162,6 +164,7 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
         timeTxt = (TextView) findViewById(R.id.add_task_time);
         timeTextLayout = (LinearLayout) findViewById(R.id.time_txt_layout);
         timeTextLayout.setOnClickListener(this);
+        dueDateTimeLbl = (TextView) findViewById(R.id.due_date_day_time_lbl);
 
         noteLayout = (LinearLayout) findViewById(R.id.note_layout);
         noteLayout.setOnClickListener(this);
@@ -182,6 +185,7 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
         reminderTimePicker.setVisibility(View.GONE);
         reminderDateTxt = (TextView) findViewById(R.id.reminder_date_txt);
         reminderTimeTxt = (TextView) findViewById(R.id.reminder_time_txt);
+        reminderDateTimeLbl = (TextView) findViewById(R.id.reminder_day_time_lbl);
         reminderArrowCalendar = (ImageView) findViewById(R.id.arrow_cal_reminder);
         reminderArrowTime = (ImageView) findViewById(R.id.arrow_time_reminder);
         reminderCurrDateTxt = (TextView) findViewById(R.id.reminder_curr_date_txt);
@@ -241,6 +245,8 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
             reminderCurrDateTxt.setText(dateStr);
             timeTxt.setText(timeStr);
             reminderTimeTxt.setText(timeStr);
+            dueDateTimeLbl.setText(dateStr + " @" + timeStr);
+            reminderDateTimeLbl.setText(dateStr + " @" + timeStr);
         }
     }
 
@@ -485,25 +491,32 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
         switch (calendarView.getId()) {
             case R.id.calendar_view:
                 dateTxt.setText(dateString);
+                dueDateTimeLbl.setText(dateString + " @" + dateTimeHelper.getTimeString(cal));
                 break;
             case R.id.reminder_calendar_view:
                 reminderDateTxt.setText(dateString);
+                reminderDateTimeLbl.setText(dateString + " @" + dateTimeHelper.getTimeString(cal));
         }
 
     }
 
     @Override
     public void onTimeChanged(TimePicker timePicker, int hour, int minute) {
+        Calendar calDate = Calendar.getInstance();
+        calDate.setTime(dateTimeHelper.getDate(dateTxt.getText().toString()));
+
         Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH, hour, minute);
+        cal.set(calDate.get(Calendar.YEAR), calDate.get(Calendar.MONTH), calDate.get(Calendar.DAY_OF_MONTH), hour, minute);
         String timeString = dateTimeHelper.getTimeString(cal);
 
         switch (timePicker.getId()) {
             case R.id.time_picker_view:
                 timeTxt.setText(timeString);
+                dueDateTimeLbl.setText(dateTimeHelper.getDateString(cal) + " @" + timeString);
                 break;
             case R.id.reminder_time_picker_view:
                 reminderTimeTxt.setText(timeString);
+                reminderDateTimeLbl.setText(dateTimeHelper.getDateString(cal) + " @" + timeString);
                 break;
         }
 
@@ -910,6 +923,10 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
                 reminderTimeTxt.setText(reminderTime);
                 setTimeToTimePicker(reminderTime);
             }
+
+            if(reminderDate != null && reminderTime != null) {
+                reminderDateTimeLbl.setText(reminderDate + " @" + reminderTime);
+            }
         }
     }
 
@@ -1036,6 +1053,9 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
                 oldTimeStr = time;
                 timeTxt.setText(time);
                 setTimeToTimePicker(time);
+
+                // #Due Date Main
+                dueDateTimeLbl.setText(date + " @" + time);
 
                 // #Populate Reminder If Green Task
                 if (isGreenTask(priority)) {

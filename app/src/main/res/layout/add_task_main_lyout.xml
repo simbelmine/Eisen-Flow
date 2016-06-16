@@ -36,7 +36,7 @@
                     android:layout_marginTop="@dimen/task_standard_margin"
                     />
 
-                <include layout="@layout/add_task_pick_time_layout"/>
+                <include layout="@layout/add_task_pick_date_time_layout"/>
                 <ImageView
                     android:id="@+id/time_divider"
                     android:layout_width="match_parent"
