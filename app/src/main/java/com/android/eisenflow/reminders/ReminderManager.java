@@ -34,7 +34,7 @@ public class ReminderManager {
         alarmManager.set(AlarmManager.RTC_WAKEUP, when.getTimeInMillis(), pendingIntent);
     }
 
-    public void setRepeatingReminder(Long taskId, String reminderOccurrence, String reminderWhen, String reminderDate, String reminderTime) {
+    public void setRepeatingReminder(Long taskId, String reminderOccurrence, int reminderWhen, String reminderDate, String reminderTime) {
         Intent intent = new Intent(context, OnAlarmReceiver.class);
         intent.putExtra(LocalDataBaseHelper.KEY_ROW_ID, (long)taskId);
 
@@ -49,17 +49,19 @@ public class ReminderManager {
 
                 // *** NOT WORKING YET ****
 
-                String[] splitReminderWhen = reminderWhen.split(",");
-                for(int i = 0; i < splitReminderWhen.length; i++) {
-                    String weekDay = splitReminderWhen[i];
-                    try {
-                        int weekDayInt = dateTimeHelper.dayOfMonthsMap.get(weekDay);
-                        setUpWeeklyAlarm(reminderTime, weekDayInt, pendingIntent);
-                    }
-                    catch (Exception ex) {
-                        Log.e("eisen", "Exception Reminder Manager : " + ex.getMessage());
-                    }
-                }
+//                String[] splitReminderWhen = reminderWhen.split(",");
+//                for(int i = 0; i < splitReminderWhen.length; i++) {
+//                    String weekDay = splitReminderWhen[i];
+//                    try {
+//                        int weekDayInt = dateTimeHelper.dayOfMonthsMap.get(weekDay);
+//                        setUpWeeklyAlarm(reminderTime, reminderWhen, pendingIntent);
+//                    }
+//                    catch (Exception ex) {
+//                        Log.e("eisen", "Exception Reminder Manager : " + ex.getMessage());
+//                    }
+//                }
+
+                setUpWeeklyAlarm(reminderTime, reminderWhen, pendingIntent);
 
                 break;
             case DateTimeHelper.MONTHLY_REMINDER:
@@ -90,14 +92,22 @@ public class ReminderManager {
         alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, whenToRepeat.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
     }
 
-    private void setUpWeeklyAlarm(String reminderTime, int weekDayInt, PendingIntent pendingIntent) {
+    private void setUpWeeklyAlarm(String reminderTime, int reminderWhen, PendingIntent pendingIntent) {
         Calendar whenToRepeat = dateTimeHelper.getCalendarTime(reminderTime);
+        Calendar now = Calendar.getInstance();
+        whenToRepeat.set(Calendar.DAY_OF_WEEK, reminderWhen);
 
-        if(whenToRepeat.getTimeInMillis() > System.currentTimeMillis()) {
-            whenToRepeat.set(Calendar.DAY_OF_WEEK, weekDayInt);
+        Log.v("eisen", "    B Date = " + dateTimeHelper.getDateString(whenToRepeat));
+        Log.v("eisen", "    B Time = " + dateTimeHelper.getTimeString(whenToRepeat));
+
+        if(whenToRepeat.before(now)) {
             whenToRepeat.add(Calendar.DAY_OF_YEAR, 7);
-            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, whenToRepeat.getTimeInMillis(), AlarmManager.INTERVAL_DAY * 7, pendingIntent);
         }
+
+        Log.v("eisen", "    A Date = " + dateTimeHelper.getDateString(whenToRepeat));
+        Log.v("eisen", "    A Time = " + dateTimeHelper.getTimeString(whenToRepeat));
+
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, whenToRepeat.getTimeInMillis(), AlarmManager.INTERVAL_DAY * 7, pendingIntent);
     }
 
     private void setUpMonthlyAlarm(String reminderDate, String reminderTime, PendingIntent pendingIntent) {
@@ -107,11 +117,18 @@ public class ReminderManager {
         // Check we aren't setting it in the past which would trigger it to fire instantly
         int daysInMonth = dateTimeHelper.getMonthDays(reminderDate);
 
+        Log.v("eisen", "    B Date = " + dateTimeHelper.getDateString(whenToRepeat));
+        Log.v("eisen", "    B Time = " + dateTimeHelper.getTimeString(whenToRepeat));
+
         if(whenToRepeat.before(now)) {
             whenToRepeat.add(Calendar.DAY_OF_MONTH, daysInMonth);
         }
 
-        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, whenToRepeat.getTimeInMillis(), AlarmManager.INTERVAL_DAY * daysInMonth, pendingIntent);
+        Log.v("eisen", "    daysInMonth = " + daysInMonth);
+        Log.v("eisen", "    A Date = " + dateTimeHelper.getDateString(whenToRepeat));
+        Log.v("eisen", "    A Time = " + dateTimeHelper.getTimeString(whenToRepeat));
+
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, whenToRepeat.getTimeInMillis(), AlarmManager.INTERVAL_DAY * daysInMonth, pendingIntent);
     }
 
     private void setUpYearlyAlarm(String reminderDate, String reminderTime, PendingIntent pendingIntent) {

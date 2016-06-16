@@ -951,7 +951,18 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
         }
 
         if(isGreenTask(priorityInt)) {
-            setTaskRepeatingReminder(reminderOccurrence, reminderWhen, reminderDate, reminderTime);
+            if(reminderWhen.length() > 0) {
+                String[] splitReminderWhen = reminderWhen.split(",");
+                for(int i = 0; i < splitReminderWhen.length; i++) {
+                    String weekDay = splitReminderWhen[i]; Log.v("eisen", weekDay);
+                    int weekDayInt = dateTimeHelper.dayOfMonthsMap.get(weekDay);
+
+                    setTaskRepeatingReminder(reminderOccurrence, weekDayInt, reminderDate, reminderTime);
+                }
+            }
+            else {
+                setTaskRepeatingReminder(reminderOccurrence, -1, reminderDate, reminderTime);
+            }
         }
 
         setTaskReminder(date, time);
@@ -1054,7 +1065,7 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
         }
     }
 
-    private void setTaskRepeatingReminder(String reminderOccurrence, String reminderWhen, String reminderDate, String reminderTime) {
+    private void setTaskRepeatingReminder(String reminderOccurrence, int reminderWhen, String reminderDate, String reminderTime) {
         new ReminderManager(this).setRepeatingReminder(rowId, reminderOccurrence, reminderWhen, reminderDate, reminderTime);
     }
 }
