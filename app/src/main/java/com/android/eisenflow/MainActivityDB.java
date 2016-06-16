@@ -132,7 +132,7 @@ public class MainActivityDB extends AppCompatActivity
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         // Toolbar Month Name
         month = (TextView)findViewById(R.id.toolbar_month);
-        month.setText(dateTimeHelper.getMonthName());
+        month.setText(dateTimeHelper.getMonthName(Calendar.getInstance()));
         month.setOnClickListener(this);
         // FAB init
         fab = (FloatingActionButton) findViewById(R.id.fab);

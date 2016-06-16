@@ -175,8 +175,7 @@ public class DateTimeHelper {
         return null;
     }
 
-    public String getMonthName() {
-        Calendar cal = Calendar.getInstance();
+    public String getMonthName(Calendar cal) {
         return cal.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault());
     }
 
@@ -185,6 +184,13 @@ public class DateTimeHelper {
         cal.setTime(getDate(date));
 
         return cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+    }
+
+    public int getDayOfMonth(String date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(getDate(date));
+
+        return cal.get(Calendar.DAY_OF_MONTH);
     }
 
     public Calendar getCalendarTime(String time) {

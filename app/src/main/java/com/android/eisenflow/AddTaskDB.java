@@ -243,10 +243,10 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
             dateTxt.setText(dateStr);
             currDateTxt.setText(dateStr);
             reminderCurrDateTxt.setText(dateStr);
+            reminderDateTxt.setText(dateStr);
             timeTxt.setText(timeStr);
             reminderTimeTxt.setText(timeStr);
             dueDateTimeLbl.setText(dateStr + " @" + timeStr);
-            reminderDateTimeLbl.setText(dateStr + " @" + timeStr);
         }
     }
 
@@ -465,19 +465,39 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
                 reminderCheckGroup.setVisibility(View.GONE);
                 reminderCalendarTextLayout.setVisibility(View.GONE);
                 reminderCalendar.setVisibility(View.GONE);
+                reminderDateTimeLbl.setText(
+                        generateReminderLbl(
+                                getString(R.string.daily_txt),
+                                null,
+                                dateTimeHelper.getTimeString(Calendar.getInstance())));
                 break;
             case R.id.weekly_btn:
                 reminderCheckGroup.setVisibility(View.VISIBLE);
                 reminderCalendarTextLayout.setVisibility(View.GONE);
                 reminderCalendar.setVisibility(View.GONE);
+                reminderDateTimeLbl.setText(
+                        generateReminderLbl(
+                                getString(R.string.weekly_txt),
+                                null,
+                                dateTimeHelper.getTimeString(Calendar.getInstance())));
                 break;
             case R.id.monthly_btn:
                 reminderCheckGroup.setVisibility(View.GONE);
                 reminderCalendarTextLayout.setVisibility(View.VISIBLE);
+                reminderDateTimeLbl.setText(
+                        generateReminderLbl(
+                                getString(R.string.monthly_txt),
+                                dateTimeHelper.getDateString(Calendar.getInstance()),
+                                dateTimeHelper.getTimeString(Calendar.getInstance())));
                 break;
             case R.id.yearly_btn:
                 reminderCheckGroup.setVisibility(View.GONE);
                 reminderCalendarTextLayout.setVisibility(View.VISIBLE);
+                reminderDateTimeLbl.setText(
+                        generateReminderLbl(
+                                getString(R.string.yearly_txt),
+                                dateTimeHelper.getDateString(Calendar.getInstance()),
+                                dateTimeHelper.getTimeString(Calendar.getInstance())));
                 break;
         }
     }
@@ -495,7 +515,12 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
                 break;
             case R.id.reminder_calendar_view:
                 reminderDateTxt.setText(dateString);
-                reminderDateTimeLbl.setText(dateString + " @" + dateTimeHelper.getTimeString(cal));
+                reminderDateTimeLbl.setText(
+                        generateReminderLbl(
+                                getCheckedRadioLbl(getCheckedRadioId()),
+                                dateString,
+                                reminderTimeTxt.getText().toString()
+                        ));
         }
 
     }
@@ -516,7 +541,13 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
                 break;
             case R.id.reminder_time_picker_view:
                 reminderTimeTxt.setText(timeString);
-                reminderDateTimeLbl.setText(dateTimeHelper.getDateString(cal) + " @" + timeString);
+                reminderDateTimeLbl.setText(
+                        generateReminderLbl(
+                                getCheckedRadioLbl(getCheckedRadioId()),
+                                reminderDateTxt.getText().toString(),
+                                timeString
+                        )
+                );
                 break;
         }
 
@@ -910,6 +941,9 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
 
 
             if(reminderDate != null) {
+                reminderDate = dateTimeHelper.getDateString(Calendar.getInstance());
+            }
+
                 reminderDateTxt.setText(reminderDate);
                 Calendar reminderCal = Calendar.getInstance();
                 Date date = dateTimeHelper.getDate(reminderDate);
@@ -917,7 +951,6 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
                     reminderCal.setTime(date);
                     reminderCalendarView.setDate(reminderCal.getTimeInMillis(), true, true);
                 }
-            }
 
             if(reminderTime != null) {
                 reminderTimeTxt.setText(reminderTime);
@@ -925,8 +958,50 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
             }
 
             if(reminderDate != null && reminderTime != null) {
-                reminderDateTimeLbl.setText(reminderDate + " @" + reminderTime);
+                reminderDateTimeLbl.setText(generateReminderLbl(reminderOccurrence, reminderDate, reminderTime));
             }
+        }
+    }
+
+    private String generateReminderLbl(String occurrence, String date, String time) {
+        String month = "";
+        String dateNumStr = "";
+        int dateNum = 0;
+
+        if(date != null && !"".equals(date)) {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(dateTimeHelper.getDate(date));
+            month = dateTimeHelper.getMonthName(cal);
+            dateNumStr = String.valueOf(dateTimeHelper.getDayOfMonth(date));
+            dateNum = dateTimeHelper.getDayOfMonth(date);
+        }
+
+        switch (occurrence) {
+            case "Daily":
+                return occurrence + " @" + time;
+            case "Weekly":
+                return occurrence + " @" + time;
+            case "Monthly":
+                return occurrence + "  " + dateNumStr + getDatePostfix(dateNum) + " @" + time;
+            case "Yearly":
+                return occurrence + "  " + month + " " + dateNumStr + getDatePostfix(dateNum) + " @" + time;
+            default:
+                return "";
+        }
+    }
+
+    private String getDatePostfix(int dateNum) {
+        char[] dateArray = String.valueOf(dateNum).toCharArray();
+        char lastChar = dateArray[dateArray.length-1];
+        switch (lastChar) {
+            case '1':
+                return "st";
+            case '2':
+                return "nd";
+            case '3':
+                return "rd";
+            default:
+                return "th";
         }
     }
 
