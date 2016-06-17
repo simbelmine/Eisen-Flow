@@ -37,6 +37,7 @@ public class ReminderManager {
     public void setRepeatingReminder(Long taskId, String reminderOccurrence, int reminderWhen, String reminderDate, String reminderTime) {
         Intent intent = new Intent(context, OnAlarmReceiver.class);
         intent.putExtra(LocalDataBaseHelper.KEY_ROW_ID, (long)taskId);
+        intent.putExtra("isReminder", true);
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 

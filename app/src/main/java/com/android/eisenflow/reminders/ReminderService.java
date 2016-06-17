@@ -23,6 +23,7 @@ import com.android.eisenflow.R;
 public class ReminderService extends WakeReminderIntentService {
     private static final int NEEDED_API_LEVEL = 20;
     private LocalDataBaseHelper dbHelper;
+    private boolean isReminder;
 
     public ReminderService() {
         super("ReminderService");
@@ -33,6 +34,7 @@ public class ReminderService extends WakeReminderIntentService {
         Log.d("eisen", "ReminderService: Doing work.");
 
         Long rowId = intent.getExtras().getLong(LocalDataBaseHelper.KEY_ROW_ID);
+        isReminder = intent.getBooleanExtra("isReminder", false);
 
         dbHelper = new LocalDataBaseHelper(this);
         dbHelper.open();
@@ -65,10 +67,13 @@ public class ReminderService extends WakeReminderIntentService {
                 taskIntent.putExtra(LocalDataBaseHelper.KEY_ROW_ID, rowId);
                 Intent doneTaskIntent = new Intent(context, ReminderDoneReceiver.class);
                 doneTaskIntent.putExtra(LocalDataBaseHelper.KEY_ROW_ID, rowId);
+                Intent addProgressIntent = new Intent(context, AddProgressReceiver.class);
+                addProgressIntent.putExtra(LocalDataBaseHelper.KEY_ROW_ID, rowId);
 
 
                 PendingIntent pendingIntentOpenTask = PendingIntent.getActivity(context, 0, taskIntent, PendingIntent.FLAG_ONE_SHOT);
                 PendingIntent pendingIntentDoneTask = PendingIntent.getBroadcast(context, 0, doneTaskIntent, PendingIntent.FLAG_ONE_SHOT);
+                PendingIntent pendingIntentAddProgress = PendingIntent.getBroadcast(context, 0, addProgressIntent, PendingIntent.FLAG_ONE_SHOT);
 
                 String title = cursor.getString(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_TITLE));
                 String date = cursor.getString(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_DATE));
@@ -83,8 +88,14 @@ public class ReminderService extends WakeReminderIntentService {
                         .setAutoCancel(true)
                         .setLights(Color.CYAN, 500, 500)
                         .setContentIntent(pendingIntentOpenTask)
-                        .addAction(R.drawable.check_done, getString(R.string.notification_done), pendingIntentDoneTask)
                         ;
+
+                if(isReminder) {
+                    notificationBuilder.addAction(R.drawable.plus, getString(R.string.notification_add_progress), pendingIntentAddProgress);
+                }
+                else {
+                    notificationBuilder.addAction(R.drawable.check_done, getString(R.string.notification_done), pendingIntentDoneTask);
+                }
 
                 if(Build.VERSION.SDK_INT >= NEEDED_API_LEVEL) {
                     // Wearable-only actions.

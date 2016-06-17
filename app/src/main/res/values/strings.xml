@@ -76,5 +76,6 @@
 
     <!-- Notification -->
     <string name="notification_done">Done</string>
+    <string name="notification_add_progress">Add Progress</string>
 
 </resources>

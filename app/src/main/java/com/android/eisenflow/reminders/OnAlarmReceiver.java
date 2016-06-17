@@ -22,11 +22,13 @@ public class OnAlarmReceiver extends BroadcastReceiver {
         Log.v(TAG, "On Alarm Received");
 
         long rowId = intent.getExtras().getLong(LocalDataBaseHelper.KEY_ROW_ID);
+        boolean isReminder = intent.getBooleanExtra("isReminder", false);
 
         WakeReminderIntentService.acquireStaticLock(context);
 
         Intent intentReminderService = new Intent(context, ReminderService.class);
         intentReminderService.putExtra(LocalDataBaseHelper.KEY_ROW_ID, rowId);
+        intentReminderService.putExtra("isReminder", isReminder);
         context.startService(intentReminderService);
 
         LocalBroadcastManager.getInstance(context).unregisterReceiver(this);

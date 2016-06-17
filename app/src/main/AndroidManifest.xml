@@ -44,6 +44,7 @@
             </intent-filter>
         </receiver>
         <receiver android:name=".reminders.ReminderDoneReceiver"/>
+        <receiver android:name=".reminders.AddProgressReceiver"/>
 
         <service android:name=".reminders.ReminderService" />
     </application>
