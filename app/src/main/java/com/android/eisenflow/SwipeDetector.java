@@ -1,119 +1,88 @@
 package com.android.eisenflow;
 
-import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.RelativeLayout;
 
 /**
- * Created by Sve on 5/1/16.
+ * Created by Sve on 6/16/16.
  */
-public class SwipeDetector implements View.OnTouchListener {
-    private static final int MIN_LOCK_DISTANCE = 30; // disallow motion intercept
-    private static final int MIN_DISTANCE = 550;
-    private boolean motionInterceptDisallowed = false;
-    private float downX, upX;
-    private int pos;
-    private TasksListHolder holder;
-    private RecyclerView recyclerView;
-    private int priority;
-    private RelativeLayout currentMenuLayout;
 
-    public SwipeDetector(TasksListHolder holder, RecyclerView recyclerView, int priority, int pos) {
-        this.pos = pos;
-        this.holder = holder;
-        this.recyclerView = recyclerView;
-        this.priority = priority;
-
-        currentMenuLayout = getCorrectLayout();
+public class SwipeDetector implements View.OnTouchListener{
+    public static enum Action {
+        LR, // Left to right
+        RL, // Right to left
+        TB, // Top to bottom
+        BT, // Bottom to top
+        None // Action not found
     }
 
-    @Override
+    private static final int HORIZONTAL_MIN_DISTANCE = 80; // The minimum distance for horizontal swipe
+    private static final int VERTICAL_MIN_DISTANCE = 5; // The minimum distance for vertical swipe
+    private float downX, downY, upX, upY; // Coordinates
+    private Action mSwipeDetected = Action.None; // Last action
+
+    public boolean swipeDetected() {
+        return mSwipeDetected != Action.None;
+    }
+
+    public Action getAction() {
+        return mSwipeDetected;
+    }
+
+    /**
+     * Swipe detection
+     */@Override
     public boolean onTouch(View v, MotionEvent event) {
         switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN: {
+            case MotionEvent.ACTION_DOWN:
+            {
                 downX = event.getX();
-                return true; // allow other events like Click to be processed
+                downY = event.getY();
+                mSwipeDetected = Action.None;
+                return false; // allow other events like Click to be processed
             }
-
-            case MotionEvent.ACTION_MOVE: {
+            case MotionEvent.ACTION_MOVE:
+            {
                 upX = event.getX();
+                upY = event.getY();
+
                 float deltaX = downX - upX;
+                float deltaY = downY - upY;
 
-                // Prevent swipe from Left-to-Right
-                if (deltaX < 0 && currentMenuLayout !=null && currentMenuLayout.getVisibility() == View.GONE) {
-                    return true;
-                }
-
-                // If we opened the menu enough => the RecyclerView is going to accept the change if not, skip it
-                if (Math.abs(deltaX) > MIN_LOCK_DISTANCE && recyclerView != null && !motionInterceptDisallowed) {
-                    recyclerView.requestDisallowInterceptTouchEvent(true);
-                    motionInterceptDisallowed = true;
-                }
-
-                // Open enough => VISIBLE
-                if (deltaX > 0) {
-                    if(currentMenuLayout != null) {
-                        currentMenuLayout.setVisibility(View.VISIBLE);
+                // horizontal swipe detection
+                if (Math.abs(deltaX) > HORIZONTAL_MIN_DISTANCE) {
+                    // left or right
+                    if (deltaX < 0) {
+                        mSwipeDetected = Action.LR;
+                        return true;
                     }
-                }
-                else {
-                    currentMenuLayout.setVisibility(View.GONE);
-                    swipe(0);
-                    return true;
-                }
-
-                swipe(-(int) deltaX);
+                    if (deltaX > 0) {
+                        mSwipeDetected = Action.RL;
+                        return true;
+                    }
+                } else
+                    // vertical swipe detection
+                    if (Math.abs(deltaY) > VERTICAL_MIN_DISTANCE) {
+                        // top or down
+                        if (deltaY < 0) {
+                            mSwipeDetected = Action.TB;
+                            onSwipeDown();
+                            return false;
+                        }
+                        if (deltaY > 0) {
+                            mSwipeDetected = Action.BT;
+                            return false;
+                        }
+                    }
                 return true;
             }
-
-            case MotionEvent.ACTION_UP:
-                upX = event.getX();
-                float deltaX = upX - downX;
-
-                // If not opened enough => GONE
-                if (Math.abs(deltaX) < MIN_DISTANCE) {
-                    swipe(0);
-                    currentMenuLayout.setVisibility(View.GONE);
-                }
-
-                // Stop accepting changes
-                if (recyclerView != null) {
-                    recyclerView.requestDisallowInterceptTouchEvent(false);
-                    motionInterceptDisallowed = false;
-                }
-
-                return true;
-
-            case MotionEvent.ACTION_CANCEL:
-                currentMenuLayout.setVisibility(View.GONE);
-                swipe(0);
-                return true;
         }
-
-        return true;
+        return false;
     }
 
-    private void swipe(int distance) {
-        View animationView = holder.mainLayout;
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) animationView.getLayoutParams();
-        params.rightMargin = -distance;
-        params.leftMargin = distance;
-        animationView.setLayoutParams(params);
+    public void onSwipeDown() {
+
     }
 
-    private RelativeLayout getCorrectLayout() {
-        switch (priority) {
-            case 0:
-                return holder.priority_0_layout;
-            case 1:
-                return holder.priority_1_layout;
-            case 2:
-                return holder.priority_2_layout;
-            case 3:
-                return holder.priority_3_layout;
-        }
-
-        return null;
-    }
 }

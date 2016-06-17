@@ -270,19 +270,19 @@ public class TasksListAdapterDB extends RecyclerView.Adapter<TasksListHolder> {
         switch (priority) {
             case 0:
                 holder.priorityColor.setBackgroundColor(context.getResources().getColor(R.color.firstQuadrant));
-                holder.cardView.setOnTouchListener(new SwipeDetector(holder, recyclerView, 0, position));
+                holder.cardView.setOnTouchListener(new RecyclerItemSwipeDetector(holder, recyclerView, 0, position));
                 break;
             case 1:
                 holder.priorityColor.setBackgroundColor(context.getResources().getColor(R.color.secondQuadrant));
-                holder.cardView.setOnTouchListener(new SwipeDetector(holder, recyclerView, 1, position));
+                holder.cardView.setOnTouchListener(new RecyclerItemSwipeDetector(holder, recyclerView, 1, position));
                 break;
             case 2:
                 holder.priorityColor.setBackgroundColor(context.getResources().getColor(R.color.thirdQuadrant));
-                holder.cardView.setOnTouchListener(new SwipeDetector(holder, recyclerView, 2, position));
+                holder.cardView.setOnTouchListener(new RecyclerItemSwipeDetector(holder, recyclerView, 2, position));
                 break;
             case 3:
                 holder.priorityColor.setBackgroundColor(context.getResources().getColor(R.color.fourthQuadrant));
-                holder.cardView.setOnTouchListener(new SwipeDetector(holder, recyclerView, 3, position));
+                holder.cardView.setOnTouchListener(new RecyclerItemSwipeDetector(holder, recyclerView, 3, position));
                 break;
         }
     }

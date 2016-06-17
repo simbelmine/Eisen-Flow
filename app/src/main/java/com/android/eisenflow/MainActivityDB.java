@@ -25,7 +25,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,8 +39,6 @@ import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -127,6 +124,8 @@ public class MainActivityDB extends AppCompatActivity
     private void initLayout() {
         // Toolbar init
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setOnTouchSwipeListener();
+
         setSupportActionBar(toolbar);
         // Init Toolbar
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -639,4 +638,14 @@ public class MainActivityDB extends AppCompatActivity
 
         return false;
     }
+
+
+   private void setOnTouchSwipeListener () {
+       toolbar.setOnTouchListener(new SwipeDetector() {
+           @Override
+           public void onSwipeDown() {
+               slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.ANCHORED);
+           }
+       });
+   }
 }
