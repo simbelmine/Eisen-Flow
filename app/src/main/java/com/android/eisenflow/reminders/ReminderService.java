@@ -100,10 +100,21 @@ public class ReminderService extends WakeReminderIntentService {
                 if(Build.VERSION.SDK_INT >= NEEDED_API_LEVEL) {
                     // Wearable-only actions.
                     NotificationCompat.WearableExtender wearableExtender = new NotificationCompat.WearableExtender();
+                    PendingIntent wearablePendingIntent;
+                    int imgResource;
+                    if(isReminder) {
+                        imgResource = R.mipmap.plus;
+                        wearablePendingIntent = pendingIntentAddProgress;
+                    }
+                    else {
+                        imgResource = R.mipmap.check_done;
+                        wearablePendingIntent = pendingIntentDoneTask;
+                    }
+
                     wearableExtender.addAction(new NotificationCompat.Action.Builder(
-                            R.mipmap.check_done,
+                            imgResource,
                             getString(R.string.notification_done),
-                            pendingIntentDoneTask)
+                            wearablePendingIntent)
                             .build());
                     notificationBuilder.extend(wearableExtender);
                 }
