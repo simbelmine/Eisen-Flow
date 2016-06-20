@@ -116,14 +116,19 @@ public class ReminderManager {
         Calendar now = Calendar.getInstance();
 
         // Check we aren't setting it in the past which would trigger it to fire instantly
-        int daysInMonth = dateTimeHelper.getMonthDays(reminderDate);
+        int daysInMonth = dateTimeHelper.getMonthDays(reminderDate, 0);
 
         Log.v("eisen", "    B Date = " + dateTimeHelper.getDateString(whenToRepeat));
         Log.v("eisen", "    B Time = " + dateTimeHelper.getTimeString(whenToRepeat));
+        
 
         if(whenToRepeat.before(now)) {
             whenToRepeat.add(Calendar.DAY_OF_MONTH, daysInMonth);
+            Log.v("eisen", "    -Date = " + dateTimeHelper.getDateString(whenToRepeat));
+            Log.v("eisen", "    -Time = " + dateTimeHelper.getTimeString(whenToRepeat));
+            daysInMonth = dateTimeHelper.getMonthDays(reminderDate, 1);
         }
+
 
         Log.v("eisen", "    daysInMonth = " + daysInMonth);
         Log.v("eisen", "    A Date = " + dateTimeHelper.getDateString(whenToRepeat));
@@ -143,7 +148,7 @@ public class ReminderManager {
         if(whenToRepeat.before(now)) {
             whenToRepeat.add(Calendar.DATE, daysToAdd);
         }
-        
+
         Log.v("eisen", "    A Date = " + dateTimeHelper.getDateString(whenToRepeat));
         Log.v("eisen", "    A Time = " + dateTimeHelper.getTimeString(whenToRepeat));
         Log.v("eisen", "    ---- days = " + daysToAdd);

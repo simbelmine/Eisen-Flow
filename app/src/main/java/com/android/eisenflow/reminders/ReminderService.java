@@ -60,7 +60,7 @@ public class ReminderService extends WakeReminderIntentService {
         protected void onPostExecute(Cursor cursor) {
             super.onPostExecute(cursor);
 
-            if (cursor != null) {
+            if (cursor != null && cursor.moveToFirst()) {
 
                 NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
                 Intent taskIntent = new Intent(context, AddTaskDB.class);

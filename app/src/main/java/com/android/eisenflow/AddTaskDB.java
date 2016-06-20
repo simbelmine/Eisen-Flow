@@ -1103,7 +1103,7 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
         protected void onPostExecute(Cursor cursor) {
             super.onPostExecute(cursor);
 
-            if (cursor != null) {
+            if (cursor != null && cursor.moveToFirst()) {
                 // #Priority
                 int priority = cursor.getInt(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_PRIORITY));
                 setBgPriorityColor(priority);

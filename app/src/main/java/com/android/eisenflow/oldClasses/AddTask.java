@@ -1208,7 +1208,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
     }
 
     private void populateReminderTaskData(Cursor cursor) {
-        if(cursor != null) {
+        if(cursor != null && cursor.moveToFirst()) {
             String reminderOccurrence = cursor.getString(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_REMINDER_OCCURRENCE));
             String reminderWhen = cursor.getString(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_REMINDER_WHEN));
             String reminderDate = cursor.getString(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_REMINDER_DATE));

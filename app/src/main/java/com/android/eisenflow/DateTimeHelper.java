@@ -179,9 +179,12 @@ public class DateTimeHelper {
         return cal.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault());
     }
 
-    public int getMonthDays(String date) {
+    public int getMonthDays(String date, int monthToAdd) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(getDate(date));
+        int month = cal.get(Calendar.MONTH);
+        month = month + monthToAdd;
+        cal.set(Calendar.MONTH, month);
 
         return cal.getActualMaximum(Calendar.DAY_OF_MONTH);
     }

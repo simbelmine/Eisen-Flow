@@ -35,7 +35,7 @@ public class AddProgressReceiver extends BroadcastReceiver {
         @Override
         protected Void doInBackground(Void... voids) {
             Cursor cursor = dbHelper.fetchTask(rowId);
-            if(cursor != null) {
+            if(cursor != null && cursor.moveToFirst()) {
                 int progress = cursor.getInt(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_PROGRESS));
                 progress++;
 
