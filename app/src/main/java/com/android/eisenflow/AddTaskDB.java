@@ -912,15 +912,22 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
         }
     }
 
-    private void setTimeToTimePicker(String timeStr) {
+    private void setTimeToTimePicker(String timeStr, boolean isReminder) {
         if(Build.VERSION.SDK_INT >= MainActivityDB.NEEDED_API_LEVEL) {
             Date date = dateTimeHelper.getTime(timeStr);
             Calendar c = Calendar.getInstance();
             c.setTime(date);
-            timePickerView.setHour(c.get(Calendar.HOUR_OF_DAY));
-            timePickerView.setMinute(c.get(Calendar.MINUTE));
-            reminderTimePickerView.setHour(c.get(Calendar.HOUR_OF_DAY));
-            reminderTimePickerView.setMinute(c.get(Calendar.MINUTE));
+
+            if(isReminder) {
+                reminderTimePickerView.setHour(c.get(Calendar.HOUR_OF_DAY));
+                reminderTimePickerView.setMinute(c.get(Calendar.MINUTE));
+            }
+            else {
+                timePickerView.setHour(c.get(Calendar.HOUR_OF_DAY));
+                timePickerView.setMinute(c.get(Calendar.MINUTE));
+            }
+
+
         }
     }
 
@@ -954,7 +961,7 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
 
             if(reminderTime != null) {
                 reminderTimeTxt.setText(reminderTime);
-                setTimeToTimePicker(reminderTime);
+                setTimeToTimePicker(reminderTime, true);
             }
 
             if(reminderDate != null && reminderTime != null) {
@@ -1125,9 +1132,11 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
 
                 // #Time
                 String time = cursor.getString(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_TIME));
+                Log.v("eisen" , "Time = " + time);
+
                 oldTimeStr = time;
                 timeTxt.setText(time);
-                setTimeToTimePicker(time);
+                setTimeToTimePicker(time, false);
 
                 // #Due Date Main
                 dueDateTimeLbl.setText(date + " @" + time);
