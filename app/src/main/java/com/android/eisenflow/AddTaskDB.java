@@ -1132,8 +1132,6 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
 
                 // #Time
                 String time = cursor.getString(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_TIME));
-                Log.v("eisen" , "Time = " + time);
-
                 oldTimeStr = time;
                 timeTxt.setText(time);
                 setTimeToTimePicker(time, false);

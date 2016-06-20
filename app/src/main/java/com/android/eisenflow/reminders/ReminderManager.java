@@ -25,7 +25,7 @@ public class ReminderManager {
         dateTimeHelper = new DateTimeHelper(context);
     }
 
-    public void setReminder(Long taskId, Calendar when) {
+    public void setReminder(long taskId, Calendar when) {
         Intent intent = new Intent(context, OnAlarmReceiver.class);
         intent.putExtra(LocalDataBaseHelper.KEY_ROW_ID, (long)taskId);
 
@@ -34,12 +34,12 @@ public class ReminderManager {
         alarmManager.set(AlarmManager.RTC_WAKEUP, when.getTimeInMillis(), pendingIntent);
     }
 
-    public void setRepeatingReminder(Long taskId, String reminderOccurrence, int reminderWhen, String reminderDate, String reminderTime) {
+    public void setRepeatingReminder(long taskId, String reminderOccurrence, int reminderWhen, String reminderDate, String reminderTime) {
         Intent intent = new Intent(context, OnAlarmReceiver.class);
-        intent.putExtra(LocalDataBaseHelper.KEY_ROW_ID, (long)taskId);
+        intent.putExtra(LocalDataBaseHelper.KEY_ROW_ID, taskId);
         intent.putExtra("isReminder", true);
 
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, (int)taskId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         switch (reminderOccurrence) {
             case DateTimeHelper.DAILY_REMINDER:

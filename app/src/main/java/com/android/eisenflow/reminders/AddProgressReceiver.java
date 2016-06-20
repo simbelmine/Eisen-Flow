@@ -29,6 +29,7 @@ public class AddProgressReceiver extends BroadcastReceiver {
 
         dbHelper.open();
         new StartUpdateAsyncTask().execute();
+        closeNotification();
     }
 
     private class StartUpdateAsyncTask extends AsyncTask<Void, Void, Void> {
@@ -42,10 +43,6 @@ public class AddProgressReceiver extends BroadcastReceiver {
                 dbHelper.updateTaskIntColumn(rowId, LocalDataBaseHelper.KEY_PROGRESS, progress);
                 dbHelper.close();
             }
-
-
-
-            closeNotification();
             return null;
         }
     }
