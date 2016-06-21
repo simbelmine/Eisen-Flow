@@ -10,6 +10,8 @@ import com.android.eisenflow.DateTimeHelper;
 import com.android.eisenflow.LocalDataBaseHelper;
 
 import java.util.Calendar;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * Created by Sve on 6/11/16.
@@ -39,6 +41,20 @@ public class ReminderManager {
         intent.putExtra(LocalDataBaseHelper.KEY_ROW_ID, taskId);
         intent.putExtra("isReminder", true);
 
+        if(reminderWhen != -1) {
+            String weekDay = "weekDay";
+            for (Map.Entry<String, Integer> entry : dateTimeHelper.dayOfMonthsMap.entrySet()) {
+                if (reminderWhen == entry.getValue()) {
+                    weekDay = entry.getKey();
+                }
+            }
+
+            intent.setAction(weekDay);
+        }
+
+        Log.v("eisen", "INTENT = " + intent);
+        Log.v("eisen", "ACTION = " + intent.getAction());
+
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, (int)taskId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         switch (reminderOccurrence) {
@@ -47,21 +63,6 @@ public class ReminderManager {
 
                 break;
             case DateTimeHelper.WEEKLY_REMINDER:
-
-                // *** NOT WORKING YET ****
-
-//                String[] splitReminderWhen = reminderWhen.split(",");
-//                for(int i = 0; i < splitReminderWhen.length; i++) {
-//                    String weekDay = splitReminderWhen[i];
-//                    try {
-//                        int weekDayInt = dateTimeHelper.dayOfMonthsMap.get(weekDay);
-//                        setUpWeeklyAlarm(reminderTime, reminderWhen, pendingIntent);
-//                    }
-//                    catch (Exception ex) {
-//                        Log.e("eisen", "Exception Reminder Manager : " + ex.getMessage());
-//                    }
-//                }
-
                 setUpWeeklyAlarm(reminderTime, reminderWhen, pendingIntent);
 
                 break;
@@ -89,6 +90,8 @@ public class ReminderManager {
 
         Log.v("eisen", "    A Date = " + dateTimeHelper.getDateString(whenToRepeat));
         Log.v("eisen", "    A Time = " + dateTimeHelper.getTimeString(whenToRepeat));
+        Log.v("eisen", "    P I = " + pendingIntent);
+        Log.v("eisen", "     " );
 
         alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, whenToRepeat.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
     }
@@ -107,6 +110,8 @@ public class ReminderManager {
 
         Log.v("eisen", "    A Date = " + dateTimeHelper.getDateString(whenToRepeat));
         Log.v("eisen", "    A Time = " + dateTimeHelper.getTimeString(whenToRepeat));
+        Log.v("eisen", "    P I = " + pendingIntent);
+        Log.v("eisen", "     " );
 
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, whenToRepeat.getTimeInMillis(), AlarmManager.INTERVAL_DAY * 7, pendingIntent);
     }
@@ -133,6 +138,8 @@ public class ReminderManager {
         Log.v("eisen", "    daysInMonth = " + daysInMonth);
         Log.v("eisen", "    A Date = " + dateTimeHelper.getDateString(whenToRepeat));
         Log.v("eisen", "    A Time = " + dateTimeHelper.getTimeString(whenToRepeat));
+        Log.v("eisen", "    P I = " + pendingIntent);
+        Log.v("eisen", "     " );
 
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, whenToRepeat.getTimeInMillis(), AlarmManager.INTERVAL_DAY * daysInMonth, pendingIntent);
     }
@@ -152,6 +159,8 @@ public class ReminderManager {
         Log.v("eisen", "    A Date = " + dateTimeHelper.getDateString(whenToRepeat));
         Log.v("eisen", "    A Time = " + dateTimeHelper.getTimeString(whenToRepeat));
         Log.v("eisen", "    ---- days = " + daysToAdd);
+        Log.v("eisen", "    P I = " + pendingIntent);
+        Log.v("eisen", "     " );
 
 
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, whenToRepeat.getTimeInMillis(), AlarmManager.INTERVAL_DAY * daysToAdd, pendingIntent);
