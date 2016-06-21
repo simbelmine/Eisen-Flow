@@ -1,6 +1,8 @@
 package com.android.eisenflow;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.Toast;
 import com.android.eisenflow.oldClasses.MainActivity;
+import com.android.eisenflow.reminders.OnAlarmReceiver;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -366,6 +369,8 @@ public class TasksListAdapterDB extends RecyclerView.Adapter<TasksListHolder> {
     }
 
     private void deleteItem(LocalDataBaseHelper dbHelper, int taskId, int position) {
+        cancelTaskAlarm(taskId);
+        cancelReminders(taskId, position);
         dbHelper.deleteTask(taskId);
         tasksList.remove(position);
         notifyItemRemoved(position);
@@ -378,4 +383,31 @@ public class TasksListAdapterDB extends RecyclerView.Adapter<TasksListHolder> {
     }
 
 
+    private void cancelTaskAlarm(int taskId) {
+        PendingIntent alarmPendingIntent = getAlarmPendingIntent(taskId);
+        AlarmManager am = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+        am.cancel(alarmPendingIntent);
+    }
+
+    private PendingIntent getAlarmPendingIntent(int taskId) {
+        Intent intent = new Intent(context, OnAlarmReceiver.class);
+        intent.putExtra(LocalDataBaseHelper.KEY_ROW_ID, taskId);
+
+        return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_ONE_SHOT);
+    }
+
+    private void cancelReminders(int taskId, int position) {
+        if(tasksList.get(position).getPriority() == 1) {
+            PendingIntent reminderPendingIntent = getReminderPendingIntent(taskId);
+            AlarmManager am = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+            am.cancel(reminderPendingIntent);
+        }
+    }
+
+    private PendingIntent getReminderPendingIntent(int taskId) {
+        Intent intent = new Intent(context, OnAlarmReceiver.class);
+        intent.putExtra(LocalDataBaseHelper.KEY_ROW_ID, taskId);
+        intent.putExtra("isReminder", true);
+        return PendingIntent.getBroadcast(context, taskId, intent, 0);
+    }
 }
