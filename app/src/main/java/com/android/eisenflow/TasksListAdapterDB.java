@@ -29,7 +29,7 @@ import java.util.Map;
  * Created by Sve on 6/8/16.
  */
 public class TasksListAdapterDB extends RecyclerView.Adapter<TasksListHolder> {
-    public static final String ACTION = "deleteTaskAction";
+    public static final String ACTION_DELETE = "deleteTaskAction";
     private static final String PROGRESS_TIP = "isProgressTipShown";
     private Context context;
     private List<Task> tasksList;
@@ -378,7 +378,7 @@ public class TasksListAdapterDB extends RecyclerView.Adapter<TasksListHolder> {
     }
 
     private void sendBroadcastDeleted(int position) {
-        Intent intent = new Intent(ACTION);
+        Intent intent = new Intent(ACTION_DELETE);
         intent.putExtra("taskPosition", position);
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }

@@ -33,6 +33,7 @@ import android.widget.TextView;
 
 import com.android.eisenflow.decorators.EventDecorator;
 import com.android.eisenflow.decorators.HighlightWeekendsDecorator;
+import com.android.eisenflow.reminders.ReminderDoneReceiver;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
@@ -100,8 +101,11 @@ public class MainActivityDB extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        IntentFilter iif = new IntentFilter(TasksListAdapterDB.ACTION);
-        LocalBroadcastManager.getInstance(this).registerReceiver(onTaskDeleted, iif);
+        IntentFilter iifDelete = new IntentFilter(TasksListAdapterDB.ACTION_DELETE);
+        LocalBroadcastManager.getInstance(this).registerReceiver(onTaskDeleted, iifDelete);
+
+        IntentFilter iifDone = new IntentFilter(ReminderDoneReceiver.NOTIFICATION_DONE_ACTION);
+        LocalBroadcastManager.getInstance(this).registerReceiver(onTaskDone, iifDone);
 
         initLayout();
         onPermissionGranted();
@@ -111,12 +115,20 @@ public class MainActivityDB extends AppCompatActivity
     protected void onPause() {
         super.onPause();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(onTaskDeleted);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(onTaskDone);
     }
 
     private BroadcastReceiver onTaskDeleted = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             justRefreshDecorators = true;
+            startListFeedingTask();
+        }
+    };
+
+    private BroadcastReceiver onTaskDone = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
             startListFeedingTask();
         }
     };

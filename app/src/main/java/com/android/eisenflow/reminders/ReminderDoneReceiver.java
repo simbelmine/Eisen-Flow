@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.android.eisenflow.DateTimeHelper;
@@ -18,6 +19,7 @@ import java.util.Map;
  * Created by Sve on 6/14/16.
  */
 public class ReminderDoneReceiver extends BroadcastReceiver {
+    public static final String NOTIFICATION_DONE_ACTION = "NotificationDoneAction";
     private static final String TAG = "eisen";
     private LocalDataBaseHelper dbHelper;
     private Context context;
@@ -35,6 +37,7 @@ public class ReminderDoneReceiver extends BroadcastReceiver {
 
         dbHelper.open();
         new StartUpdateAsyncTask(intent).execute();
+        sendDoneBroadcastMsg();
         closeNotification();
     }
 
@@ -91,5 +94,10 @@ public class ReminderDoneReceiver extends BroadcastReceiver {
     private void closeNotification() {
         NotificationManager notificationmanager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationmanager.cancel((int)rowId);
+    }
+
+    private void sendDoneBroadcastMsg() {
+        Intent intentToSend = new Intent(NOTIFICATION_DONE_ACTION);
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intentToSend);
     }
 }
