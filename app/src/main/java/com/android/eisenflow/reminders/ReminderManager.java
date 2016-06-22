@@ -49,6 +49,7 @@ public class ReminderManager {
                 }
             }
 
+            intent.putExtra("weekDay", weekDay);
             intent.setAction(weekDay);
         }
 

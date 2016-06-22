@@ -24,6 +24,7 @@ public class ReminderService extends WakeReminderIntentService {
     private static final int NEEDED_API_LEVEL = 20;
     private LocalDataBaseHelper dbHelper;
     private boolean isReminder;
+    private String weekDay;
 
     public ReminderService() {
         super("ReminderService");
@@ -35,6 +36,7 @@ public class ReminderService extends WakeReminderIntentService {
 
         Long rowId = intent.getExtras().getLong(LocalDataBaseHelper.KEY_ROW_ID);
         isReminder = intent.getBooleanExtra("isReminder", false);
+        weekDay = intent.getStringExtra("weekDay");
 
         dbHelper = new LocalDataBaseHelper(this);
         dbHelper.open();
@@ -67,6 +69,7 @@ public class ReminderService extends WakeReminderIntentService {
                 taskIntent.putExtra(LocalDataBaseHelper.KEY_ROW_ID, rowId);
                 Intent doneTaskIntent = new Intent(context, ReminderDoneReceiver.class);
                 doneTaskIntent.putExtra(LocalDataBaseHelper.KEY_ROW_ID, rowId);
+                doneTaskIntent.putExtra("weekDay", weekDay);
                 Intent addProgressIntent = new Intent(context, AddProgressReceiver.class);
                 addProgressIntent.putExtra(LocalDataBaseHelper.KEY_ROW_ID, rowId);
 
