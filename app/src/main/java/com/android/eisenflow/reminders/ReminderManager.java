@@ -36,15 +36,15 @@ public class ReminderManager {
         alarmManager.set(AlarmManager.RTC_WAKEUP, when.getTimeInMillis(), pendingIntent);
     }
 
-    public void setRepeatingReminder(long taskId, String reminderOccurrence, int reminderWhen, String reminderDate, String reminderTime) {
+    public void setRepeatingReminder(long taskId, String reminderOccurrence, int weekDayInt, String reminderDate, String reminderTime) {
         Intent intent = new Intent(context, OnAlarmReceiver.class);
         intent.putExtra(LocalDataBaseHelper.KEY_ROW_ID, taskId);
         intent.putExtra("isReminder", true);
 
-        if(reminderWhen != -1) {
+        if(weekDayInt != -1) {
             String weekDay = "weekDay";
             for (Map.Entry<String, Integer> entry : dateTimeHelper.dayOfMonthsMap.entrySet()) {
-                if (reminderWhen == entry.getValue()) {
+                if (weekDayInt == entry.getValue()) {
                     weekDay = entry.getKey();
                 }
             }
@@ -64,7 +64,7 @@ public class ReminderManager {
 
                 break;
             case DateTimeHelper.WEEKLY_REMINDER:
-                setUpWeeklyAlarm(reminderTime, reminderWhen, pendingIntent);
+                setUpWeeklyAlarm(reminderTime, weekDayInt, pendingIntent);
 
                 break;
             case DateTimeHelper.MONTHLY_REMINDER:

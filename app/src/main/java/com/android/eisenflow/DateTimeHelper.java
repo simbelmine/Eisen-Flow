@@ -5,6 +5,7 @@ import android.util.Log;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -262,6 +263,19 @@ public class DateTimeHelper {
         cal.setTime(getDate(date));
 
         return cal.get(Calendar.YEAR);
+    }
+
+    public ArrayList<String> getWeekDaysList(String reminderWhen) {
+        ArrayList<String> weekDays = new ArrayList<>();
+
+        if(!"".equals(reminderWhen)) {
+            String[] splitReminderWhen = reminderWhen.split(",");
+            for (int i = 0; i < splitReminderWhen.length; i++) {
+                weekDays.add(splitReminderWhen[i]);
+            }
+        }
+
+        return weekDays;
     }
 
 }

@@ -76,17 +76,16 @@ public class ReminderDoneReceiver extends BroadcastReceiver {
                 Log.e("eisen", "Exception canceling weekly remidners : " + ex.getMessage());
             }
         }
+        else {
+            AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+            Intent intentToCancel = new Intent(context, OnAlarmReceiver.class);
+            intentToCancel.putExtra(LocalDataBaseHelper.KEY_ROW_ID, rowId);
+            intentToCancel.putExtra("isReminder", true);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, (int) rowId, intentToCancel, 0);
 
-
-
-        AlarmManager am = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-        Intent intentToCancel = new Intent(context, OnAlarmReceiver.class);
-        intentToCancel.putExtra(LocalDataBaseHelper.KEY_ROW_ID, rowId);
-        intentToCancel.putExtra("isReminder", true);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, (int)rowId, intentToCancel, 0);
-
-        Log.v("eisen", "  ------   CANCEL REPEATING ALARM -------  ");
-        am.cancel(pendingIntent);
+            Log.v("eisen", "  ------   CANCEL REPEATING ALARM -------  ");
+            am.cancel(pendingIntent);
+        }
     }
 
     private void closeNotification() {

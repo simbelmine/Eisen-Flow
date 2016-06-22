@@ -23,6 +23,7 @@ import com.android.eisenflow.reminders.OnAlarmReceiver;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Sve on 6/8/16.
@@ -398,10 +399,20 @@ public class TasksListAdapterDB extends RecyclerView.Adapter<TasksListHolder> {
 
     private void cancelReminders(int taskId, int position) {
         if(tasksList.get(position).getPriority() == 1) {
-            PendingIntent reminderPendingIntent = getReminderPendingIntent(taskId);
-            AlarmManager am = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-            am.cancel(reminderPendingIntent);
+            if(tasksList.get(position).getReminderWhen().length() > 0) {
+                cancelWeeklyReminder(taskId);
+            }
+            else {
+                cancelReminder(taskId);
+            }
         }
+    }
+
+    private void cancelReminder(int taskId) {
+        PendingIntent reminderPendingIntent = getReminderPendingIntent(taskId);
+        AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        am.cancel(reminderPendingIntent);
+        Log.v("eisen", "  ------   CANCEL Repeating ALARM  from Delete   --------  ");
     }
 
     private PendingIntent getReminderPendingIntent(int taskId) {
@@ -409,5 +420,27 @@ public class TasksListAdapterDB extends RecyclerView.Adapter<TasksListHolder> {
         intent.putExtra(LocalDataBaseHelper.KEY_ROW_ID, taskId);
         intent.putExtra("isReminder", true);
         return PendingIntent.getBroadcast(context, taskId, intent, 0);
+    }
+
+    private void cancelWeeklyReminder(int taskId) {
+        DateTimeHelper dateTimeHelper = new DateTimeHelper(context);
+        AlarmManager am = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+        Intent i = new Intent(context, OnAlarmReceiver.class);
+        i.putExtra(LocalDataBaseHelper.KEY_ROW_ID, taskId);
+        i.putExtra("isReminder", true);
+
+        try {
+            for(Map.Entry<String, Integer> entry : dateTimeHelper.dayOfMonthsMap.entrySet()) {
+                i.putExtra("weekDay", entry.getKey());
+                i.setAction(entry.getKey());
+
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(context, taskId, i, 0);
+                am.cancel(pendingIntent);
+                Log.v("eisen", "  ------   CANCEL WEEKLY ALARM  from Delete- " + entry.getKey() + " -------  ");
+            }
+        }
+        catch (Exception ex) {
+            Log.e("eisen", "Exception canceling weekly remidners : " + ex.getMessage());
+        }
     }
 }

@@ -1051,9 +1051,9 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
 
         if(isGreenTask(priorityInt)) {
             if(reminderWhen.length() > 0) {
-                String[] splitReminderWhen = reminderWhen.split(",");
-                for(int i = 0; i < splitReminderWhen.length; i++) {
-                    String weekDay = splitReminderWhen[i]; Log.v("eisen", weekDay);
+                ArrayList<String> weekDays = dateTimeHelper.getWeekDaysList(reminderWhen);
+                for(int i = 0; i < weekDays.size(); i++) {
+                    String weekDay = weekDays.get(i); Log.v("eisen", weekDay);
                     int weekDayInt = dateTimeHelper.dayOfMonthsMap.get(weekDay);
 
                     setTaskRepeatingReminder(reminderOccurrence, weekDayInt, reminderDate, reminderTime);
@@ -1167,8 +1167,8 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
         }
     }
 
-    private void setTaskRepeatingReminder(String reminderOccurrence, int reminderWhen, String reminderDate, String reminderTime) {
-        new ReminderManager(this).setRepeatingReminder(rowId, reminderOccurrence, reminderWhen, reminderDate, reminderTime);
+    private void setTaskRepeatingReminder(String reminderOccurrence, int weekDayInt, String reminderDate, String reminderTime) {
+        new ReminderManager(this).setRepeatingReminder(rowId, reminderOccurrence, weekDayInt, reminderDate, reminderTime);
     }
 }
 
