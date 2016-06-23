@@ -133,6 +133,12 @@ public class MainActivityDB extends AppCompatActivity
         }
     };
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        dbHelper.close();
+    }
+
     private void initLayout() {
         // Toolbar init
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -450,6 +456,7 @@ public class MainActivityDB extends AppCompatActivity
 
         hidePriorityTipMessage();
         showCurrentTasksFromEvent(pressedCalendarDate);
+
         if(isEventDate(pressedCalendarDate)) {
             noTasksTipLayout.setVisibility(View.GONE);
             slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);

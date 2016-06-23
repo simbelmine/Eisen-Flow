@@ -296,6 +296,10 @@ public class TasksListAdapterDB extends RecyclerView.Adapter<TasksListHolder> {
             holder.task_check.setChecked(true);
             holder.task_done_line.setVisibility(View.VISIBLE);
         }
+        else {
+            holder.task_check.setChecked(false);
+            holder.task_done_line.setVisibility(View.INVISIBLE);
+        }
     }
 
     private void saveProgressToDb(View view, TasksListHolder holder, Task task) {
