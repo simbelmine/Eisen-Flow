@@ -307,15 +307,18 @@ public class TasksListAdapterDB extends RecyclerView.Adapter<TasksListHolder> {
 
     private void saveProgressToDb(View view, TasksListHolder holder, Task task) {
         int taskId = task.getId();
-        int taskCurrentProgress = task.getProgress();
-        taskCurrentProgress++;
+        int taskCurrentProgress = task.calculateProgress(context);
 
-        if(dbHelper.updateTaskIntColumn(taskId, LocalDataBaseHelper.KEY_PROGRESS, taskCurrentProgress)) {
-            showMessageAddedPercent(view);
-            updateTaskProgress(holder, task, taskCurrentProgress);
+        if(taskCurrentProgress >= 100) {
+            showTipMessagePercentage(view);
         }
         else {
-            Log.v("eisen", "Column Update UNsuccessful!");
+            if (dbHelper.updateTaskIntColumn(taskId, LocalDataBaseHelper.KEY_PROGRESS, taskCurrentProgress)) {
+                showMessageAddedPercent(view);
+                updateTaskProgress(holder, task, taskCurrentProgress);
+            } else {
+                Log.v("eisen", "Column Update UNsuccessful!");
+            }
         }
     }
 
@@ -333,6 +336,10 @@ public class TasksListAdapterDB extends RecyclerView.Adapter<TasksListHolder> {
             // TO Do : add progress to the task
             showTipMessage(view, context.getResources().getString(R.string.progress_added));
         }
+    }
+
+    private void showTipMessagePercentage(View view) {
+        showTipMessage(view, context.getResources().getString(R.string.progress_tip));
     }
 
     private void getSharedPrefs() {

@@ -1,5 +1,10 @@
 package com.android.eisenflow;
 
+import android.content.Context;
+import android.database.Cursor;
+
+import java.util.Calendar;
+
 /**
  * Created by Sve on 6/8/16.
  */
@@ -111,5 +116,40 @@ public class Task {
 
     public void setIsDone(int isDone) {
         this.isDone = isDone;
+    }
+
+    public void setInfoFromCursor(Cursor cursor) {
+        setId(cursor.getInt(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_ROW_ID)));
+        setPriority(cursor.getInt(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_PRIORITY)));
+        setTitle(cursor.getString(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_TITLE)));
+        setDate(cursor.getString(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_DATE)));
+        setTime(cursor.getString(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_TIME)));
+        setReminderOccurrence(cursor.getString(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_REMINDER_OCCURRENCE)));
+        setReminderWhen(cursor.getString(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_REMINDER_WHEN)));
+        setReminderDate(cursor.getString(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_REMINDER_DATE)));
+        setReminderTime(cursor.getString(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_REMINDER_TIME)));
+        setNote(cursor.getString(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_NOTE)));
+        setProgress(cursor.getInt(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_PROGRESS)));
+        setId(cursor.getInt(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_DONE)));
+    }
+
+    public int calculateProgress(Context context) {
+        int progress = getProgress();
+        long totalDays = getTotalDays(context);
+
+        int progressToReturn = (int)((100/totalDays) + progress);
+        if(progressToReturn > 100) progressToReturn = 100;
+
+        return progressToReturn;
+    }
+
+    private long getTotalDays(Context context) {
+        DateTimeHelper dateTimeHelper = new DateTimeHelper(context);
+        Calendar calNow = Calendar.getInstance();
+        Calendar calDate = Calendar.getInstance();
+        calDate.setTime(dateTimeHelper.getDate(getDate()));
+
+        long diff = calDate.getTimeInMillis() - calNow.getTimeInMillis();
+        return diff / (24 * 60 * 60 * 1000);
     }
 }

@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.android.eisenflow.LocalDataBaseHelper;
+import com.android.eisenflow.Task;
 
 /**
  * Created by Sve on 6/16/16.
@@ -37,10 +38,11 @@ public class AddProgressReceiver extends BroadcastReceiver {
         protected Void doInBackground(Void... voids) {
             Cursor cursor = dbHelper.fetchTask(rowId);
             if(cursor != null && cursor.moveToFirst()) {
-                int progress = cursor.getInt(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_PROGRESS));
-                progress++;
+                Task task = new Task();
+                task.setInfoFromCursor(cursor);
+                int taskCurrentProgress = task.calculateProgress(context);
 
-                dbHelper.updateTaskIntColumn(rowId, LocalDataBaseHelper.KEY_PROGRESS, progress);
+                dbHelper.updateTaskIntColumn(rowId, LocalDataBaseHelper.KEY_PROGRESS, taskCurrentProgress);
                 dbHelper.close();
             }
             return null;
