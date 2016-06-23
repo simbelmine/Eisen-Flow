@@ -54,7 +54,7 @@
         sothree:umanoDragView="@+id/dragView"
         sothree:umanoOverlay="true"
         android:layout_marginTop="?attr/actionBarSize"
-        sothree:umanoAnchorPoint="0.55"
+        sothree:umanoAnchorPoint="0.61"
         >
 
         <include layout="@layout/content_main" />
@@ -72,28 +72,31 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1.3"
+                android:layout_weight="1.15"
                 android:background="@drawable/tile_bg"
                 />
             <FrameLayout
                 android:id="@+id/calendar_frame_layout"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1.7">
+                android:layout_marginTop="2.5dp"
+                android:layout_weight="1.85">
                 <com.prolificinteractive.materialcalendarview.MaterialCalendarView
                     android:id="@+id/materialCalendarView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:mcv_selectionColor="@color/colorAccent"
                     app:mcv_arrowColor="@color/colorPrimaryDark"
-                    sothree:mcv_tileSize="45dp"
+                    sothree:mcv_tileSize="43dp"
                     />
             </FrameLayout>
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
                 android:gravity="center"
+                android:layout_gravity="center_horizontal"
                 android:paddingBottom="3dp"
+                android:layout_marginTop="5.5dp"
                 >
                 <ImageView
                     android:id="@+id/icon_1"
