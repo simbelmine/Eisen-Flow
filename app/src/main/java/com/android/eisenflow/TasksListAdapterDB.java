@@ -97,6 +97,9 @@ public class TasksListAdapterDB extends RecyclerView.Adapter<TasksListHolder> {
             holder.task_p1_progress.setVisibility(View.VISIBLE);
             holder.task_p1_progress.setText(setProgressValue(taskRow.getProgress()));
         }
+        else {
+            holder.task_p1_progress.setVisibility(View.INVISIBLE);
+        }
     }
 
     private String setProgressValue(int progress) {
