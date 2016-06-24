@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.LocalBroadcastManager;
@@ -22,6 +23,7 @@ import com.android.eisenflow.oldClasses.MainActivity;
 import com.android.eisenflow.reminders.OnAlarmReceiver;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
@@ -38,11 +40,13 @@ public class TasksListAdapterDB extends RecyclerView.Adapter<TasksListHolder> {
     private Activity activity;
     private SharedPreferences sharedPreferences;
     private LocalDataBaseHelper dbHelper;
+    private DateTimeHelper dateTimeHelper;
 
     public TasksListAdapterDB(Activity activity, Context context, LocalDataBaseHelper dbHelper) {
         this.activity = activity;
         this.context = context;
         this.dbHelper = dbHelper;
+        dateTimeHelper = new DateTimeHelper(context);
         tasksList = new ArrayList<>();
         sharedPreferences = context.getSharedPreferences(MainActivityDB.MAIN_PREFS, Context.MODE_PRIVATE);
     }
@@ -85,6 +89,7 @@ public class TasksListAdapterDB extends RecyclerView.Adapter<TasksListHolder> {
 
         setTaskPriority(holder, taskRow.getPriority(), position);
         crossTaskIfDone(holder, position);
+        setOldTaskTextColor(holder, position);
     }
 
     private void setValueToField(TasksListHolder holder, Task taskRow) {
@@ -305,6 +310,29 @@ public class TasksListAdapterDB extends RecyclerView.Adapter<TasksListHolder> {
         }
     }
 
+    private void setOldTaskTextColor(TasksListHolder holder, int position) {
+        Calendar now = Calendar.getInstance();
+        Calendar calDate = Calendar.getInstance();
+        String dateStr = tasksList.get(position).getDate();
+        calDate.setTime(dateTimeHelper.getDate(dateStr));
+
+        if(isAnOldTask(now, calDate)) {
+            holder.task_time_txt.setTextColor(context.getResources().getColor(R.color.firstQuadrant));
+            holder.task_time_txt.setTypeface(null, Typeface.BOLD);
+        }
+    }
+
+    private boolean isAnOldTask(Calendar now, Calendar calDate) {
+        if(now.get(Calendar.MONTH) > calDate.get(Calendar.MONTH)) {
+            return true;
+        }
+        else if(now.get(Calendar.MONTH) == calDate.get(Calendar.MONTH)) {
+            return true;
+        }
+        else
+            return false;
+    }
+
     private void saveProgressToDb(View view, TasksListHolder holder, Task task) {
         int taskId = task.getId();
         int currProgress = task.getProgress();
@@ -440,7 +468,6 @@ public class TasksListAdapterDB extends RecyclerView.Adapter<TasksListHolder> {
     }
 
     private void cancelWeeklyReminder(int taskId) {
-        DateTimeHelper dateTimeHelper = new DateTimeHelper(context);
         AlarmManager am = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
         Intent i = new Intent(context, OnAlarmReceiver.class);
         i.putExtra(LocalDataBaseHelper.KEY_ROW_ID, taskId);
