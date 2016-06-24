@@ -68,8 +68,8 @@
     <string name="priority_tip_3"><b>DROP</b> \n <i>Unnecessary. Usually a distraction.</i></string>
 
     <!-- MainActivity -->
-    <string name="no_tasks_msg">No Tasks</string>
-    <string name="no_tasks_add_msg">Create new task or select calendar event.</string>
+    <string name="no_tasks_msg">No tasks to show</string>
+    <string name="no_tasks_add_msg">\"Get specific about your goals \nand keep them visible\"</string>
 
     <!-- Reminders -->
     <string name="notify_new_task_message">A task needs to be reviewed!</string>
