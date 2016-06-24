@@ -2,6 +2,7 @@ package com.android.eisenflow;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 
 import java.util.Calendar;
 
@@ -136,9 +137,14 @@ public class Task {
     public int calculateProgress(Context context) {
         int progress = getProgress();
         long totalDays = getTotalDays(context);
+        int monthlyPercentage = (int) Math.round((100/(double)totalDays));
 
-        int progressToReturn = (int)((100/totalDays) + progress);
-        if(progressToReturn > 100) progressToReturn = 100;
+//        progress++;
+//        setProgress(progress);
+
+        int progressToReturn = monthlyPercentage * progress;
+
+        if(progress == totalDays || progressToReturn > 100) progressToReturn = 100;
 
         return progressToReturn;
     }

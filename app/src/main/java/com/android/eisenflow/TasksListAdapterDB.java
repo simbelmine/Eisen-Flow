@@ -95,7 +95,7 @@ public class TasksListAdapterDB extends RecyclerView.Adapter<TasksListHolder> {
         holder.task_time_txt.setTextColor(context.getResources().getColor(R.color.gray_light));
         if(taskRow.getPriority() == 1) {
             holder.task_p1_progress.setVisibility(View.VISIBLE);
-            holder.task_p1_progress.setText(setProgressValue(taskRow.getProgress()));
+            holder.task_p1_progress.setText(setProgressValue(taskRow.calculateProgress(context)));
         }
         else {
             holder.task_p1_progress.setVisibility(View.INVISIBLE);
@@ -307,23 +307,26 @@ public class TasksListAdapterDB extends RecyclerView.Adapter<TasksListHolder> {
 
     private void saveProgressToDb(View view, TasksListHolder holder, Task task) {
         int taskId = task.getId();
+        int currProgress = task.getProgress();
+        currProgress++;
+        task.setProgress(currProgress);
         int taskCurrentProgress = task.calculateProgress(context);
 
         if(taskCurrentProgress >= 100) {
             showTipMessagePercentage(view);
+            updateTaskProgress(holder, taskCurrentProgress);
         }
         else {
-            if (dbHelper.updateTaskIntColumn(taskId, LocalDataBaseHelper.KEY_PROGRESS, taskCurrentProgress)) {
+            if (dbHelper.updateTaskIntColumn(taskId, LocalDataBaseHelper.KEY_PROGRESS, currProgress)) {
                 showMessageAddedPercent(view);
-                updateTaskProgress(holder, task, taskCurrentProgress);
+                updateTaskProgress(holder, taskCurrentProgress);
             } else {
                 Log.v("eisen", "Column Update UNsuccessful!");
             }
         }
     }
 
-    private void updateTaskProgress(TasksListHolder holder, Task task, int taskCurrentProgress) {
-        task.setProgress(taskCurrentProgress);
+    private void updateTaskProgress(TasksListHolder holder, int taskCurrentProgress) {
         holder.task_p1_progress.setText(setProgressValue(taskCurrentProgress));
     }
 

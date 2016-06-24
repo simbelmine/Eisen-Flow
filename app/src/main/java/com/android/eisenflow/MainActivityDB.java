@@ -33,6 +33,7 @@ import android.widget.TextView;
 
 import com.android.eisenflow.decorators.EventDecorator;
 import com.android.eisenflow.decorators.HighlightWeekendsDecorator;
+import com.android.eisenflow.reminders.AddProgressReceiver;
 import com.android.eisenflow.reminders.ReminderDoneReceiver;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
@@ -107,6 +108,9 @@ public class MainActivityDB extends AppCompatActivity
         IntentFilter iifDone = new IntentFilter(ReminderDoneReceiver.NOTIFICATION_DONE_ACTION);
         LocalBroadcastManager.getInstance(this).registerReceiver(onTaskDone, iifDone);
 
+        IntentFilter iifAddProgress = new IntentFilter(AddProgressReceiver.NOTIFICATION_ADD_PROGRESS_ACTION);
+        LocalBroadcastManager.getInstance(this).registerReceiver(onTaskAddProgress, iifAddProgress);
+
         initLayout();
         onPermissionGranted();
     }
@@ -127,6 +131,13 @@ public class MainActivityDB extends AppCompatActivity
     };
 
     private BroadcastReceiver onTaskDone = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            startListFeedingTask();
+        }
+    };
+
+    private BroadcastReceiver onTaskAddProgress = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             startListFeedingTask();

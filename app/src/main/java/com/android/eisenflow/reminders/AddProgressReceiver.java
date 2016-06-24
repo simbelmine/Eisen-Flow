@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.android.eisenflow.LocalDataBaseHelper;
@@ -15,6 +16,7 @@ import com.android.eisenflow.Task;
  * Created by Sve on 6/16/16.
  */
 public class AddProgressReceiver extends BroadcastReceiver {
+    public static final String NOTIFICATION_ADD_PROGRESS_ACTION = "NotificationAddProgressAction";
     private static final String TAG = "eisen";
     private LocalDataBaseHelper dbHelper;
     private Context context;
@@ -30,6 +32,7 @@ public class AddProgressReceiver extends BroadcastReceiver {
 
         dbHelper.open();
         new StartUpdateAsyncTask().execute();
+        sendAddProgressBroadcastMsg();
         closeNotification();
     }
 
@@ -40,13 +43,19 @@ public class AddProgressReceiver extends BroadcastReceiver {
             if(cursor != null && cursor.moveToFirst()) {
                 Task task = new Task();
                 task.setInfoFromCursor(cursor);
-                int taskCurrentProgress = task.calculateProgress(context);
+                int progress = task.getProgress();
+                progress++;
 
-                dbHelper.updateTaskIntColumn(rowId, LocalDataBaseHelper.KEY_PROGRESS, taskCurrentProgress);
+                dbHelper.updateTaskIntColumn(rowId, LocalDataBaseHelper.KEY_PROGRESS, progress);
                 dbHelper.close();
             }
             return null;
         }
+    }
+
+    private void sendAddProgressBroadcastMsg() {
+        Intent intentToSend = new Intent(NOTIFICATION_ADD_PROGRESS_ACTION);
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intentToSend);
     }
 
     private void closeNotification() {
