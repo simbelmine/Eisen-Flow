@@ -311,27 +311,16 @@ public class TasksListAdapterDB extends RecyclerView.Adapter<TasksListHolder> {
     }
 
     private void setOldTaskTextColor(TasksListHolder holder, int position) {
-        Calendar now = Calendar.getInstance();
         Calendar calDate = Calendar.getInstance();
         String dateStr = tasksList.get(position).getDate();
         calDate.setTime(dateTimeHelper.getDate(dateStr));
 
-        if(isAnOldTask(now, calDate)) {
+        if(dateTimeHelper.isPastDate(calDate)) {
             holder.task_time_txt.setTextColor(context.getResources().getColor(R.color.firstQuadrant));
             holder.task_time_txt.setTypeface(null, Typeface.BOLD);
         }
     }
 
-    private boolean isAnOldTask(Calendar now, Calendar calDate) {
-        if(now.get(Calendar.MONTH) > calDate.get(Calendar.MONTH)) {
-            return true;
-        }
-        else if(now.get(Calendar.MONTH) == calDate.get(Calendar.MONTH)) {
-            return true;
-        }
-        else
-            return false;
-    }
 
     private void saveProgressToDb(View view, TasksListHolder holder, Task task) {
         int taskId = task.getId();

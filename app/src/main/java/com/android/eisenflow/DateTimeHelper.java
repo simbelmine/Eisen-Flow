@@ -278,4 +278,17 @@ public class DateTimeHelper {
         return weekDays;
     }
 
+    public boolean isPastDate(Calendar calDate){
+        Calendar now = Calendar.getInstance();
+
+        if(now.get(Calendar.MONTH) > calDate.get(Calendar.MONTH)) {
+            return true;
+        }
+        else if(now.get(Calendar.MONTH) == calDate.get(Calendar.MONTH)) {
+            return true;
+        }
+        else
+            return false;
+    }
+
 }
