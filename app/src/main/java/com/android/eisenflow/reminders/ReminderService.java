@@ -44,13 +44,20 @@ public class ReminderService extends WakeReminderIntentService {
         isReminder = intent.getBooleanExtra("isReminder", false);
         weekDay = intent.getStringExtra("weekDay");
         weekDayOfTip = intent.getIntExtra("weekDayOfTip", -1);
+        boolean isWeeklyTip = intent.getBooleanExtra("isWeeklyTip", false);
+        boolean isDailyTip = intent.getBooleanExtra("isDailyTip", false);
 
         dbHelper = new LocalDataBaseHelper(this);
         dbHelper.open();
 
         Log.v("eisen", "*** rowId = " + rowId);
         if(rowId == -1) {
-            new StartCheckingForOldTasks().execute();
+            if(isWeeklyTip) {
+                new StartCheckingForOldTasks().execute();
+            }
+            else if(isDailyTip) {
+                showEveningTipNotifications();
+            }
         }
         else {
             new StartFeedingNotificationAsyncTask(this, rowId).execute();
@@ -201,5 +208,25 @@ public class ReminderService extends WakeReminderIntentService {
     private int generateRandomId() {
         Random r = new Random();
         return r.nextInt(100 - 1) + 1;
+    }
+
+    private void showEveningTipNotifications() {
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(ReminderService.this)
+                .setSmallIcon(R.mipmap.ic_stat_fish_icon)
+                .setContentTitle(getString(R.string.app_name))
+                .setContentText(getString(R.string.daily_evening_tip_notification))
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(getString(R.string.daily_evening_tip_notification)))
+                .setSound(getNotificationSoundUri())
+                .setAutoCancel(true)
+                .setLights(Color.CYAN, 500, 500)
+                ;
+
+        if(Build.VERSION.SDK_INT >= NEEDED_API_LEVEL) {
+            NotificationCompat.WearableExtender wearableExtender = new NotificationCompat.WearableExtender();
+            notificationBuilder.extend(wearableExtender);
+        }
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.notify(generateRandomId(), notificationBuilder.build());
     }
 }

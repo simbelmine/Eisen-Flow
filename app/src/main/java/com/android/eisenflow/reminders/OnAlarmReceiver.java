@@ -25,6 +25,8 @@ public class OnAlarmReceiver extends BroadcastReceiver {
         boolean isReminder = intent.getBooleanExtra("isReminder", false);
         String weekDay = intent.getStringExtra("weekDay");
         int weekDayOfTip = intent.getIntExtra("weekDayOfTip", -1);
+        boolean isWeeklyTip = intent.getBooleanExtra("isWeeklyTip", false);
+        boolean isDailyTip = intent.getBooleanExtra("isDailyTip", false);
 
         WakeReminderIntentService.acquireStaticLock(context);
 
@@ -33,6 +35,8 @@ public class OnAlarmReceiver extends BroadcastReceiver {
         intentReminderService.putExtra("isReminder", isReminder);
         intentReminderService.putExtra("weekDay", weekDay);
         intentReminderService.putExtra("weekDayOfTip", weekDayOfTip);
+        intentReminderService.putExtra("isWeeklyTip", isWeeklyTip);
+        intentReminderService.putExtra("isDailyTip", isDailyTip);
         context.startService(intentReminderService);
 
         LocalBroadcastManager.getInstance(context).unregisterReceiver(this);

@@ -167,33 +167,32 @@ public class ReminderManager {
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, whenToRepeat.getTimeInMillis(), AlarmManager.INTERVAL_DAY * daysToAdd, pendingIntent);
     }
 
-    public void setOldTasksReminder() {
-        Calendar whenToRepeat;
+    public void setOldTasksReminder(Calendar whenToRepeat) {
         Calendar now = Calendar.getInstance();
-
-        whenToRepeat = Calendar.getInstance();
-        whenToRepeat.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
-        if(dateTimeHelper.isSystem24hFormat()){
-            whenToRepeat.set(Calendar.HOUR_OF_DAY, 18);
-        }
-        else {
-            whenToRepeat.set(Calendar.HOUR, 6);
-            whenToRepeat.set(Calendar.AM_PM, Calendar.PM);
-        }
-        whenToRepeat.set(Calendar.MINUTE, 0);
-        whenToRepeat.set(Calendar.SECOND, 0);
-
-        if(whenToRepeat.before(now)) {
-            whenToRepeat.add(Calendar.DAY_OF_YEAR, 7);
-        }
-
-        Log.v("eisen", "Sunday Alarm : " + whenToRepeat);
 
         Intent intent = new Intent(context, OnAlarmReceiver.class);
         intent.putExtra(LocalDataBaseHelper.KEY_ROW_ID, -1L);
-        intent.putExtra("weekDayOfTip", Calendar.SUNDAY);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, whenToRepeat.getTimeInMillis(), AlarmManager.INTERVAL_DAY * 7, pendingIntent);
+        if(whenToRepeat.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+            if (whenToRepeat.before(now)) {
+                whenToRepeat.add(Calendar.DAY_OF_YEAR, 7);
+            }
+            Log.v("eisen", "Sunday Alarm : " + whenToRepeat);
+            intent.putExtra("isWeeklyTip", true);
+            intent.putExtra("weekDayOfTip", Calendar.SUNDAY);
+            intent.setAction("OldTasksSundayTip");
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, whenToRepeat.getTimeInMillis(), AlarmManager.INTERVAL_DAY * 7, pendingIntent);
+        }
+        else {
+            if (whenToRepeat.before(now)) {
+                whenToRepeat.add(Calendar.DATE, 1);
+            }
+            Log.v("eisen", "Daily Alarm : " + whenToRepeat);
+            intent.putExtra("isDailyTip", true);
+            intent.setAction("DailyEveningTip");
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, whenToRepeat.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+        }
     }
 }

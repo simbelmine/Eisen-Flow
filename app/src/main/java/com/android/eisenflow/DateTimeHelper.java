@@ -280,10 +280,6 @@ public class DateTimeHelper {
 
     public boolean isPastDate(Calendar calDate){
         Calendar now = Calendar.getInstance();
-
-        Log.v("eisen", "NOW : " + now);
-        Log.v("eisen", "DATE : " + calDate);
-
         if(calDate.get(Calendar.MONTH) == now.get(Calendar.MONTH)
                 && calDate.get(Calendar.DAY_OF_MONTH) == now.get(Calendar.DAY_OF_MONTH)
                 && calDate.get(Calendar.HOUR) == now.get(Calendar.HOUR)
@@ -295,15 +291,6 @@ public class DateTimeHelper {
         }
         else
             return false;
-
-//        if(now.get(Calendar.MONTH) > calDate.get(Calendar.MONTH)) {
-//            return true;
-//        }
-//        else if(now.get(Calendar.MONTH) == calDate.get(Calendar.MONTH)) {
-//            return true;
-//        }
-//        else
-//            return false;
     }
 
 }

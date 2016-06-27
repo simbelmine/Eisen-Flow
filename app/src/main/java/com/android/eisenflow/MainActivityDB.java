@@ -59,6 +59,7 @@ public class MainActivityDB extends AppCompatActivity
     public static final String MAIN_PREFS = "MainSharedPreferences";
     private static final String PRIORITY_PREFS_STR = "priority";
     private static final String WEEKLY_OLD_TASKS_TIP = "WeeklyOldTasksTip";
+    private static final String DAILY_EVENING_TIP = "DailyEveningTip";
     private static final int ACTIVITY_CREATE = 0;
     public static final int ACTIVITY_EDIT = 1;
     private static final String DATE_FORMAT = "EEE, MMM dd, yyyy";
@@ -101,6 +102,7 @@ public class MainActivityDB extends AppCompatActivity
         eventDates = new ArrayList<>();
         eventsTaskList = new ArrayList<>();
 
+        createDailyEveningTip();
         createWeeklyOldTasksTip();
     }
 
@@ -684,18 +686,37 @@ public class MainActivityDB extends AppCompatActivity
         });
     }
 
-    private void createWeeklyOldTasksTip() {
-        if(!mainSharedPrefs.contains(WEEKLY_OLD_TASKS_TIP) || !mainSharedPrefs.getBoolean(WEEKLY_OLD_TASKS_TIP, false)) {
-            mainSharedPrefs.edit().putBoolean(WEEKLY_OLD_TASKS_TIP, true).apply();
-            setOldTasksReminder();
-            Log.v("eisen", "Old tasks notification");
-        }
-        else {
-            Log.v("eisen", "DONT Old tasks notification");
+    private void createDailyEveningTip() {
+        if(!mainSharedPrefs.contains(DAILY_EVENING_TIP) || !mainSharedPrefs.getBoolean(DAILY_EVENING_TIP, false)) {
+            mainSharedPrefs.edit().putBoolean(DAILY_EVENING_TIP, true).apply();
+
+            Calendar whenToRepeat = getWhenToRepeat(Calendar.getInstance().get(Calendar.DAY_OF_WEEK), 20);
+            setTipReminder(whenToRepeat);
         }
     }
 
-    private void setOldTasksReminder() {
-        new ReminderManager(this).setOldTasksReminder();
+    private void createWeeklyOldTasksTip() {
+        if(!mainSharedPrefs.contains(WEEKLY_OLD_TASKS_TIP) || !mainSharedPrefs.getBoolean(WEEKLY_OLD_TASKS_TIP, false)) {
+            mainSharedPrefs.edit().putBoolean(WEEKLY_OLD_TASKS_TIP, true).apply();
+
+            Calendar whenToRepeat = getWhenToRepeat(Calendar.SUNDAY, 18);
+            setTipReminder(whenToRepeat);
+        }
+    }
+
+    private Calendar getWhenToRepeat(int dayOfWeek, int hour) {
+        Calendar whenToRepeat;
+
+        whenToRepeat = Calendar.getInstance();
+        whenToRepeat.set(Calendar.DAY_OF_WEEK, dayOfWeek);
+        whenToRepeat.set(Calendar.HOUR_OF_DAY, hour);
+        whenToRepeat.set(Calendar.MINUTE, 0);
+        whenToRepeat.set(Calendar.SECOND, 0);
+
+        return whenToRepeat;
+    }
+
+    private void setTipReminder(Calendar whenToRepeat) {
+        new ReminderManager(this).setOldTasksReminder(whenToRepeat);
     }
 }
