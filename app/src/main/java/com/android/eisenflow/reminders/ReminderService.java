@@ -13,9 +13,12 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.android.eisenflow.AddTaskDB;
+import com.android.eisenflow.DateTimeHelper;
 import com.android.eisenflow.LocalDataBaseHelper;
-import com.android.eisenflow.MainActivityDB;
 import com.android.eisenflow.R;
+
+import java.util.Calendar;
+import java.util.Random;
 
 /**
  * Created by Sve on 6/7/16.
@@ -25,6 +28,8 @@ public class ReminderService extends WakeReminderIntentService {
     private LocalDataBaseHelper dbHelper;
     private boolean isReminder;
     private String weekDay;
+    private int weekDayOfTip;
+    private DateTimeHelper dateTimeHelper;
 
     public ReminderService() {
         super("ReminderService");
@@ -33,14 +38,23 @@ public class ReminderService extends WakeReminderIntentService {
     @Override
     void doReminderWork(Intent intent) {
         Log.d("eisen", "ReminderService: Doing work.");
+        dateTimeHelper = new DateTimeHelper(this);
 
         Long rowId = intent.getExtras().getLong(LocalDataBaseHelper.KEY_ROW_ID);
         isReminder = intent.getBooleanExtra("isReminder", false);
         weekDay = intent.getStringExtra("weekDay");
+        weekDayOfTip = intent.getIntExtra("weekDayOfTip", -1);
 
         dbHelper = new LocalDataBaseHelper(this);
         dbHelper.open();
-        new StartFeedingNotificationAsyncTask(this, rowId).execute();
+
+        Log.v("eisen", "*** rowId = " + rowId);
+        if(rowId == -1) {
+            new StartCheckingForOldTasks().execute();
+        }
+        else {
+            new StartFeedingNotificationAsyncTask(this, rowId).execute();
+        }
 
     }
 
@@ -133,5 +147,59 @@ public class ReminderService extends WakeReminderIntentService {
 
     private Uri getNotificationSoundUri() {
         return Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.task_notification);
+    }
+
+    private class StartCheckingForOldTasks extends AsyncTask<Void, Void, Cursor> {
+        @Override
+        protected Cursor doInBackground(Void... voids) {
+            return dbHelper.fetchAllTasks();
+        }
+
+        @Override
+        protected void onPostExecute(Cursor cursor) {
+            Log.v("eisen", "---- OnPostExecute");
+            boolean isAnyOldTask = false;
+            if (cursor != null) {
+                while (cursor.moveToNext()) {
+                    Log.v("eisen", "Task : " + cursor.getString(cursor.getColumnIndex(LocalDataBaseHelper.KEY_TITLE)));
+                    String date = cursor.getString(cursor.getColumnIndex(LocalDataBaseHelper.KEY_DATE));
+                    String time = cursor.getString(cursor.getColumnIndex(LocalDataBaseHelper.KEY_TIME));
+                    Calendar calDate = dateTimeHelper.getCalendarDateWithTime(date, time);
+                    Calendar now = Calendar.getInstance();
+
+                    if(calDate.before(now)){
+                        isAnyOldTask = true;
+                    }
+                }
+
+                if(isAnyOldTask) {
+                    showWeeklyOldTaskNotification();
+                }
+            }
+        }
+    }
+
+    private void showWeeklyOldTaskNotification() {
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(ReminderService.this)
+                .setSmallIcon(R.mipmap.ic_stat_fish_icon)
+                .setContentTitle(getString(R.string.app_name))
+                .setContentText(getString(R.string.weekly_tip_notification))
+                .setSound(getNotificationSoundUri())
+                .setAutoCancel(true)
+                .setLights(Color.CYAN, 500, 500)
+                ;
+
+        if(Build.VERSION.SDK_INT >= NEEDED_API_LEVEL) {
+            NotificationCompat.WearableExtender wearableExtender = new NotificationCompat.WearableExtender();
+            notificationBuilder.extend(wearableExtender);
+        }
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.notify(generateRandomId(), notificationBuilder.build());
+    }
+
+    private int generateRandomId() {
+        Random r = new Random();
+        return r.nextInt(100 - 1) + 1;
     }
 }

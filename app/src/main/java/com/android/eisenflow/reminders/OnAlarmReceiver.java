@@ -24,6 +24,7 @@ public class OnAlarmReceiver extends BroadcastReceiver {
         long rowId = intent.getExtras().getLong(LocalDataBaseHelper.KEY_ROW_ID);
         boolean isReminder = intent.getBooleanExtra("isReminder", false);
         String weekDay = intent.getStringExtra("weekDay");
+        int weekDayOfTip = intent.getIntExtra("weekDayOfTip", -1);
 
         WakeReminderIntentService.acquireStaticLock(context);
 
@@ -31,6 +32,7 @@ public class OnAlarmReceiver extends BroadcastReceiver {
         intentReminderService.putExtra(LocalDataBaseHelper.KEY_ROW_ID, rowId);
         intentReminderService.putExtra("isReminder", isReminder);
         intentReminderService.putExtra("weekDay", weekDay);
+        intentReminderService.putExtra("weekDayOfTip", weekDayOfTip);
         context.startService(intentReminderService);
 
         LocalBroadcastManager.getInstance(context).unregisterReceiver(this);

@@ -78,5 +78,6 @@
     <!-- Notification -->
     <string name="notification_done">Done</string>
     <string name="notification_add_progress">Add Progress</string>
+    <string name="weekly_tip_notification">Hey, some task are waiting!</string>
 
 </resources>

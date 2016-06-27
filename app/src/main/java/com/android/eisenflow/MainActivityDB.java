@@ -25,6 +25,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,6 +36,7 @@ import com.android.eisenflow.decorators.EventDecorator;
 import com.android.eisenflow.decorators.HighlightWeekendsDecorator;
 import com.android.eisenflow.reminders.AddProgressReceiver;
 import com.android.eisenflow.reminders.ReminderDoneReceiver;
+import com.android.eisenflow.reminders.ReminderManager;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
@@ -56,6 +58,7 @@ public class MainActivityDB extends AppCompatActivity
     public static final int NEEDED_API_LEVEL = 22;
     public static final String MAIN_PREFS = "MainSharedPreferences";
     private static final String PRIORITY_PREFS_STR = "priority";
+    private static final String WEEKLY_OLD_TASKS_TIP = "WeeklyOldTasksTip";
     private static final int ACTIVITY_CREATE = 0;
     public static final int ACTIVITY_EDIT = 1;
     private static final String DATE_FORMAT = "EEE, MMM dd, yyyy";
@@ -97,6 +100,8 @@ public class MainActivityDB extends AppCompatActivity
         mainSharedPrefs = getSharedPreferences(MAIN_PREFS, Context.MODE_PRIVATE);
         eventDates = new ArrayList<>();
         eventsTaskList = new ArrayList<>();
+
+        createWeeklyOldTasksTip();
     }
 
     @Override
@@ -670,12 +675,27 @@ public class MainActivityDB extends AppCompatActivity
     }
 
 
-   private void setOnTouchSwipeListener () {
-       toolbar.setOnTouchListener(new SwipeDetector() {
-           @Override
-           public void onSwipeDown() {
-               slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.ANCHORED);
-           }
-       });
-   }
+    private void setOnTouchSwipeListener () {
+        toolbar.setOnTouchListener(new SwipeDetector() {
+            @Override
+            public void onSwipeDown() {
+                slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.ANCHORED);
+            }
+        });
+    }
+
+    private void createWeeklyOldTasksTip() {
+        if(!mainSharedPrefs.contains(WEEKLY_OLD_TASKS_TIP) || !mainSharedPrefs.getBoolean(WEEKLY_OLD_TASKS_TIP, false)) {
+            mainSharedPrefs.edit().putBoolean(WEEKLY_OLD_TASKS_TIP, true).apply();
+            setOldTasksReminder();
+            Log.v("eisen", "Old tasks notification");
+        }
+        else {
+            Log.v("eisen", "DONT Old tasks notification");
+        }
+    }
+
+    private void setOldTasksReminder() {
+        new ReminderManager(this).setOldTasksReminder();
+    }
 }
