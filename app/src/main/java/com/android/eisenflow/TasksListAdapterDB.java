@@ -311,11 +311,14 @@ public class TasksListAdapterDB extends RecyclerView.Adapter<TasksListHolder> {
     }
 
     private void setOldTaskTextColor(TasksListHolder holder, int position) {
-        Calendar calDate = Calendar.getInstance();
-        String dateStr = tasksList.get(position).getDate();
-        calDate.setTime(dateTimeHelper.getDate(dateStr));
+//        Calendar calDate = Calendar.getInstance();
+//        String dateStr = tasksList.get(position).getDate();
+//        calDate.setTime(dateTimeHelper.getDate(dateStr));
 
-        if(dateTimeHelper.isPastDate(calDate)) {
+        Calendar calDate = dateTimeHelper.getCalendarDateWithTime(tasksList.get(position).getDate(), tasksList.get(position).getTime());
+
+
+        if(dateTimeHelper.isPastDate(calDate) && tasksList.get(position).getIsDone() == 0) {
             holder.task_time_txt.setTextColor(context.getResources().getColor(R.color.firstQuadrant));
             holder.task_time_txt.setTypeface(null, Typeface.BOLD);
         }
