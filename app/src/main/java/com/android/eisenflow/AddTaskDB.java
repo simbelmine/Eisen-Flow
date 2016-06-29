@@ -1017,8 +1017,11 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
         String date = dateTxt.getText().toString();
         String time = timeTxt.getText().toString();
 
-        Calendar cal = dateTimeHelper.getCalendarDateWithTime(date, time);
-        int dateMillis = (int)cal.getTimeInMillis();
+        Calendar cal = dateTimeHelper.getCalendar(date, time);
+        String str = dateTimeHelper.getDateString(cal);
+        Date d = dateTimeHelper.getDate(str);
+        int dateMillis = (int)d.getTime();
+
         String title = taskName.getText().toString();
 
         int radioChoiceId = getCheckedRadioId();

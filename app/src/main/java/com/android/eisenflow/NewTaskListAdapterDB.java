@@ -25,9 +25,11 @@ import com.android.eisenflow.reminders.OnAlarmReceiver;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 /**
  * Created by Sve on 6/28/16.
@@ -101,9 +103,8 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
         holder.text.setText(taskRow.getTitle());
         holder.task_time_txt.setText(taskRow.getDate());
 
-        Calendar cal = Calendar.getInstance();
-        cal.setTimeInMillis(taskRow.getDateMillis());
 
+        Calendar cal = dateTimeHelper.getCalendar(taskRow.getDate(), taskRow.getTime());
         holder.cal_day_of_month.setText(String.valueOf(cal.get(Calendar.DAY_OF_MONTH)));
         holder.cal_day_of_week.setText(cal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault()));
 
