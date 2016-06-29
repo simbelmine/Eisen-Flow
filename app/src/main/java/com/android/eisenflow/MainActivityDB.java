@@ -87,7 +87,7 @@ public class MainActivityDB extends AppCompatActivity
     private DateTimeHelper dateTimeHelper;
     private LocalDataBaseHelper dbHelper;
     private ArrayList<Task> tasks;
-    private TasksListAdapterDB adapterDB;
+    private NewTaskListAdapterDB adapterDB;
     private boolean justRefreshDecorators = false;
 
     @Override
@@ -264,7 +264,7 @@ public class MainActivityDB extends AppCompatActivity
 
     private void initTasksAdapter() {
         if(adapterDB == null) {
-            adapterDB = new TasksListAdapterDB(this, getApplicationContext(), dbHelper);
+            adapterDB = new NewTaskListAdapterDB(this, getApplicationContext(), dbHelper);
         }
     }
 
@@ -378,8 +378,8 @@ public class MainActivityDB extends AppCompatActivity
         }
 
         if(currentPriorityList != null) {
-            if(currentPriorityList.size() == 0) noTasksTipLayout.setVisibility(View.VISIBLE);
-            else noTasksTipLayout.setVisibility(View.GONE);
+//            if(currentPriorityList.size() == 0) noTasksTipLayout.setVisibility(View.VISIBLE);
+//            else noTasksTipLayout.setVisibility(View.GONE);
 
             adapterDB.setList(currentPriorityList);
 
@@ -388,7 +388,7 @@ public class MainActivityDB extends AppCompatActivity
             adapterDB.notifyDataSetChanged();
         }
         else {
-            noTasksTipLayout.setVisibility(View.VISIBLE);
+//            noTasksTipLayout.setVisibility(View.VISIBLE);
         }
     }
 
@@ -398,31 +398,31 @@ public class MainActivityDB extends AppCompatActivity
     }
 
     private void setPriorityTipTxt(int priority) {
-        switch (priority) {
-            case -1:
-                priorityTipTxt.setVisibility(View.GONE);
-                break;
-            case 0:
-                priorityTipTxt.setVisibility(View.VISIBLE);
-                priorityTipTxt.setText(getResources().getText(R.string.priority_tip_0));
-                priorityTipTxt.setBackgroundColor(getResources().getColor(R.color.firstQuadrant));
-                break;
-            case 1:
-                priorityTipTxt.setVisibility(View.VISIBLE);
-                priorityTipTxt.setText(getResources().getText(R.string.priority_tip_1));
-                priorityTipTxt.setBackgroundColor(getResources().getColor(R.color.secondQuadrant));
-                break;
-            case 2:
-                priorityTipTxt.setVisibility(View.VISIBLE);
-                priorityTipTxt.setText(getResources().getText(R.string.priority_tip_2));
-                priorityTipTxt.setBackgroundColor(getResources().getColor(R.color.thirdQuadrant));
-                break;
-            case 3:
-                priorityTipTxt.setVisibility(View.VISIBLE);
-                priorityTipTxt.setText(getResources().getText(R.string.priority_tip_3));
-                priorityTipTxt.setBackgroundColor(getResources().getColor(R.color.fourthQuadrant));
-                break;
-        }
+//        switch (priority) {
+//            case -1:
+//                priorityTipTxt.setVisibility(View.GONE);
+//                break;
+//            case 0:
+//                priorityTipTxt.setVisibility(View.VISIBLE);
+//                priorityTipTxt.setText(getResources().getText(R.string.priority_tip_0));
+//                priorityTipTxt.setBackgroundColor(getResources().getColor(R.color.firstQuadrant));
+//                break;
+//            case 1:
+//                priorityTipTxt.setVisibility(View.VISIBLE);
+//                priorityTipTxt.setText(getResources().getText(R.string.priority_tip_1));
+//                priorityTipTxt.setBackgroundColor(getResources().getColor(R.color.secondQuadrant));
+//                break;
+//            case 2:
+//                priorityTipTxt.setVisibility(View.VISIBLE);
+//                priorityTipTxt.setText(getResources().getText(R.string.priority_tip_2));
+//                priorityTipTxt.setBackgroundColor(getResources().getColor(R.color.thirdQuadrant));
+//                break;
+//            case 3:
+//                priorityTipTxt.setVisibility(View.VISIBLE);
+//                priorityTipTxt.setText(getResources().getText(R.string.priority_tip_3));
+//                priorityTipTxt.setBackgroundColor(getResources().getColor(R.color.fourthQuadrant));
+//                break;
+//        }
     }
 
 //    private Date getDate(String dateStr) {

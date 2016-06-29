@@ -40,6 +40,8 @@ public class TasksListHolder extends RecyclerView.ViewHolder
     public TextView task_p1_progress;
     public LinearLayout share_icon;
 
+    public RelativeLayout delete_done_layout;
+
     public TasksListHolder(Context context, View itemView) {
         super(itemView);
 
@@ -48,29 +50,26 @@ public class TasksListHolder extends RecyclerView.ViewHolder
         text = (TextView) itemView.findViewById(R.id.list_text);
 
         mainLayout = (LinearLayout) cardView.findViewById(R.id.task_card_mainview);
-        priority_0_layout = (RelativeLayout) cardView.findViewById(R.id.task_card_priority_0);
-        priority_1_layout = (RelativeLayout) cardView.findViewById(R.id.task_card_priority_1);
-        priority_2_layout = (RelativeLayout) cardView.findViewById(R.id.task_card_priority_2);
-        priority_3_layout = (RelativeLayout) cardView.findViewById(R.id.task_card_priority_3);
+        delete_done_layout = (RelativeLayout) cardView.findViewById(R.id.delete_done_layout);
 
-        timerIconLayout = (LinearLayout) cardView.findViewById(R.id.timer_list_icon);
-        calendarPlusIconLayout = (LinearLayout) cardView.findViewById(R.id.calendar_plus_list_icon);
-        editIconLayout_0 = (LinearLayout) cardView.findViewById(R.id.edit_list_icon_0);
-        deleteIconLayout_0 = (LinearLayout) cardView.findViewById(R.id.delete_list_icon_0);
-        editIconLayout_1 = (LinearLayout) cardView.findViewById(R.id.edit_list_icon_1);
-        deleteIconLayout_1 = (LinearLayout) cardView.findViewById(R.id.delete_list_icon_1);
-        editIconLayout_2 = (LinearLayout) cardView.findViewById(R.id.edit_list_icon_2);
-        deleteIconLayout_2 = (LinearLayout) cardView.findViewById(R.id.delete_list_icon_2);
-        editIconLayout_3 = (LinearLayout) cardView.findViewById(R.id.edit_list_icon_3);
-        deleteIconLayout_3 = (LinearLayout) cardView.findViewById(R.id.delete_list_icon_3);
-
-        priorityColor = (ImageView) cardView.findViewById(R.id.list_img);
-
-        task_check = (CheckBox) cardView.findViewById(R.id.task_check);
-        task_done_line = (ImageView) cardView.findViewById(R.id.done_divider);
+//        timerIconLayout = (LinearLayout) cardView.findViewById(R.id.timer_list_icon);
+//        calendarPlusIconLayout = (LinearLayout) cardView.findViewById(R.id.calendar_plus_list_icon);
+//        editIconLayout_0 = (LinearLayout) cardView.findViewById(R.id.edit_list_icon_0);
+//        deleteIconLayout_0 = (LinearLayout) cardView.findViewById(R.id.delete_list_icon_0);
+//        editIconLayout_1 = (LinearLayout) cardView.findViewById(R.id.edit_list_icon_1);
+//        deleteIconLayout_1 = (LinearLayout) cardView.findViewById(R.id.delete_list_icon_1);
+//        editIconLayout_2 = (LinearLayout) cardView.findViewById(R.id.edit_list_icon_2);
+//        deleteIconLayout_2 = (LinearLayout) cardView.findViewById(R.id.delete_list_icon_2);
+//        editIconLayout_3 = (LinearLayout) cardView.findViewById(R.id.edit_list_icon_3);
+//        deleteIconLayout_3 = (LinearLayout) cardView.findViewById(R.id.delete_list_icon_3);
+//
+//        priorityColor = (ImageView) cardView.findViewById(R.id.list_img);
+//
+//        task_check = (CheckBox) cardView.findViewById(R.id.task_check);
+//        task_done_line = (ImageView) cardView.findViewById(R.id.done_divider);
         task_time_txt = (TextView) cardView.findViewById(R.id.task_time_txt);
-        task_p1_progress = (TextView) cardView.findViewById(R.id.task_p1_percentage);
-
-        share_icon = (LinearLayout) cardView.findViewById(R.id.share_icon);
+//        task_p1_progress = (TextView) cardView.findViewById(R.id.task_p1_percentage);
+//
+//        share_icon = (LinearLayout) cardView.findViewById(R.id.share_icon);
     }
 }

@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.Toast;
+
 import com.android.eisenflow.oldClasses.MainActivity;
 import com.android.eisenflow.reminders.OnAlarmReceiver;
 
@@ -28,9 +29,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by Sve on 6/8/16.
+ * Created by Sve on 6/28/16.
  */
-public class TasksListAdapterDB extends RecyclerView.Adapter<TasksListHolder> {
+
+public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> {
     public static final String ACTION_DELETE = "deleteTaskAction";
     private static final String PROGRESS_TIP = "isProgressTipShown";
     private Context context;
@@ -42,7 +44,7 @@ public class TasksListAdapterDB extends RecyclerView.Adapter<TasksListHolder> {
     private LocalDataBaseHelper dbHelper;
     private DateTimeHelper dateTimeHelper;
 
-    public TasksListAdapterDB(Activity activity, Context context, LocalDataBaseHelper dbHelper) {
+    public NewTaskListAdapterDB(Activity activity, Context context, LocalDataBaseHelper dbHelper) {
         this.activity = activity;
         this.context = context;
         this.dbHelper = dbHelper;
@@ -72,7 +74,7 @@ public class TasksListAdapterDB extends RecyclerView.Adapter<TasksListHolder> {
 
     @Override
     public TasksListHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.task_list_card, parent, false);
+        View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.new_card_list, parent, false);
         TasksListHolder eisenHolder = new TasksListHolder(context, layoutView);
 
         return eisenHolder;
@@ -83,28 +85,29 @@ public class TasksListAdapterDB extends RecyclerView.Adapter<TasksListHolder> {
         Task taskRow = tasksList.get(position);
 
         setValueToField(holder, taskRow);
-        setTagToField(holder, position);
-        setOnClickListeners(holder, taskRow, position);
-        setOnCheckedClickedListeners(holder);
+//        setTagToField(holder, position);
+//        setOnClickListeners(holder, taskRow, position);
+//        setOnCheckedClickedListeners(holder);
+        holder.cardView.setOnTouchListener(new RecyclerItemSwipeDetector(holder, recyclerView));
 
         setTaskPriority(holder, taskRow.getPriority(), position);
-        crossTaskIfDone(holder, position);
-        setOldTaskTextColor(holder, position);
+//        crossTaskIfDone(holder, position);
+//        setOldTaskTextColor(holder, position);
     }
 
     private void setValueToField(TasksListHolder holder, Task taskRow) {
 
         holder.text.setText(taskRow.getTitle());
-        holder.text.setTextColor(context.getResources().getColor(R.color.gray));
+//        holder.text.setTextColor(context.getResources().getColor(R.color.gray));
         holder.task_time_txt.setText(taskRow.getDate());
-        holder.task_time_txt.setTextColor(context.getResources().getColor(R.color.gray_light));
-        if(taskRow.getPriority() == 1) {
-            holder.task_p1_progress.setVisibility(View.VISIBLE);
-            holder.task_p1_progress.setText(setProgressValue(taskRow.calculateProgress(context)));
-        }
-        else {
-            holder.task_p1_progress.setVisibility(View.INVISIBLE);
-        }
+//        holder.task_time_txt.setTextColor(context.getResources().getColor(R.color.gray_light));
+//        if(taskRow.getPriority() == 1) {
+//            holder.task_p1_progress.setVisibility(View.VISIBLE);
+//            holder.task_p1_progress.setText(setProgressValue(taskRow.calculateProgress(context)));
+//        }
+//        else {
+//            holder.task_p1_progress.setVisibility(View.INVISIBLE);
+//        }
     }
 
     private String setProgressValue(int progress) {
@@ -281,20 +284,16 @@ public class TasksListAdapterDB extends RecyclerView.Adapter<TasksListHolder> {
     private void setTaskPriority(TasksListHolder holder, int priority, int position) {
         switch (priority) {
             case 0:
-                holder.priorityColor.setBackgroundColor(context.getResources().getColor(R.color.firstQuadrant));
-//                holder.cardView.setOnTouchListener(new RecyclerItemSwipeDetector(holder, recyclerView, 0, position));
+                holder.mainLayout.setBackgroundColor(context.getResources().getColor(R.color.firstQuadrant));
                 break;
             case 1:
-                holder.priorityColor.setBackgroundColor(context.getResources().getColor(R.color.secondQuadrant));
-//                holder.cardView.setOnTouchListener(new RecyclerItemSwipeDetector(holder, recyclerView, 1, position));
+                holder.mainLayout.setBackgroundColor(context.getResources().getColor(R.color.secondQuadrant));
                 break;
             case 2:
-                holder.priorityColor.setBackgroundColor(context.getResources().getColor(R.color.thirdQuadrant));
-//                holder.cardView.setOnTouchListener(new RecyclerItemSwipeDetector(holder, recyclerView, 2, position));
+                holder.mainLayout.setBackgroundColor(context.getResources().getColor(R.color.thirdQuadrant));
                 break;
             case 3:
-                holder.priorityColor.setBackgroundColor(context.getResources().getColor(R.color.fourthQuadrant));
-//                holder.cardView.setOnTouchListener(new RecyclerItemSwipeDetector(holder, recyclerView, 3, position));
+                holder.mainLayout.setBackgroundColor(context.getResources().getColor(R.color.fourthQuadrant));
                 break;
         }
     }
