@@ -72,7 +72,7 @@
                 />
         </RelativeLayout>
 
-        <!-- **************  DELETED - UNDO  ******************** -->
+        <!-- **************  UNDO - UNDO  ******************** -->
         <RelativeLayout
             android:id="@+id/deleted_undo_layout"
             android:layout_width="match_parent"
@@ -83,10 +83,21 @@
             >
             <TextView
                 android:id="@+id/undo_btn"
-                android:layout_width="match_parent"
-                android:layout_height="23dp"
-                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
                 android:layout_marginLeft="10dp"
+                android:text="undo"
+                android:textAllCaps="true"
+                android:textColor="@color/firstQuadrant"
+                />
+            <TextView
+                android:id="@+id/action_undo_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="10dp"
                 android:text="undo"
                 android:textAllCaps="true"
                 android:textColor="@color/firstQuadrant"

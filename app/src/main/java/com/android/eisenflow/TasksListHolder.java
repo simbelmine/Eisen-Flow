@@ -40,12 +40,13 @@ public class TasksListHolder extends RecyclerView.ViewHolder
     public TextView task_p1_progress;
     public LinearLayout share_icon;
 
-    public RelativeLayout delete_done_layout;
-    public RelativeLayout deleted_undo_layout;
+    public RelativeLayout delete_action_layout;
+    public RelativeLayout undo_layout;
     public TextView cal_day_of_month;
     public TextView cal_day_of_week;
     public TextView undo_btn;
     public ImageView card_right_action;
+    public TextView action_undo_btn;
 
     public TasksListHolder(Context context, View itemView) {
         super(itemView);
@@ -58,14 +59,15 @@ public class TasksListHolder extends RecyclerView.ViewHolder
         task_time_txt = (TextView) itemView.findViewById(R.id.task_time_txt);
 
         mainLayout = (LinearLayout) itemView.findViewById(R.id.task_card_mainview);
-        delete_done_layout = (RelativeLayout) itemView.findViewById(R.id.delete_done_layout);
-        deleted_undo_layout = (RelativeLayout) itemView.findViewById(R.id.deleted_undo_layout);
+        delete_action_layout = (RelativeLayout) itemView.findViewById(R.id.delete_done_layout);
+        undo_layout = (RelativeLayout) itemView.findViewById(R.id.deleted_undo_layout);
 
         cal_day_of_month = (TextView) itemView.findViewById(R.id.card_day_of_month);
         cal_day_of_week = (TextView) itemView.findViewById(R.id.card_day_of_week);
         undo_btn = (TextView) itemView.findViewById(R.id.undo_btn);
         task_p1_progress = (TextView) itemView.findViewById(R.id.task_p1_percentage);
         card_right_action = (ImageView) itemView.findViewById(R.id.card_right_action);
+        action_undo_btn = (TextView) itemView.findViewById(R.id.action_undo_btn);
 
 //        timerIconLayout = (LinearLayout) cardView.findViewById(R.id.timer_list_icon);
 //        calendarPlusIconLayout = (LinearLayout) cardView.findViewById(R.id.calendar_plus_list_icon);

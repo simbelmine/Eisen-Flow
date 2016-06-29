@@ -127,6 +127,8 @@ public class MainActivityDB extends AppCompatActivity
         super.onPause();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(onTaskDeleted);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(onTaskDone);
+
+        if(adapterDB != null) adapterDB.unregisterAdapterBroadcastReceivers();
     }
 
     private BroadcastReceiver onTaskDeleted = new BroadcastReceiver() {
@@ -269,6 +271,7 @@ public class MainActivityDB extends AppCompatActivity
         if(adapterDB == null) {
             adapterDB = new NewTaskListAdapterDB(this, getApplicationContext(), dbHelper);
         }
+        adapterDB.registerBroadcastReceivers();
     }
 
     private void startListFeedingTask() {
@@ -498,6 +501,7 @@ public class MainActivityDB extends AppCompatActivity
         if(tasksList != null) {
             tasksList.clear();
             adapterDB.notifyDataSetChanged();
+            if(adapterDB != null) adapterDB.registerBroadcastReceivers();
         }
 
         startListFeedingTask();

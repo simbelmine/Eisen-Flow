@@ -147,12 +147,14 @@ public class Task {
     public int calculateProgress(Context context) {
         int progress = getProgress();
         long totalDays = getTotalDays(context);
-        int monthlyPercentage = (int) Math.round((100/(double)totalDays));
+//        int monthlyPercentage = (int) Math.round((100/(double)totalDays));
+        double monthlyPercentage = 100/(double)totalDays;
 
 //        progress++;
 //        setProgress(progress);
 
-        int progressToReturn = monthlyPercentage * progress;
+//        int progressToReturn = monthlyPercentage * progress;
+        int progressToReturn = (int) (Math.round(progress * monthlyPercentage));
 
         if(progress == totalDays || progressToReturn > 100) progressToReturn = 100;
 

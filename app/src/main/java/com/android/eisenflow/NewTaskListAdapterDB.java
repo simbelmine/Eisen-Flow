@@ -3,9 +3,11 @@ package com.android.eisenflow;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Build;
@@ -45,6 +47,7 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
     private LocalDataBaseHelper dbHelper;
     private DateTimeHelper dateTimeHelper;
     private String lastSeenDate;
+    private View layoutView;
 
     public NewTaskListAdapterDB(Activity activity, Context context, LocalDataBaseHelper dbHelper) {
         this.activity = activity;
@@ -76,7 +79,7 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
 
     @Override
     public TasksListHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.new_card_list, parent, false);
+        layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.new_card_list, parent, false);
         TasksListHolder eisenHolder = new TasksListHolder(context, layoutView);
 
         return eisenHolder;
@@ -89,8 +92,6 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
 
         setValueToField(holder, taskRow);
         setPriorityActionIcon(holder, priority);
-
-
 
 //        setTagToField(holder, position);
 //        setOnClickListeners(holder, taskRow, position);
@@ -121,9 +122,18 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
 
 //        holder.text.setTextColor(context.getResources().getColor(R.color.gray));
 //        holder.task_time_txt.setTextColor(context.getResources().getColor(R.color.gray_light));
+
         if(taskRow.getPriority() == 1) {
             holder.task_p1_progress.setVisibility(View.VISIBLE);
-            holder.task_p1_progress.setText(setProgressValue(taskRow.calculateProgress(context)));
+
+            int currProgress = taskRow.calculateProgress(context);
+//            Log.v("eisen", " Progresssss ===> " + currProgress);
+            if(currProgress >= 100) {
+                holder.task_p1_progress.setText(setProgressValue(100));
+            }
+            else {
+                holder.task_p1_progress.setText(setProgressValue(currProgress));
+            }
         }
         else {
             holder.task_p1_progress.setVisibility(View.INVISIBLE);
@@ -134,12 +144,15 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
         switch (priority) {
             case 0:
                 holder.card_right_action.setImageDrawable(context.getResources().getDrawable(R.drawable.timer));
+                holder.card_right_action.setTag(priority);
                 break;
             case 1:
                 holder.card_right_action.setImageDrawable(context.getResources().getDrawable(R.drawable.calendar_plus));
+                holder.card_right_action.setTag(priority);
                 break;
             case 2:
                 holder.card_right_action.setImageDrawable(context.getResources().getDrawable(R.drawable.share));
+                holder.card_right_action.setTag(priority);
                 break;
         }
     }
@@ -516,5 +529,90 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
         catch (Exception ex) {
             Log.e("eisen", "Exception canceling weekly remidners : " + ex.getMessage());
         }
+    }
+
+
+    public void registerBroadcastReceivers() {
+        IntentFilter timerIF= new IntentFilter(RecyclerItemSwipeDetector.TIMER_ACTION);
+        LocalBroadcastManager.getInstance(context).registerReceiver(onTimerTriggered, timerIF);
+
+        IntentFilter progressUpIF= new IntentFilter(RecyclerItemSwipeDetector.PROGRESS_UP_ACTION);
+        LocalBroadcastManager.getInstance(context).registerReceiver(onProgressUpTriggered, progressUpIF);
+
+        IntentFilter shareIF= new IntentFilter(RecyclerItemSwipeDetector.SHARE_ACTION);
+        LocalBroadcastManager.getInstance(context).registerReceiver(onShareTriggered, shareIF);
+    }
+
+    private BroadcastReceiver onTimerTriggered = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+//            startActivity(TimerActivity.class, flags, null, null);
+
+        }
+    };
+    private BroadcastReceiver onProgressUpTriggered = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            int position = intent.getIntExtra("position", -1);
+            int taskId = intent.getIntExtra(LocalDataBaseHelper.KEY_ROW_ID, -1);
+            View view = getParentView();
+
+            if(taskId != -1) {
+                Task task = getTaskById(taskId);
+                if (task != null) {
+                    int currProgress = task.getProgress();
+                    currProgress++;
+                    task.setProgress(currProgress);
+                    int taskCurrentProgress = task.calculateProgress(context);
+
+                    if (taskCurrentProgress >= 100) {
+                        if(view != null) showTipMessagePercentage(view);
+                        if(position!= -1) notifyItemChanged(position);
+                    }
+                    else {
+                        if (dbHelper.updateTaskIntColumn(taskId, LocalDataBaseHelper.KEY_PROGRESS, currProgress)) {
+                            if(view != null) showMessageAddedPercent(view);
+                            if(position!= -1) notifyItemChanged(position);
+                        } else {
+                            Log.v("eisen", "Column Update UNsuccessful!");
+                        }
+                    }
+                }
+            }
+        }
+    };
+
+    private BroadcastReceiver onShareTriggered = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+
+        }
+    };
+
+    private Task getTaskById(int taskId) {
+        for(Task t : tasksList) {
+            if (t.getId() == taskId) {
+                return t;
+            }
+        }
+
+        return null;
+    }
+
+    public void unregisterAdapterBroadcastReceivers() {
+        LocalBroadcastManager.getInstance(context).unregisterReceiver(onTimerTriggered);
+        LocalBroadcastManager.getInstance(context).unregisterReceiver(onProgressUpTriggered);
+        LocalBroadcastManager.getInstance(context).unregisterReceiver(onShareTriggered);
+    }
+
+    private View getParentView() {
+        if(layoutView != null) {
+           if(layoutView.getParent() != null) {
+               return (View) (layoutView.getParent()).getParent();
+           }
+        }
+
+        return null;
     }
 }
