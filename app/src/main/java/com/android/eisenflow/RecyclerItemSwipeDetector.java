@@ -18,6 +18,7 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
     private static final int MIN_LOCK_DISTANCE = 300; // disallow motion intercept
     private static final int MIN_DISTANCE = 300;
     private static final int DISMISS_DELAY = 3000;
+    private static final int ACTION_DELAY = 1500;
     public static final String TIMER_ACTION = "StartTimer";
     public static final String PROGRESS_UP_ACTION = "IncreaseProgress";
     public static final String SHARE_ACTION = "ShareTask";
@@ -217,7 +218,7 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
                         holder.delete_action_layout.setVisibility(View.VISIBLE);
                     }
                 }
-            }, DISMISS_DELAY);
+            }, ACTION_DELAY);
         }
     }
 
