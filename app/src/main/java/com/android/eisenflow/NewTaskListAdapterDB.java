@@ -546,8 +546,8 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
     private BroadcastReceiver onTimerTriggered = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-//            startActivity(TimerActivity.class, flags, null, null);
-
+            int[] flags = new int[] {Intent.FLAG_ACTIVITY_NEW_TASK};
+            startActivity(TimerActivity.class, flags, null, null);
         }
     };
     private BroadcastReceiver onProgressUpTriggered = new BroadcastReceiver() {
