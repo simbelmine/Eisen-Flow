@@ -20,6 +20,7 @@ public class LocalDataBaseHelper {
     public static final String KEY_PRIORITY = "priority";
     public static final String KEY_TITLE = "title";
     public static final String KEY_DATE = "date";
+    public static final String KEY_DATE_MILLIS = "calDate";
     public static final String KEY_TIME = "time";
     public static final String KEY_REMINDER_OCCURRENCE = "reminderOccurrence";
     public static final String KEY_REMINDER_WHEN = "reminderWhen";
@@ -43,6 +44,7 @@ public class LocalDataBaseHelper {
                     + KEY_TITLE + " text not null, "
                     + KEY_DATE + " text not null, "
                     + KEY_TIME + " text not null, "
+                    + KEY_DATE_MILLIS + " integer, "
                     + KEY_REMINDER_OCCURRENCE + " text not null, "
                     + KEY_REMINDER_WHEN + " text not null, "
                     + KEY_REMINDER_DATE + " text not null, "
@@ -52,6 +54,8 @@ public class LocalDataBaseHelper {
                     + KEY_DONE + " integer default 0);"
 
             ;
+
+    private static final String ORDER_BY =  KEY_DATE_MILLIS + " ASC";
 
     private final Context context;
 
@@ -128,7 +132,7 @@ public class LocalDataBaseHelper {
      * @param progress if the task is Green priority; progress of the task
      * @return rowId or -1 if failed
      */
-    public long createTask(int priority, String title, String taskDate, String taskTime,
+    public long createTask(int priority, String title, String taskDate, String taskTime, int taskDateMillis,
                            String taskReminderOccurrence, String taskReminderWhen, String taskReminderDate, String taskReminderTime,
                            String note, int progress) {
 //        Log.d(TAG, "---Creating Task.");
@@ -138,6 +142,7 @@ public class LocalDataBaseHelper {
         initialValues.put(KEY_TITLE, title);
         initialValues.put(KEY_DATE, taskDate);
         initialValues.put(KEY_TIME, taskTime);
+        initialValues.put(KEY_DATE_MILLIS, taskDateMillis);
         initialValues.put(KEY_REMINDER_OCCURRENCE, taskReminderOccurrence);
         initialValues.put(KEY_REMINDER_WHEN, taskReminderWhen);
         initialValues.put(KEY_REMINDER_DATE, taskReminderDate);
@@ -169,8 +174,8 @@ public class LocalDataBaseHelper {
 //        Log.v("eisen", "---Fetchibg All");
 
         return eisenDb.query(DATABASE_TABLE, new String[] {KEY_ROW_ID, KEY_PRIORITY, KEY_TITLE,
-                KEY_DATE, KEY_TIME, KEY_REMINDER_OCCURRENCE, KEY_REMINDER_WHEN, KEY_REMINDER_DATE, KEY_REMINDER_TIME,
-                KEY_NOTE, KEY_PROGRESS, KEY_DONE}, null, null, null, null, null);
+                KEY_DATE, KEY_TIME, KEY_DATE_MILLIS, KEY_REMINDER_OCCURRENCE, KEY_REMINDER_WHEN, KEY_REMINDER_DATE, KEY_REMINDER_TIME,
+                KEY_NOTE, KEY_PROGRESS, KEY_DONE}, null, null, null, null, ORDER_BY);
     }
 
     /**
@@ -183,7 +188,7 @@ public class LocalDataBaseHelper {
     public Cursor fetchTask(long rowId) throws SQLException {
         Cursor mCursor =
                 eisenDb.query(true, DATABASE_TABLE, new String[] {KEY_ROW_ID,
-                                KEY_PRIORITY, KEY_TITLE, KEY_DATE, KEY_TIME, KEY_REMINDER_OCCURRENCE, KEY_REMINDER_WHEN,
+                                KEY_PRIORITY, KEY_TITLE, KEY_DATE, KEY_TIME, KEY_DATE_MILLIS, KEY_REMINDER_OCCURRENCE, KEY_REMINDER_WHEN,
                         KEY_REMINDER_DATE, KEY_REMINDER_TIME, KEY_NOTE, KEY_PROGRESS, KEY_DONE},
                         KEY_ROW_ID + "=" + rowId, null,
                         null, null, null, null);
@@ -210,7 +215,7 @@ public class LocalDataBaseHelper {
      * @param progress if the task is Green priority; progress of the task
      * @return true if the reminder was successfully updated, false otherwise
      */
-    public boolean updateTask(long rowId, int priority, String title, String taskDate, String taskTime,
+    public boolean updateTask(long rowId, int priority, String title, String taskDate, String taskTime, int taskDateMillis,
                               String taskReminderOccurrence, String taskReminderWhen, String taskReminderDate, String taskReminderTime,
                               String note, int progress, int isDone) {
         ContentValues args = new ContentValues();
@@ -218,6 +223,7 @@ public class LocalDataBaseHelper {
         args.put(KEY_TITLE, title);
         args.put(KEY_DATE, taskDate);
         args.put(KEY_TIME, taskTime);
+        args.put(KEY_DATE_MILLIS, taskDateMillis);
         args.put(KEY_REMINDER_OCCURRENCE, taskReminderOccurrence);
         args.put(KEY_REMINDER_WHEN, taskReminderWhen);
         args.put(KEY_REMINDER_DATE, taskReminderDate);

@@ -1016,6 +1016,9 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
         // Priority, Title, Date, Time, Reminder, Note, Progress
         String date = dateTxt.getText().toString();
         String time = timeTxt.getText().toString();
+
+        Calendar cal = dateTimeHelper.getCalendarDateWithTime(date, time);
+        int dateMillis = (int)cal.getTimeInMillis();
         String title = taskName.getText().toString();
 
         int radioChoiceId = getCheckedRadioId();
@@ -1028,7 +1031,7 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
         String note = noteTxt.getText().toString();
 
         if(rowId == null) {
-            long id = dbHelper.createTask(priorityInt, title, date, time,
+            long id = dbHelper.createTask(priorityInt, title, date, time, dateMillis,
                     reminderOccurrence, reminderWhen, reminderDate, reminderTime, note, progress);
 
             if (id > 0) {
@@ -1040,7 +1043,7 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
             }
         }
         else {
-            if (dbHelper.updateTask(rowId, priorityInt, title, date, time,
+            if (dbHelper.updateTask(rowId, priorityInt, title, date, time, dateMillis,
                     reminderOccurrence, reminderWhen, reminderDate, reminderTime, note, progress, isDone)) {
                 closeActivityWithResult(Activity.RESULT_OK);
             }

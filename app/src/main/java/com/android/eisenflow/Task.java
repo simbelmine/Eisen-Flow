@@ -15,6 +15,7 @@ public class Task {
     String title;
     String date;
     String time;
+    int dateMillis;
     String reminderOccurrence;
     String reminderWhen;
     String reminderDate;
@@ -61,6 +62,14 @@ public class Task {
 
     public void setTime(String time) {
         this.time = time;
+    }
+
+    public int getDateMillis() {
+        return dateMillis;
+    }
+
+    public void setDateMillis(int dateMillis) {
+        this.dateMillis = dateMillis;
     }
 
     public String getReminderOccurrence() {
@@ -125,6 +134,7 @@ public class Task {
         setTitle(cursor.getString(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_TITLE)));
         setDate(cursor.getString(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_DATE)));
         setTime(cursor.getString(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_TIME)));
+        setDateMillis(cursor.getInt(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_DATE_MILLIS)));
         setReminderOccurrence(cursor.getString(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_REMINDER_OCCURRENCE)));
         setReminderWhen(cursor.getString(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_REMINDER_WHEN)));
         setReminderDate(cursor.getString(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_REMINDER_DATE)));

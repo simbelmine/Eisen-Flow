@@ -580,7 +580,7 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
 //        else {
             if(!isRedTask()) {
 //                saveTaskToDB();
-                saveState();
+//                saveState();
             }
             else {
                 if(isScheduledTooInAdvance()) {
@@ -1280,45 +1280,45 @@ public class AddTask extends AppCompatActivity implements View.OnClickListener,
         return true;
     }
 
-    private void saveState() {
-        // Priority, Title, Date, Time, Reminder, Note, Progress
-        String date = dateTxt.getText().toString();
-        String time = timeTxt.getText().toString();
-        String title = taskName.getText().toString();
-
-        int radioChoiceId = getCheckedRadioId();
-        String reminderOccurrence = getCheckedRadioLbl(radioChoiceId);
-        String reminderWhen = getReminderWhen(radioChoiceId);
-        String reminderDate = getReminderDate(radioChoiceId);
-        String reminderTime = getReminderTime();
-
-
-        String note = noteTxt.getText().toString();
-
-        if(rowId == null) {
-            long id = dbHelper.createTask(priorityInt, title, date, time,
-                    reminderOccurrence, reminderWhen, reminderDate, reminderTime, note, progress);
-
-            if (id > 0) {
-                rowId = id;
-                closeActivityWithResult(Activity.RESULT_OK);
-            }
-            else {
-                closeActivityWithResult(Activity.RESULT_CANCELED);
-            }
-        }
-        else {
-            if (dbHelper.updateTask(rowId, priorityInt, title, date, time,
-                    reminderOccurrence, reminderWhen, reminderDate, reminderTime, note, progress, 0)) {
-                closeActivityWithResult(Activity.RESULT_OK);
-            }
-            else {
-                closeActivityWithResult(Activity.RESULT_CANCELED);
-            }
-        }
-
-        //new ReminderManager(this).setReminder(rowId, getCalendar(date , time));
-    }
+//    private void saveState() {
+//        // Priority, Title, Date, Time, Reminder, Note, Progress
+//        String date = dateTxt.getText().toString();
+//        String time = timeTxt.getText().toString();
+//        String title = taskName.getText().toString();
+//
+//        int radioChoiceId = getCheckedRadioId();
+//        String reminderOccurrence = getCheckedRadioLbl(radioChoiceId);
+//        String reminderWhen = getReminderWhen(radioChoiceId);
+//        String reminderDate = getReminderDate(radioChoiceId);
+//        String reminderTime = getReminderTime();
+//
+//
+//        String note = noteTxt.getText().toString();
+//
+//        if(rowId == null) {
+//            long id = dbHelper.createTask(priorityInt, title, date, time,
+//                    reminderOccurrence, reminderWhen, reminderDate, reminderTime, note, progress);
+//
+//            if (id > 0) {
+//                rowId = id;
+//                closeActivityWithResult(Activity.RESULT_OK);
+//            }
+//            else {
+//                closeActivityWithResult(Activity.RESULT_CANCELED);
+//            }
+//        }
+//        else {
+//            if (dbHelper.updateTask(rowId, priorityInt, title, date, time,
+//                    reminderOccurrence, reminderWhen, reminderDate, reminderTime, note, progress, 0)) {
+//                closeActivityWithResult(Activity.RESULT_OK);
+//            }
+//            else {
+//                closeActivityWithResult(Activity.RESULT_CANCELED);
+//            }
+//        }
+//
+//        //new ReminderManager(this).setReminder(rowId, getCalendar(date , time));
+//    }
 
     private void closeActivityWithResult(int result) {
         returnResult(result);

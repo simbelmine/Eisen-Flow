@@ -304,6 +304,7 @@ public class MainActivityDB extends AppCompatActivity
                         String title = cursor.getString(cursor.getColumnIndex(LocalDataBaseHelper.KEY_TITLE));
                         String date = cursor.getString(cursor.getColumnIndex(LocalDataBaseHelper.KEY_DATE));
                         String time = cursor.getString(cursor.getColumnIndex(LocalDataBaseHelper.KEY_TIME));
+                        int dateMillis = cursor.getInt(cursor.getColumnIndex(LocalDataBaseHelper.KEY_DATE_MILLIS));
                         String reminderOccurrence = cursor.getString(cursor.getColumnIndex(LocalDataBaseHelper.KEY_REMINDER_OCCURRENCE));
                         String reminderWhen = cursor.getString(cursor.getColumnIndex(LocalDataBaseHelper.KEY_REMINDER_WHEN));
                         String reminderDate = cursor.getString(cursor.getColumnIndex(LocalDataBaseHelper.KEY_REMINDER_DATE));
@@ -318,6 +319,7 @@ public class MainActivityDB extends AppCompatActivity
                         currentTask.setTitle(title);
                         currentTask.setDate(date);
                         currentTask.setTime(time);
+                        currentTask.setDateMillis(dateMillis);
                         currentTask.setReminderOccurrence(reminderOccurrence);
                         currentTask.setReminderWhen(reminderWhen);
                         currentTask.setReminderDate(reminderDate);
