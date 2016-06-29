@@ -25,11 +25,9 @@ import com.android.eisenflow.reminders.OnAlarmReceiver;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.TimeZone;
 
 /**
  * Created by Sve on 6/28/16.
@@ -46,6 +44,7 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
     private SharedPreferences sharedPreferences;
     private LocalDataBaseHelper dbHelper;
     private DateTimeHelper dateTimeHelper;
+    private String lastSeenDate;
 
     public NewTaskListAdapterDB(Activity activity, Context context, LocalDataBaseHelper dbHelper) {
         this.activity = activity;
@@ -99,14 +98,21 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
     }
 
     private void setValueToField(TasksListHolder holder, Task taskRow) {
-
         holder.text.setText(taskRow.getTitle());
         holder.task_time_txt.setText(taskRow.getDate());
 
-
-        Calendar cal = dateTimeHelper.getCalendar(taskRow.getDate(), taskRow.getTime());
-        holder.cal_day_of_month.setText(String.valueOf(cal.get(Calendar.DAY_OF_MONTH)));
-        holder.cal_day_of_week.setText(cal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault()));
+        String taskDate = taskRow.getDate();
+        String taskTime = taskRow.getTime();
+        if(lastSeenDate == null || !lastSeenDate.equals(taskDate)) {
+            Calendar cal = dateTimeHelper.getCalendar(taskDate, taskTime);
+            holder.cal_day_of_month.setText(String.valueOf(cal.get(Calendar.DAY_OF_MONTH)));
+            holder.cal_day_of_week.setText(cal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault()));
+            lastSeenDate = taskDate;
+        }
+        else {
+            holder.cal_day_of_month.setText("");
+            holder.cal_day_of_week.setText("");
+        }
 
 //        holder.text.setTextColor(context.getResources().getColor(R.color.gray));
 //        holder.task_time_txt.setTextColor(context.getResources().getColor(R.color.gray_light));
