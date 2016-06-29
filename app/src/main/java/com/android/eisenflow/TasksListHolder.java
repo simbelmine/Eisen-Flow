@@ -41,8 +41,10 @@ public class TasksListHolder extends RecyclerView.ViewHolder
     public LinearLayout share_icon;
 
     public RelativeLayout delete_done_layout;
+    public RelativeLayout deleted_undo_layout;
     public TextView cal_day_of_month;
     public TextView cal_day_of_week;
+    public TextView undo_btn;
 
     public TasksListHolder(Context context, View itemView) {
         super(itemView);
@@ -56,9 +58,11 @@ public class TasksListHolder extends RecyclerView.ViewHolder
 
         mainLayout = (LinearLayout) itemView.findViewById(R.id.task_card_mainview);
         delete_done_layout = (RelativeLayout) itemView.findViewById(R.id.delete_done_layout);
+        deleted_undo_layout = (RelativeLayout) itemView.findViewById(R.id.deleted_undo_layout);
 
         cal_day_of_month = (TextView) itemView.findViewById(R.id.card_day_of_month);
         cal_day_of_week = (TextView) itemView.findViewById(R.id.card_day_of_week);
+        undo_btn = (TextView) itemView.findViewById(R.id.undo_btn);
 
 //        timerIconLayout = (LinearLayout) cardView.findViewById(R.id.timer_list_icon);
 //        calendarPlusIconLayout = (LinearLayout) cardView.findViewById(R.id.calendar_plus_list_icon);

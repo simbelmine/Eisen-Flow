@@ -132,6 +132,9 @@ public class MainActivityDB extends AppCompatActivity
     private BroadcastReceiver onTaskDeleted = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            int rowId = intent.getIntExtra(LocalDataBaseHelper.KEY_ROW_ID, -1);
+            int position = intent.getIntExtra("position", -1);
+            adapterDB.deleteItem(dbHelper, rowId, position) ;
             justRefreshDecorators = true;
             startListFeedingTask();
         }

@@ -89,7 +89,7 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
 //        setTagToField(holder, position);
 //        setOnClickListeners(holder, taskRow, position);
 //        setOnCheckedClickedListeners(holder);
-        holder.cardView.setOnTouchListener(new RecyclerItemSwipeDetector(holder, recyclerView));
+        holder.cardView.setOnTouchListener(new RecyclerItemSwipeDetector(context, holder, recyclerView, taskRow.getId(), position));
 
         setTaskPriority(holder, taskRow.getPriority(), position);
 //        crossTaskIfDone(holder, position);
@@ -160,6 +160,8 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
         holder.editIconLayout_3.setOnClickListener(positionListener);
 
         holder.share_icon.setOnClickListener(positionListener);
+
+//        holder.undo_btn.setOnClickListener(positionListener);
     }
 
     private class PositionBasedOnClickListener implements View.OnClickListener {
@@ -182,6 +184,7 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
             extra_value = new long[]{tasksList.get(position).getId()};
 
             switch (view.getId()) {
+
                 case R.id.timer_list_icon:
                     startActivity(TimerActivity.class, flags, null, null);
                     break;
@@ -413,12 +416,14 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
         builder.show();
     }
 
-    private void deleteItem(LocalDataBaseHelper dbHelper, int taskId, int position) {
-        cancelTaskAlarm(taskId);
-        cancelReminders(taskId, position);
-        dbHelper.deleteTask(taskId);
-        tasksList.remove(position);
-        notifyItemRemoved(position);
+    public void deleteItem(LocalDataBaseHelper dbHelper, int taskId, int position) {
+        if(taskId >= 0 && position >=0) {
+            cancelTaskAlarm(taskId);
+            cancelReminders(taskId, position);
+            dbHelper.deleteTask(taskId);
+            tasksList.remove(position);
+            notifyItemRemoved(position);
+        }
     }
 
     private void sendBroadcastDeleted(int position) {

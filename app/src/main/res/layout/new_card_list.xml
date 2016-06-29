@@ -68,6 +68,35 @@
                 android:layout_marginRight="7dp"
                 />
         </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/deleted_undo_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/list_item_bg"
+            android:layout_toRightOf="@+id/list_cal_date"
+            android:visibility="gone"
+            >
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="23dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="7dp"
+                android:text="deleted"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                />
+            <TextView
+                android:id="@+id/undo_btn"
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:layout_centerVertical="true"
+                android:gravity="right"
+                android:layout_marginRight="7dp"
+                android:text="undo"
+                android:textAllCaps="true"
+                android:textColor="@color/firstQuadrant"
+                />
+        </RelativeLayout>
         <LinearLayout
             android:id="@+id/task_card_mainview"
             android:layout_width="match_parent"
