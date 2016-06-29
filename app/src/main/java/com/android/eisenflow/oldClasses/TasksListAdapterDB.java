@@ -1,4 +1,4 @@
-package com.android.eisenflow;
+package com.android.eisenflow.oldClasses;
 
 import android.app.Activity;
 import android.app.AlarmManager;
@@ -19,6 +19,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.Toast;
+
+import com.android.eisenflow.AddTaskDB;
+import com.android.eisenflow.DateTimeHelper;
+import com.android.eisenflow.LocalDataBaseHelper;
+import com.android.eisenflow.MainActivityDB;
+import com.android.eisenflow.R;
+import com.android.eisenflow.Task;
+import com.android.eisenflow.TasksListHolder;
+import com.android.eisenflow.TimerActivity;
 import com.android.eisenflow.oldClasses.MainActivity;
 import com.android.eisenflow.reminders.OnAlarmReceiver;
 

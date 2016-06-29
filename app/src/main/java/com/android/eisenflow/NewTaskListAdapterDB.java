@@ -116,13 +116,13 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
 
 //        holder.text.setTextColor(context.getResources().getColor(R.color.gray));
 //        holder.task_time_txt.setTextColor(context.getResources().getColor(R.color.gray_light));
-//        if(taskRow.getPriority() == 1) {
-//            holder.task_p1_progress.setVisibility(View.VISIBLE);
-//            holder.task_p1_progress.setText(setProgressValue(taskRow.calculateProgress(context)));
-//        }
-//        else {
-//            holder.task_p1_progress.setVisibility(View.INVISIBLE);
-//        }
+        if(taskRow.getPriority() == 1) {
+            holder.task_p1_progress.setVisibility(View.VISIBLE);
+            holder.task_p1_progress.setText(setProgressValue(taskRow.calculateProgress(context)));
+        }
+        else {
+            holder.task_p1_progress.setVisibility(View.INVISIBLE);
+        }
     }
 
     private String setProgressValue(int progress) {

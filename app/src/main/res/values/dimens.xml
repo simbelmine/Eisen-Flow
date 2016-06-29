@@ -24,7 +24,7 @@
     <dimen name="card_view_padding">2dp</dimen>
     <dimen name="card_view_margin">1dp</dimen>
     <dimen name="card_height">55dp</dimen>
-    <dimen name="card_padding">8dp</dimen>
+    <dimen name="card_padding">10dp</dimen>
     <dimen name="card_priority_img_width">6dp</dimen>
     <dimen name="card_priority_img_margin">5dp</dimen>
     <dimen name="card_under_icon_size">25dp</dimen>

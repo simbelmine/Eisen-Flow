@@ -25,7 +25,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,6 +33,7 @@ import android.widget.TextView;
 
 import com.android.eisenflow.decorators.EventDecorator;
 import com.android.eisenflow.decorators.HighlightWeekendsDecorator;
+import com.android.eisenflow.oldClasses.TasksListAdapterDB;
 import com.android.eisenflow.reminders.AddProgressReceiver;
 import com.android.eisenflow.reminders.ReminderDoneReceiver;
 import com.android.eisenflow.reminders.ReminderManager;

@@ -21,7 +21,7 @@
         android:layout_height="@dimen/card_height"
         android:background="@color/white"
         >
-<!-- **************  Date Layout  ******************** -->
+        <!-- **************  Date Layout  ******************** -->
         <LinearLayout
             android:id="@+id/list_cal_date"
             android:layout_width="50dp"
@@ -47,7 +47,7 @@
                 />
         </LinearLayout>
 
-<!-- **************  DELETE - DONE  ******************** -->
+        <!-- **************  DELETE - DONE  ******************** -->
         <RelativeLayout
             android:id="@+id/delete_done_layout"
             android:layout_width="match_parent"
@@ -72,7 +72,7 @@
                 />
         </RelativeLayout>
 
-<!-- **************  DELETED - UNDO  ******************** -->
+        <!-- **************  DELETED - UNDO  ******************** -->
         <RelativeLayout
             android:id="@+id/deleted_undo_layout"
             android:layout_width="match_parent"
@@ -93,7 +93,7 @@
                 />
         </RelativeLayout>
 
-<!-- **************  CARD CONTENT  ******************** -->
+        <!-- **************  CARD CONTENT  ******************** -->
         <LinearLayout
             android:id="@+id/task_card_mainview"
             android:layout_width="match_parent"
@@ -103,16 +103,6 @@
             android:visibility="visible"
             android:layout_toRightOf="@+id/list_cal_date"
             >
-            <TextView
-                android:id="@+id/task_p1_percentage"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical|right"
-                android:layout_marginRight="@dimen/card_padding"
-                android:textColor="@color/colorAccent"
-                android:text="12%"
-                android:visibility="gone"
-                />
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -137,6 +127,18 @@
                     android:text="May 2, 16:00"
                     android:textColor="@color/white"
                     android:layout_below="@+id/list_text"
+                    />
+
+                <TextView
+                    android:id="@+id/task_p1_percentage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="@dimen/card_padding"
+                    android:layout_marginLeft="@dimen/card_padding"
+                    android:textColor="@color/white"
+                    android:text="12%"
+                    android:visibility="invisible"
                     />
             </RelativeLayout>
         </LinearLayout>
