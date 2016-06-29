@@ -85,14 +85,19 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
     @Override
     public void onBindViewHolder(TasksListHolder holder, int position) {
         Task taskRow = tasksList.get(position);
+        int priority = taskRow.getPriority();
 
         setValueToField(holder, taskRow);
+        setPriorityActionIcon(holder, priority);
+
+
+
 //        setTagToField(holder, position);
 //        setOnClickListeners(holder, taskRow, position);
 //        setOnCheckedClickedListeners(holder);
         holder.cardView.setOnTouchListener(new RecyclerItemSwipeDetector(context, holder, recyclerView, taskRow.getId(), position));
 
-        setTaskPriority(holder, taskRow.getPriority(), position);
+        setTaskPriority(holder, priority, position);
 //        crossTaskIfDone(holder, position);
 //        setOldTaskTextColor(holder, position);
     }
@@ -122,6 +127,20 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
         }
         else {
             holder.task_p1_progress.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    private void setPriorityActionIcon(TasksListHolder holder, int priority) {
+        switch (priority) {
+            case 0:
+                holder.card_right_action.setImageDrawable(context.getResources().getDrawable(R.drawable.timer));
+                break;
+            case 1:
+                holder.card_right_action.setImageDrawable(context.getResources().getDrawable(R.drawable.calendar_plus));
+                break;
+            case 2:
+                holder.card_right_action.setImageDrawable(context.getResources().getDrawable(R.drawable.share));
+                break;
         }
     }
 

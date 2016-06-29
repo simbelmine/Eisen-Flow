@@ -45,6 +45,7 @@ public class TasksListHolder extends RecyclerView.ViewHolder
     public TextView cal_day_of_month;
     public TextView cal_day_of_week;
     public TextView undo_btn;
+    public ImageView card_right_action;
 
     public TasksListHolder(Context context, View itemView) {
         super(itemView);
@@ -63,7 +64,8 @@ public class TasksListHolder extends RecyclerView.ViewHolder
         cal_day_of_month = (TextView) itemView.findViewById(R.id.card_day_of_month);
         cal_day_of_week = (TextView) itemView.findViewById(R.id.card_day_of_week);
         undo_btn = (TextView) itemView.findViewById(R.id.undo_btn);
-        task_p1_progress = (TextView) cardView.findViewById(R.id.task_p1_percentage);
+        task_p1_progress = (TextView) itemView.findViewById(R.id.task_p1_percentage);
+        card_right_action = (ImageView) itemView.findViewById(R.id.card_right_action);
 
 //        timerIconLayout = (LinearLayout) cardView.findViewById(R.id.timer_list_icon);
 //        calendarPlusIconLayout = (LinearLayout) cardView.findViewById(R.id.calendar_plus_list_icon);

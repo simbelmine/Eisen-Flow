@@ -47,7 +47,7 @@
                 />
         </LinearLayout>
 
-        <!-- **************  DELETE - DONE  ******************** -->
+        <!-- **************  DELETE - ACTION  ******************** -->
         <RelativeLayout
             android:id="@+id/delete_done_layout"
             android:layout_width="match_parent"
@@ -63,9 +63,9 @@
                 android:layout_marginLeft="7dp"
                 />
             <ImageView
+                android:id="@+id/card_right_action"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
-                android:src="@drawable/check_done"
                 android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="7dp"
