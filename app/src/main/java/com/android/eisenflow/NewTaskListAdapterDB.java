@@ -127,7 +127,6 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
             holder.task_p1_progress.setVisibility(View.VISIBLE);
 
             int currProgress = taskRow.calculateProgress(context);
-//            Log.v("eisen", " Progresssss ===> " + currProgress);
             if(currProgress >= 100) {
                 holder.task_p1_progress.setText(setProgressValue(100));
             }
@@ -167,135 +166,6 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
 
     public void setList(List<Task> tasks) {
         this.tasksList = tasks;
-    }
-
-    private void setTagToField(TasksListHolder holder, int position) {
-        holder.deleteIconLayout_0.setTag(position);
-        holder.deleteIconLayout_1.setTag(position);
-        holder.deleteIconLayout_2.setTag(position);
-        holder.deleteIconLayout_3.setTag(position);
-
-        holder.editIconLayout_0.setTag(position);
-        holder.editIconLayout_1.setTag(position);
-        holder.editIconLayout_2.setTag(position);
-        holder.editIconLayout_3.setTag(position);
-
-        holder.task_check.setTag(position);
-        holder.share_icon.setTag(position);
-    }
-
-    private void setOnClickListeners(TasksListHolder holder, Task task, int position) {
-        PositionBasedOnClickListener positionListener = new PositionBasedOnClickListener(holder, task, position);
-        holder.timerIconLayout.setOnClickListener(positionListener);
-        holder.calendarPlusIconLayout.setOnClickListener(positionListener);
-        holder.editIconLayout_0.setOnClickListener(positionListener);
-        holder.deleteIconLayout_0.setOnClickListener(positionListener);
-        holder.editIconLayout_1.setOnClickListener(positionListener);
-        holder.deleteIconLayout_1.setOnClickListener(positionListener);
-
-        holder.deleteIconLayout_2.setOnClickListener(positionListener);
-        holder.editIconLayout_2.setOnClickListener(positionListener);
-        holder.deleteIconLayout_3.setOnClickListener(positionListener);
-        holder.editIconLayout_3.setOnClickListener(positionListener);
-
-        holder.share_icon.setOnClickListener(positionListener);
-
-//        holder.undo_btn.setOnClickListener(positionListener);
-    }
-
-    private class PositionBasedOnClickListener implements View.OnClickListener {
-        private TasksListHolder holder;
-        private Task task;
-        private int position;
-
-        public PositionBasedOnClickListener(TasksListHolder holder, Task task, int position) {
-            this.holder = holder;
-            this.task = task;
-            this.position = position;
-        }
-
-        @Override
-        public void onClick(View view) {
-            int[] flags = new int[] {Intent.FLAG_ACTIVITY_NEW_TASK};
-            String[] extra_names;
-            long[] extra_value;
-            extra_names = new String[]{LocalDataBaseHelper.KEY_ROW_ID};
-            extra_value = new long[]{tasksList.get(position).getId()};
-
-            switch (view.getId()) {
-
-                case R.id.timer_list_icon:
-                    startActivity(TimerActivity.class, flags, null, null);
-                    break;
-                case R.id.calendar_plus_list_icon:
-                    saveProgressToDb(view, holder, task);
-                    break;
-                case R.id.edit_list_icon_0:
-                    startActivity(AddTaskDB.class, flags, extra_names, extra_value);
-                    break;
-                case R.id.delete_list_icon_0:
-                    deleteItem(dbHelper, task.getId(), position);
-                    sendBroadcastDeleted(position);
-                    break;
-                case R.id.edit_list_icon_1:
-                    startActivity(AddTaskDB.class, flags, extra_names, extra_value);
-                    break;
-                case R.id.delete_list_icon_1:
-                    deleteItem(dbHelper, task.getId(), position);
-                    sendBroadcastDeleted(position);
-                    break;
-                case R.id.edit_list_icon_2:
-                    startActivity(AddTaskDB.class, flags, extra_names, extra_value);
-                    break;
-                case R.id.delete_list_icon_2:
-                    deleteItem(dbHelper, task.getId(), position);
-                    sendBroadcastDeleted(position);
-                    break;
-                case R.id.edit_list_icon_3:
-                    startActivity(AddTaskDB.class, flags, extra_names, extra_value);
-                    break;
-                case R.id.delete_list_icon_3:
-                    deleteItem(dbHelper, task.getId(), position);
-                    sendBroadcastDeleted(position);
-                    break;
-                case R.id.share_icon:
-                    showShareOptions(task);
-                    break;
-            }
-        }
-    }
-
-    private void setOnCheckedClickedListeners(TasksListHolder holder) {
-        PositionBasedOnCheckClickedListener positionCheckListener = new PositionBasedOnCheckClickedListener(holder);
-        holder.task_check.setOnCheckedChangeListener(positionCheckListener);
-    }
-
-    private class PositionBasedOnCheckClickedListener implements CompoundButton.OnCheckedChangeListener {
-        private TasksListHolder holder;
-        public PositionBasedOnCheckClickedListener(TasksListHolder holder) {
-            this.holder = holder;
-        }
-
-        @Override
-        public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-            int position = (int)compoundButton.getTag();
-            int taskId = tasksList.get(position).getId();
-
-            if(compoundButton.isChecked()) {
-                holder.task_done_line.setVisibility(View.VISIBLE);
-
-                // Save isDone = 1 to DB and update Task list
-                dbHelper.updateTaskIntColumn(taskId, LocalDataBaseHelper.KEY_DONE, 1);
-                tasksList.get(position).setIsDone(1);
-            }
-            else {
-                holder.task_done_line.setVisibility(View.GONE);
-
-                // Save isDone = 1 to DB and update Task list
-                dbHelper.updateTaskIntColumn(taskId, LocalDataBaseHelper.KEY_DONE, 0);
-                tasksList.get(position).setIsDone(0);
-            }
-        }
     }
 
     private void startActivity(Class<?> activityClass, int[] flags, String[] extras_names, long[] extras_values) {
@@ -373,27 +243,6 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
         }
     }
 
-
-    private void saveProgressToDb(View view, TasksListHolder holder, Task task) {
-        int taskId = task.getId();
-        int currProgress = task.getProgress();
-        currProgress++;
-        task.setProgress(currProgress);
-        int taskCurrentProgress = task.calculateProgress(context);
-
-        if(taskCurrentProgress >= 100) {
-            showTipMessagePercentage(view);
-            updateTaskProgress(holder, taskCurrentProgress);
-        }
-        else {
-            if (dbHelper.updateTaskIntColumn(taskId, LocalDataBaseHelper.KEY_PROGRESS, currProgress)) {
-                showMessageAddedPercent(view);
-                updateTaskProgress(holder, taskCurrentProgress);
-            } else {
-                Log.v("eisen", "Column Update UNsuccessful!");
-            }
-        }
-    }
 
     private void updateTaskProgress(TasksListHolder holder, int taskCurrentProgress) {
         holder.task_p1_progress.setText(setProgressValue(taskCurrentProgress));
@@ -553,32 +402,7 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
     private BroadcastReceiver onProgressUpTriggered = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            int position = intent.getIntExtra("position", -1);
-            int taskId = intent.getIntExtra(LocalDataBaseHelper.KEY_ROW_ID, -1);
-            View view = getParentView();
-
-            if(taskId != -1) {
-                Task task = getTaskById(taskId);
-                if (task != null) {
-                    int currProgress = task.getProgress();
-                    currProgress++;
-                    task.setProgress(currProgress);
-                    int taskCurrentProgress = task.calculateProgress(context);
-
-                    if (taskCurrentProgress >= 100) {
-                        if(view != null) showTipMessagePercentage(view);
-                        if(position!= -1) notifyItemChanged(position);
-                    }
-                    else {
-                        if (dbHelper.updateTaskIntColumn(taskId, LocalDataBaseHelper.KEY_PROGRESS, currProgress)) {
-                            if(view != null) showMessageAddedPercent(view);
-                            if(position!= -1) notifyItemChanged(position);
-                        } else {
-                            Log.v("eisen", "Column Update UNsuccessful!");
-                        }
-                    }
-                }
-            }
+            saveProgressToDb(intent);
         }
     };
 
@@ -620,5 +444,34 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
         }
 
         return null;
+    }
+
+    private void saveProgressToDb(Intent intent) {
+        int position = intent.getIntExtra("position", -1);
+        int taskId = intent.getIntExtra(LocalDataBaseHelper.KEY_ROW_ID, -1);
+        View view = getParentView();
+
+        if(taskId != -1) {
+            Task task = getTaskById(taskId);
+            if (task != null) {
+                int currProgress = task.getProgress();
+                currProgress++;
+                task.setProgress(currProgress);
+                int taskCurrentProgress = task.calculateProgress(context);
+
+                if (taskCurrentProgress >= 100) {
+                    if(view != null) showTipMessagePercentage(view);
+                    if(position!= -1) notifyItemChanged(position);
+                }
+                else {
+                    if (dbHelper.updateTaskIntColumn(taskId, LocalDataBaseHelper.KEY_PROGRESS, currProgress)) {
+                        if(view != null) showMessageAddedPercent(view);
+                        if(position!= -1) notifyItemChanged(position);
+                    } else {
+                        Log.v("eisen", "Column Update UNsuccessful!");
+                    }
+                }
+            }
+        }
     }
 }
