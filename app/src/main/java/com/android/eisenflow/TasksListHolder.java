@@ -41,16 +41,24 @@ public class TasksListHolder extends RecyclerView.ViewHolder
     public LinearLayout share_icon;
 
     public RelativeLayout delete_done_layout;
+    public TextView cal_day_of_month;
+    public TextView cal_day_of_week;
 
     public TasksListHolder(Context context, View itemView) {
         super(itemView);
 
         cardView = (CardView)itemView;
         this.context = context;
-        text = (TextView) itemView.findViewById(R.id.list_text);
 
-        mainLayout = (LinearLayout) cardView.findViewById(R.id.task_card_mainview);
-        delete_done_layout = (RelativeLayout) cardView.findViewById(R.id.delete_done_layout);
+
+        text = (TextView) itemView.findViewById(R.id.list_text);
+        task_time_txt = (TextView) itemView.findViewById(R.id.task_time_txt);
+
+        mainLayout = (LinearLayout) itemView.findViewById(R.id.task_card_mainview);
+        delete_done_layout = (RelativeLayout) itemView.findViewById(R.id.delete_done_layout);
+
+        cal_day_of_month = (TextView) itemView.findViewById(R.id.card_day_of_month);
+        cal_day_of_week = (TextView) itemView.findViewById(R.id.card_day_of_week);
 
 //        timerIconLayout = (LinearLayout) cardView.findViewById(R.id.timer_list_icon);
 //        calendarPlusIconLayout = (LinearLayout) cardView.findViewById(R.id.calendar_plus_list_icon);
@@ -67,7 +75,6 @@ public class TasksListHolder extends RecyclerView.ViewHolder
 //
 //        task_check = (CheckBox) cardView.findViewById(R.id.task_check);
 //        task_done_line = (ImageView) cardView.findViewById(R.id.done_divider);
-        task_time_txt = (TextView) cardView.findViewById(R.id.task_time_txt);
 //        task_p1_progress = (TextView) cardView.findViewById(R.id.task_p1_percentage);
 //
 //        share_icon = (LinearLayout) cardView.findViewById(R.id.share_icon);

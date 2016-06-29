@@ -30,6 +30,7 @@
             android:layout_marginLeft="@dimen/task_standard_margin"
             >
             <TextView
+                android:id="@+id/card_day_of_month"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="28"
@@ -37,6 +38,7 @@
                 android:textColor="@color/date"
                 />
             <TextView
+                android:id="@+id/card_day_of_week"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Tue"

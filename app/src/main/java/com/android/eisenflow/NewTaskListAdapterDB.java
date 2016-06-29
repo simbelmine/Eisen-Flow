@@ -26,6 +26,7 @@ import com.android.eisenflow.reminders.OnAlarmReceiver;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -98,8 +99,15 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
     private void setValueToField(TasksListHolder holder, Task taskRow) {
 
         holder.text.setText(taskRow.getTitle());
-//        holder.text.setTextColor(context.getResources().getColor(R.color.gray));
         holder.task_time_txt.setText(taskRow.getDate());
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(taskRow.getDateMillis());
+
+        holder.cal_day_of_month.setText(String.valueOf(cal.get(Calendar.DAY_OF_MONTH)));
+        holder.cal_day_of_week.setText(cal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault()));
+
+//        holder.text.setTextColor(context.getResources().getColor(R.color.gray));
 //        holder.task_time_txt.setTextColor(context.getResources().getColor(R.color.gray_light));
 //        if(taskRow.getPriority() == 1) {
 //            holder.task_p1_progress.setVisibility(View.VISIBLE);
