@@ -127,14 +127,15 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
     }
 
     private void deleteTask() {
-        holder.delete_done_layout.setVisibility(View.GONE);
+        holder.delete_done_layout.setVisibility(View.INVISIBLE);
         holder.deleted_undo_layout.setVisibility(View.VISIBLE);
         holder.undo_btn.setVisibility(View.VISIBLE);
 
         holder.undo_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                holder.undo_btn.setVisibility(View.GONE);
+                holder.undo_btn.setVisibility(View.INVISIBLE);
+                holder.deleted_undo_layout.setVisibility(View.INVISIBLE);
                 holder.delete_done_layout.setVisibility(View.VISIBLE);
                 holder.mainLayout.setVisibility(View.VISIBLE);
                 swipe(0);
