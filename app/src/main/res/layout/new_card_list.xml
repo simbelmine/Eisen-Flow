@@ -117,11 +117,11 @@
                 android:visibility="gone"
                 />
             <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="@dimen/task_standard_margin"
-                android:layout_marginTop="@dimen/task_standard_margin"
-                android:layout_marginBottom="7dp"
+                android:gravity="bottom"
+                android:layout_marginBottom="5dp"
                 >
                 <TextView
                     android:id="@+id/list_text"
@@ -129,7 +129,7 @@
                     android:layout_height="wrap_content"
                     android:singleLine="true"
                     android:text="Release Main Project 2.1"
-                    android:textSize="17sp"
+                    android:textSize="16sp"
                     android:textStyle="bold"
                     android:textColor="@color/white"
                     />
