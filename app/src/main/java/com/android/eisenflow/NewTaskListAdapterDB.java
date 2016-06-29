@@ -585,8 +585,14 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
     private BroadcastReceiver onShareTriggered = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            int taskId = intent.getIntExtra(LocalDataBaseHelper.KEY_ROW_ID, -1);
 
-
+            if(taskId != -1) {
+                Task task = getTaskById(taskId);
+                if(task != null) {
+                    showShareOptions(task);
+                }
+            }
         }
     };
 
