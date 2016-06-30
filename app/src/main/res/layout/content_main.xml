@@ -8,14 +8,13 @@
     tools:context="com.android.eisenflow.MainActivityDB"
     tools:showIn="@layout/app_bar_main"
     android:orientation="vertical"
-
     >
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/pull_to_refresh_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="45dp"
+        android:layout_marginTop="50dp"
         android:layout_marginBottom="5dp"
         >
         <RelativeLayout
@@ -25,7 +24,7 @@
             <TextView
                 android:id="@+id/priority_tip_txt"
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
+                android:layout_height="40dp"
                 android:gravity="center"
                 android:textColor="@color/white"
                 android:layout_margin="5dp"

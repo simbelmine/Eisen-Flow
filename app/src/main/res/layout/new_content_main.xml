@@ -16,6 +16,14 @@
         android:layout_marginTop="47dp"
         android:layout_marginBottom="5dp"
         >
+        <TextView
+            android:id="@+id/priority_tip_txt"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:layout_margin="5dp"
+            />
         <android.support.v7.widget.RecyclerView
             android:id="@+id/tasks_recyclerview"
             android:layout_width="match_parent"
