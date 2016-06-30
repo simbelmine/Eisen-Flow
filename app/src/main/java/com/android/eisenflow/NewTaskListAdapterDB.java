@@ -9,17 +9,24 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.android.eisenflow.oldClasses.MainActivity;
@@ -88,37 +95,55 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
     @Override
     public void onBindViewHolder(TasksListHolder holder, int position) {
         Task taskRow = tasksList.get(position);
-        int priority = taskRow.getPriority();
 
-        setValueToField(holder, taskRow);
-        setPriorityActionIcon(holder, priority);
+        if(taskRow.getTitle() != null) {
+            int priority = taskRow.getPriority();
+            setValueToField(holder, taskRow);
+            setPriorityActionIcon(holder, priority);
 
 //        setTagToField(holder, position);
 //        setOnClickListeners(holder, taskRow, position);
 //        setOnCheckedClickedListeners(holder);
-        holder.cardView.setOnTouchListener(new RecyclerItemSwipeDetector(context, holder, recyclerView, taskRow.getId(), position));
+            holder.cardView.setOnTouchListener(new RecyclerItemSwipeDetector(context, holder, recyclerView, taskRow.getId(), position));
 
-        setTaskPriority(holder, priority, position);
+            setTaskPriority(holder, priority, position);
 //        crossTaskIfDone(holder, position);
 //        setOldTaskTextColor(holder, position);
+        }
+        else {
+            holder.text.setText(taskRow.getDate());
+            holder.text.setTextColor(context.getResources().getColor(R.color.date));
+
+            holder.cal_day_of_month.setText("");
+            holder.cal_day_of_week.setText("");
+
+            holder.task_time_txt.setVisibility(View.GONE);
+            holder.mainLayout.setBackgroundColor(context.getResources().getColor(R.color.white));
+
+
+            CardView.LayoutParams params = new CardView.LayoutParams(
+                    CardView.LayoutParams.MATCH_PARENT, (int)convertDpToPixel(40));
+            holder.cardView.setLayoutParams(params);
+
+            ((RelativeLayout)(holder.text.getParent())).setGravity(Gravity.TOP);
+            LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            p.setMargins(0, 16, 0, 0);
+            ((RelativeLayout)(holder.text.getParent())).setLayoutParams(p);
+        }
+    }
+
+    public float convertDpToPixel(int dp){
+        Resources resources = context.getResources();
+        DisplayMetrics metrics = resources.getDisplayMetrics();
+        float px = dp * ((float)metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+        return px;
     }
 
     private void setValueToField(TasksListHolder holder, Task taskRow) {
         holder.text.setText(taskRow.getTitle());
         holder.task_time_txt.setText(taskRow.getDate());
 
-        String taskDate = taskRow.getDate();
-        String taskTime = taskRow.getTime();
-        if(lastSeenDate == null || !lastSeenDate.equals(taskDate)) {
-            Calendar cal = dateTimeHelper.getCalendar(taskDate, taskTime);
-            holder.cal_day_of_month.setText(String.valueOf(cal.get(Calendar.DAY_OF_MONTH)));
-            holder.cal_day_of_week.setText(cal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault()));
-            lastSeenDate = taskDate;
-        }
-        else {
-            holder.cal_day_of_month.setText("");
-            holder.cal_day_of_week.setText("");
-        }
+        setVerticalCalendarDate(holder, taskRow);
 
 //        holder.text.setTextColor(context.getResources().getColor(R.color.gray));
 //        holder.task_time_txt.setTextColor(context.getResources().getColor(R.color.gray_light));
@@ -136,6 +161,21 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
         }
         else {
             holder.task_p1_progress.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    private void setVerticalCalendarDate(TasksListHolder holder, Task taskRow) {
+        String taskDate = taskRow.getDate();
+        String taskTime = taskRow.getTime();
+        if(lastSeenDate == null || !lastSeenDate.equals(taskDate)) {
+            Calendar cal = dateTimeHelper.getCalendar(taskDate, taskTime);
+            holder.cal_day_of_month.setText(String.valueOf(cal.get(Calendar.DAY_OF_MONTH)));
+            holder.cal_day_of_week.setText(cal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault()));
+            lastSeenDate = taskDate;
+        }
+        else {
+            holder.cal_day_of_month.setText("");
+            holder.cal_day_of_week.setText("");
         }
     }
 
@@ -165,7 +205,8 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
     }
 
     public void setList(List<Task> tasks) {
-        this.tasksList = tasks;
+//        this.tasksList = tasks;
+        this.tasksList = getListWithHeaders(tasks);
     }
 
     private void startActivity(Class<?> activityClass, int[] flags, String[] extras_names, long[] extras_values) {
@@ -438,9 +479,9 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
 
     private View getParentView() {
         if(layoutView != null) {
-           if(layoutView.getParent() != null) {
-               return (View) (layoutView.getParent()).getParent();
-           }
+            if(layoutView.getParent() != null) {
+                return (View) (layoutView.getParent()).getParent();
+            }
         }
 
         return null;
@@ -473,5 +514,26 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
                 }
             }
         }
+    }
+
+    private ArrayList<Task> getListWithHeaders(List<Task> tasks) {
+        ArrayList<Task> listWithHeaders = new ArrayList<>();
+        Calendar cal;
+        int lastSeenMonth = -1;
+
+        for(Task t : tasks) {
+            cal = dateTimeHelper.getCalendar(t.getDate(), t.getTime());
+            if(lastSeenMonth == -1 || cal.get(Calendar.MONTH) != lastSeenMonth) {
+                lastSeenMonth = cal.get(Calendar.MONTH);
+
+                Task newTask = new Task();
+                newTask.setDate(cal.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault()) + " " + cal.get(Calendar.YEAR));
+                listWithHeaders.add(newTask);
+            }
+            listWithHeaders.add(t);
+
+        }
+
+        return listWithHeaders;
     }
 }
