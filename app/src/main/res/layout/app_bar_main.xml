@@ -49,12 +49,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="top"
-        sothree:umanoPanelHeight="40dp"
+        sothree:umanoPanelHeight="48dp"
         sothree:umanoShadowHeight="4dp"
         sothree:umanoDragView="@+id/dragView"
         sothree:umanoOverlay="true"
         android:layout_marginTop="?attr/actionBarSize"
-        sothree:umanoAnchorPoint="0.61"
+        sothree:umanoAnchorPoint="0.62"
         >
 
         <!--<include layout="@layout/content_main" />-->
@@ -93,36 +93,25 @@
             </FrameLayout>
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:gravity="center"
-                android:layout_gravity="center_horizontal"
-                android:paddingBottom="3dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
                 android:layout_marginTop="5.5dp"
                 >
-                <ImageView
-                    android:id="@+id/icon_1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="15dp"
-                    android:src="@mipmap/menu"
-                    android:layout_alignParentBottom="true"
-                    />
                 <TextView
                     android:id="@+id/day_date_txt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Monday 25"
                     android:textColor="@color/colorAccent"
-                    android:layout_toRightOf="@+id/icon_1"
-                    android:layout_alignParentBottom="true"
-                    android:gravity="center"
                     android:textStyle="bold"
+                    android:layout_centerHorizontal="true"
                     />
                 <ImageView
                     android:layout_width="wrap_content"
-                    android:layout_height="15dp"
-                    android:src="@mipmap/menu"
-                    android:layout_toRightOf="@+id/day_date_txt"
-                    android:layout_alignParentBottom="true"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/drag_horizontal"
+                    android:layout_below="@+id/day_date_txt"
+                    android:layout_centerHorizontal="true"
                     />
             </RelativeLayout>
 
