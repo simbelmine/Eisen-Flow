@@ -150,15 +150,15 @@ public class Task {
 //        int monthlyPercentage = (int) Math.round((100/(double)totalDays));
         double monthlyPercentage = 100/(double)totalDays;
 
-        Log.v("eisen", "T total days = " + totalDays);
-        Log.v("eisen", "T progress = " + progress);
+//        Log.v("eisen", "T total days = " + totalDays);
+//        Log.v("eisen", "T progress = " + progress);
 
 //        progress++;
 //        setProgress(progress);
 
 //        int progressToReturn = monthlyPercentage * progress;
         int progressToReturn = (int) (Math.round(progress * monthlyPercentage));
-        Log.v("eisen", "    T progress to return = " + progressToReturn);
+//        Log.v("eisen", "    T progress to return = " + progressToReturn);
 
         if(progress == totalDays || progressToReturn > 100) progressToReturn = 100;
 

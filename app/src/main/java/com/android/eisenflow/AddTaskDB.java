@@ -1018,9 +1018,7 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
         String time = timeTxt.getText().toString();
 
         Calendar cal = dateTimeHelper.getCalendar(date, time);
-        String str = dateTimeHelper.getDateString(cal);
-        Date d = dateTimeHelper.getDate(str);
-        int dateMillis = (int)d.getTime();
+        long dateMillis = cal.getTimeInMillis();
 
         String title = taskName.getText().toString();
 

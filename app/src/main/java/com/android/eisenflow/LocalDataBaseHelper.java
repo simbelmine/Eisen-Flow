@@ -132,7 +132,7 @@ public class LocalDataBaseHelper {
      * @param progress if the task is Green priority; progress of the task
      * @return rowId or -1 if failed
      */
-    public long createTask(int priority, String title, String taskDate, String taskTime, int taskDateMillis,
+    public long createTask(int priority, String title, String taskDate, String taskTime, long taskDateMillis,
                            String taskReminderOccurrence, String taskReminderWhen, String taskReminderDate, String taskReminderTime,
                            String note, int progress) {
 //        Log.d(TAG, "---Creating Task.");
@@ -215,7 +215,7 @@ public class LocalDataBaseHelper {
      * @param progress if the task is Green priority; progress of the task
      * @return true if the reminder was successfully updated, false otherwise
      */
-    public boolean updateTask(long rowId, int priority, String title, String taskDate, String taskTime, int taskDateMillis,
+    public boolean updateTask(long rowId, int priority, String title, String taskDate, String taskTime, long taskDateMillis,
                               String taskReminderOccurrence, String taskReminderWhen, String taskReminderDate, String taskReminderTime,
                               String note, int progress, int isDone) {
         ContentValues args = new ContentValues();
