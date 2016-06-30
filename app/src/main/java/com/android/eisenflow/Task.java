@@ -172,6 +172,6 @@ public class Task {
         calDate.setTime(dateTimeHelper.getDate(getDate()));
 
         long diff = calDate.getTimeInMillis() - calNow.getTimeInMillis();
-        return diff / (24 * 60 * 60 * 1000);
+        return (diff / (24 * 60 * 60 * 1000)) + 1;
     }
 }
