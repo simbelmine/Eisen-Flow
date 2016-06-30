@@ -498,19 +498,18 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
                 int currProgress = task.getProgress();
                 currProgress++;
                 task.setProgress(currProgress);
-                int taskCurrentProgress = task.calculateProgress(context);
 
-                if (taskCurrentProgress >= 100) {
+                if (dbHelper.updateTaskIntColumn(taskId, LocalDataBaseHelper.KEY_PROGRESS, currProgress)) {
+                    if(view != null) showMessageAddedPercent(view);
+                    if(position!= -1) notifyItemChanged(position);
+                } else {
+                    Log.v("eisen", "Column Update UNsuccessful!");
+                }
+
+                int taskCurrentProgress = task.calculateProgress(context);
+                if (taskCurrentProgress == 100) {
                     if(view != null) showTipMessagePercentage(view);
                     if(position!= -1) notifyItemChanged(position);
-                }
-                else {
-                    if (dbHelper.updateTaskIntColumn(taskId, LocalDataBaseHelper.KEY_PROGRESS, currProgress)) {
-                        if(view != null) showMessageAddedPercent(view);
-                        if(position!= -1) notifyItemChanged(position);
-                    } else {
-                        Log.v("eisen", "Column Update UNsuccessful!");
-                    }
                 }
             }
         }
