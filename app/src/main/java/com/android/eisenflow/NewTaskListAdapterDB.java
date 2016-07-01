@@ -23,8 +23,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
-import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -55,6 +54,7 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
     private DateTimeHelper dateTimeHelper;
     private String lastSeenDate;
     private View layoutView;
+    int[] flags = new int[] {Intent.FLAG_ACTIVITY_NEW_TASK};
 
     public NewTaskListAdapterDB(Activity activity, Context context, LocalDataBaseHelper dbHelper) {
         this.activity = activity;
@@ -101,9 +101,8 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
             setValueToField(holder, taskRow);
             setPriorityActionIcon(holder, priority);
 
-//        setTagToField(holder, position);
-//        setOnClickListeners(holder, taskRow, position);
-//        setOnCheckedClickedListeners(holder);
+            PositionBasedOnClickListener positionListener = new PositionBasedOnClickListener(position);
+            holder.mainLayout.setOnClickListener(positionListener);
             holder.cardView.setOnTouchListener(new RecyclerItemSwipeDetector(context, holder, recyclerView, taskRow.getId(), position));
 
             setTaskPriority(holder, priority, position);
@@ -436,7 +435,6 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
     private BroadcastReceiver onTimerTriggered = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            int[] flags = new int[] {Intent.FLAG_ACTIVITY_NEW_TASK};
             startActivity(TimerActivity.class, flags, null, null);
         }
     };
@@ -534,5 +532,25 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
         }
 
         return listWithHeaders;
+    }
+
+    private class PositionBasedOnClickListener implements View.OnClickListener {
+        private int position;
+
+        public PositionBasedOnClickListener(int position) {
+            this.position = position;
+        }
+
+        @Override
+        public void onClick(View view) {
+            switch (view.getId()) {
+                case R.id.task_card_mainview:
+                    String[] extra_names = new String[]{LocalDataBaseHelper.KEY_ROW_ID};
+                    long[] extra_value = new long[]{tasksList.get(position).getId()};
+
+                    startActivity(EditTaskPreview.class, flags, extra_names, extra_value);
+                    break;
+            }
+        }
     }
 }

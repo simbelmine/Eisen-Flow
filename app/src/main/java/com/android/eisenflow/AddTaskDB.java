@@ -951,13 +951,13 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
                 reminderDate = dateTimeHelper.getDateString(Calendar.getInstance());
             }
 
-                reminderDateTxt.setText(reminderDate);
-                Calendar reminderCal = Calendar.getInstance();
-                Date date = dateTimeHelper.getDate(reminderDate);
-                if(date != null) {
-                    reminderCal.setTime(date);
-                    reminderCalendarView.setDate(reminderCal.getTimeInMillis(), true, true);
-                }
+            reminderDateTxt.setText(reminderDate);
+            Calendar reminderCal = Calendar.getInstance();
+            Date date = dateTimeHelper.getDate(reminderDate);
+            if(date != null) {
+                reminderCal.setTime(date);
+                reminderCalendarView.setDate(reminderCal.getTimeInMillis(), true, true);
+            }
 
             if(reminderTime != null) {
                 reminderTimeTxt.setText(reminderTime);
@@ -989,26 +989,11 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
             case "Weekly":
                 return occurrence + " @" + time;
             case "Monthly":
-                return occurrence + "  " + dateNumStr + getDatePostfix(dateNum) + " @" + time;
+                return occurrence + "  " + dateNumStr + dateTimeHelper.getDatePostfix(dateNum) + " @" + time;
             case "Yearly":
-                return occurrence + "  " + month + " " + dateNumStr + getDatePostfix(dateNum) + " @" + time;
+                return occurrence + "  " + month + " " + dateNumStr + dateTimeHelper.getDatePostfix(dateNum) + " @" + time;
             default:
                 return "";
-        }
-    }
-
-    private String getDatePostfix(int dateNum) {
-        char[] dateArray = String.valueOf(dateNum).toCharArray();
-        char lastChar = dateArray[dateArray.length-1];
-        switch (lastChar) {
-            case '1':
-                return "st";
-            case '2':
-                return "nd";
-            case '3':
-                return "rd";
-            default:
-                return "th";
         }
     }
 

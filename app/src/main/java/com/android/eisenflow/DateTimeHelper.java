@@ -293,4 +293,19 @@ public class DateTimeHelper {
             return false;
     }
 
+    public String getDatePostfix(int dateNum) {
+        char[] dateArray = String.valueOf(dateNum).toCharArray();
+        char lastChar = dateArray[dateArray.length-1];
+        switch (lastChar) {
+            case '1':
+                return "st";
+            case '2':
+                return "nd";
+            case '3':
+                return "rd";
+            default:
+                return "th";
+        }
+    }
+
 }

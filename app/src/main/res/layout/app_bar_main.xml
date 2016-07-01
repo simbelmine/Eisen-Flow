@@ -58,7 +58,6 @@
         >
 
         <include layout="@layout/content_main" />
-        <!--<include layout="@layout/new_content_main" />-->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"

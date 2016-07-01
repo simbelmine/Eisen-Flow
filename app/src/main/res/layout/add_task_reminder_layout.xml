@@ -19,7 +19,7 @@
             android:id="@+id/reminder_icon"
             android:layout_width="@dimen/task_icon_size"
             android:layout_height="@dimen/task_icon_size"
-            android:src="@drawable/reminder_bell"
+            android:src="@drawable/repeat_reminder"
             />
         <TextView
             android:id="@+id/reminder_label"

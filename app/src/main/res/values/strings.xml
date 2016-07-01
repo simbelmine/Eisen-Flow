@@ -4,7 +4,10 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
+    <!--  Menus -->
     <string name="action_settings">Settings</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_done">Done</string>
 
     <string name="quadrantOne">Do It Now</string>
     <string name="quadrantTwo">Plan It</string>
@@ -18,7 +21,7 @@
     <string name="time_txt">All day</string>
     <string name="due_date_txt">Add Due date</string>
     <string name="note_txt">Add note</string>
-    <string name="reminder_txt">Add reminder</string>
+    <string name="reminder_txt">Add repeating reminder</string>
     <string name="daily_txt">Daily</string>
     <string name="weekly_txt">Weekly</string>
     <string name="monthly_txt">Monthly</string>
@@ -80,5 +83,8 @@
     <string name="notification_add_progress">Add Progress</string>
     <string name="weekly_tip_notification">Hey, some task are waiting!</string>
     <string name="daily_evening_tip_notification">You wanna have a productive day tomorrow?\nPlan it now!</string>
+
+    <!-- Edit Preview -->
+    <string name="edit_preview_none_txt">None</string>
 
 </resources>

@@ -33,6 +33,7 @@
         <activity android:name=".oldClasses.AddTask"/>
         <activity android:name=".AddTaskDB"/>
         <activity android:name=".TimerActivity"/>
+        <activity android:name=".EditTaskPreview"/>
 
         <activity android:name=".oldClasses.MainActivity"/>
 
