@@ -13,11 +13,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
-import android.util.Log;
-import android.view.ContextMenu;
-import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -32,6 +30,7 @@ import java.util.Calendar;
  * Created by Sve on 6/30/16.
  */
 public class EditTaskPreview extends AppCompatActivity implements View.OnClickListener, PopupMenu.OnMenuItemClickListener {
+    public static final String ACTION_DELETED = "deleteDTaskAction";
     private LocalDataBaseHelper dbHelper;
     private DateTimeHelper dateTimeHelper;
     private Long rowId;
@@ -265,6 +264,7 @@ public class EditTaskPreview extends AppCompatActivity implements View.OnClickLi
                 break;
             case R.id.task_preview_menu_btn:
                 PopupMenu popup = new PopupMenu(this, view);
+                popup.setOnMenuItemClickListener(this);
                 MenuInflater inflater = popup.getMenuInflater();
                 inflater.inflate(R.menu.edit_preview_menu, popup.getMenu());
                 popup.show();
@@ -287,7 +287,7 @@ public class EditTaskPreview extends AppCompatActivity implements View.OnClickLi
             }
         }
 
-        Bundle b = null;
+        Bundle b;
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             b = ActivityOptions.makeScaleUpAnimation(view, 0, 0, view.getWidth(), view.getHeight()).toBundle();
             startActivity(intent, b);
@@ -302,13 +302,19 @@ public class EditTaskPreview extends AppCompatActivity implements View.OnClickLi
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_delete:
-
-                return true;
-            case R.id.action_done:
-    
+                dbHelper.deleteTask(rowId);
+                sendBroadcastMessage(ACTION_DELETED);
+                finish();
                 return true;
             default:
                 return false;
         }
     }
+
+    private void sendBroadcastMessage(String action) {
+        Intent intent = new Intent(action);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+    }
+
+
 }

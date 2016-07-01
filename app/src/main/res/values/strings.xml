@@ -57,6 +57,7 @@
     <string name="progress_tip">Good job! You reached 100% !</string>
     <string name="priority_0_tip_snackbar">To help your productivity, schedule \'Do it now\' just for the next day.</string>
     <string name="save_alert">Something went wrong while saving your task. Please try again.</string>
+    <string name="task_deleted_msg">Your task was deleted successfully!</string>
 
     <string name="add_task_alert_title">Alert</string>
 

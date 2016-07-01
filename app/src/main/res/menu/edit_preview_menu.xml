@@ -5,8 +5,4 @@
         android:id="@+id/action_delete"
         android:title="@string/action_delete"
         app:showAsAction="never" />
-    <item
-        android:id="@+id/action_done"
-        android:title="@string/action_done"
-        app:showAsAction="never" />
 </menu>
