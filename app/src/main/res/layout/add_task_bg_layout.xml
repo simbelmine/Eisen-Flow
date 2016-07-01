@@ -23,6 +23,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/task_name_buttons_height"
                 android:src="@mipmap/close"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 />
         </LinearLayout>
         <TextView

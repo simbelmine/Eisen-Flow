@@ -39,6 +39,7 @@
                     android:layout_marginBottom="@dimen/task_standard_margin"
                     android:layout_marginRight="@dimen/task_standard_margin"
                     android:src="@mipmap/close"
+                    android:background="?attr/selectableItemBackgroundBorderless"
                     />
             </LinearLayout>
             <LinearLayout
@@ -58,6 +59,7 @@
                     android:layout_marginBottom="@dimen/task_standard_margin"
                     android:layout_marginRight="@dimen/task_standard_margin"
                     android:src="@drawable/menu_v_dots"
+                    android:background="?attr/selectableItemBackgroundBorderless"
                     />
             </LinearLayout>
 
