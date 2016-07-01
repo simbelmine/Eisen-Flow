@@ -148,14 +148,15 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
 //        holder.task_time_txt.setTextColor(context.getResources().getColor(R.color.gray_light));
 
         if(taskRow.getPriority() == 1) {
-            holder.task_p1_progress.setVisibility(View.VISIBLE);
+            if(!"".equals(taskRow.reminderOccurrence)) {
+                holder.task_p1_progress.setVisibility(View.VISIBLE);
 
-            int currProgress = taskRow.calculateProgress(context);
-            if(currProgress >= 100) {
-                holder.task_p1_progress.setText(setProgressValue(100));
-            }
-            else {
-                holder.task_p1_progress.setText(setProgressValue(currProgress));
+                int currProgress = taskRow.calculateProgress(context);
+                if (currProgress >= 100) {
+                    holder.task_p1_progress.setText(setProgressValue(100));
+                } else {
+                    holder.task_p1_progress.setText(setProgressValue(currProgress));
+                }
             }
         }
         else {
