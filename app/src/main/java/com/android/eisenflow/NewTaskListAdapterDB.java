@@ -11,9 +11,11 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
@@ -27,6 +29,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.eisenflow.oldClasses.MainActivity;
@@ -45,6 +48,9 @@ import java.util.Map;
 public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> {
     public static final String ACTION_DELETE = "deleteTaskAction";
     private static final String PROGRESS_TIP = "isProgressTipShown";
+    public static final String TIMER_ACTION = "StartTimer";
+    public static final String PROGRESS_UP_ACTION = "IncreaseProgress";
+    public static final String SHARE_ACTION = "ShareTask";
     private Context context;
     private List<Task> tasksList;
     private RecyclerView recyclerView;
@@ -455,14 +461,33 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
 
 
     public void registerBroadcastReceivers() {
-        IntentFilter timerIF= new IntentFilter(RecyclerItemSwipeDetector.TIMER_ACTION);
+        IntentFilter timerIF= new IntentFilter(TIMER_ACTION);
         LocalBroadcastManager.getInstance(context).registerReceiver(onTimerTriggered, timerIF);
 
-        IntentFilter progressUpIF= new IntentFilter(RecyclerItemSwipeDetector.PROGRESS_UP_ACTION);
+        IntentFilter progressUpIF= new IntentFilter(PROGRESS_UP_ACTION);
         LocalBroadcastManager.getInstance(context).registerReceiver(onProgressUpTriggered, progressUpIF);
 
-        IntentFilter shareIF= new IntentFilter(RecyclerItemSwipeDetector.SHARE_ACTION);
+        IntentFilter shareIF= new IntentFilter(SHARE_ACTION);
         LocalBroadcastManager.getInstance(context).registerReceiver(onShareTriggered, shareIF);
+
+        IntentFilter deletedIF= new IntentFilter(EditTaskPreview.ACTION_DELETED);
+        LocalBroadcastManager.getInstance(context).registerReceiver(onDeleted, deletedIF);
+    }
+
+    private BroadcastReceiver onDeleted = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            showInfoSnackbar(context.getResources().getString(R.string.task_deleted_msg), R.color.white);
+        }
+    };
+    private void showInfoSnackbar(String messageToShow, int colorMsg) {
+        Snackbar snackbar = Snackbar.make(getParentView(), messageToShow, Snackbar.LENGTH_LONG)
+                .setActionTextColor(Color.WHITE);
+
+        View snackbarView = snackbar.getView();
+        TextView text = (TextView) snackbarView.findViewById(android.support.design.R.id.snackbar_text);
+        text.setTextColor(context.getResources().getColor(colorMsg));
+        snackbar.show();
     }
 
     private BroadcastReceiver onTimerTriggered = new BroadcastReceiver() {
@@ -482,6 +507,8 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
         @Override
         public void onReceive(Context context, Intent intent) {
             int taskId = intent.getIntExtra(LocalDataBaseHelper.KEY_ROW_ID, -1);
+
+            Log.v("eisen", "SHARE   " + taskId);
 
             if(taskId != -1) {
                 Task task = getTaskById(taskId);
@@ -506,6 +533,7 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
         LocalBroadcastManager.getInstance(context).unregisterReceiver(onTimerTriggered);
         LocalBroadcastManager.getInstance(context).unregisterReceiver(onProgressUpTriggered);
         LocalBroadcastManager.getInstance(context).unregisterReceiver(onShareTriggered);
+        LocalBroadcastManager.getInstance(context).unregisterReceiver(onDeleted);
     }
 
     private View getParentView() {

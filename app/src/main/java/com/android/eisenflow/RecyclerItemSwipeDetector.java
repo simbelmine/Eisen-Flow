@@ -23,9 +23,6 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
     private static final int MIN_DISTANCE = 300;
     private static final int DISMISS_DELAY = 3000;
     private static final int ACTION_DELAY = 1500;
-    public static final String TIMER_ACTION = "StartTimer";
-    public static final String PROGRESS_UP_ACTION = "IncreaseProgress";
-    public static final String SHARE_ACTION = "ShareTask";
     int[] flags = new int[] {Intent.FLAG_ACTIVITY_NEW_TASK};
     private Context context;
     private boolean motionInterceptDisallowed = false;
@@ -183,21 +180,21 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
                         switch ((int)holder.card_right_action.getTag()) {
                             case 0:
                                 Log.v("eisen", "Action -> Timer");
-                                sendCardActionBroadcast(TIMER_ACTION);
+                                sendCardActionBroadcast(NewTaskListAdapterDB.TIMER_ACTION);
                                 swipe(0);
                                 holder.undo_layout.setVisibility(View.INVISIBLE);
                                 holder.delete_action_layout.setVisibility(View.VISIBLE);
                                 break;
                             case 1:
                                 Log.v("eisen", "Action -> Up++");
-                                sendCardActionBroadcast(PROGRESS_UP_ACTION);
+                                sendCardActionBroadcast(NewTaskListAdapterDB.PROGRESS_UP_ACTION);
                                 swipe(0);
                                 holder.undo_layout.setVisibility(View.INVISIBLE);
                                 holder.delete_action_layout.setVisibility(View.VISIBLE);
                                 break;
                             case 2:
                                 Log.v("eisen", "Action -> Share");
-                                sendCardActionBroadcast(SHARE_ACTION);
+                                sendCardActionBroadcast(NewTaskListAdapterDB.SHARE_ACTION);
                                 swipe(0);
                                 holder.undo_layout.setVisibility(View.INVISIBLE);
                                 holder.delete_action_layout.setVisibility(View.VISIBLE);
@@ -246,8 +243,8 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
     }
 
     private void performClick(View v) {
-        String[] extra_names = new String[]{LocalDataBaseHelper.KEY_ROW_ID};
-        long[] extra_value = new long[]{taskId};
+        String[] extra_names = new String[]{LocalDataBaseHelper.KEY_ROW_ID, "position"};
+        long[] extra_value = new long[]{taskId, position};
 
         startActivity(EditTaskPreview.class, v, flags, extra_names, extra_value);
     }

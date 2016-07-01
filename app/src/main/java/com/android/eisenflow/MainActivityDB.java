@@ -27,7 +27,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -114,9 +113,6 @@ public class MainActivityDB extends AppCompatActivity
         IntentFilter iifDelete = new IntentFilter(NewTaskListAdapterDB.ACTION_DELETE);
         LocalBroadcastManager.getInstance(this).registerReceiver(onTaskDelete, iifDelete);
 
-        IntentFilter iifDeleted = new IntentFilter(EditTaskPreview.ACTION_DELETED);
-        LocalBroadcastManager.getInstance(this).registerReceiver(onTaskDeleted, iifDeleted);
-
         IntentFilter iifDone = new IntentFilter(ReminderDoneReceiver.NOTIFICATION_DONE_ACTION);
         LocalBroadcastManager.getInstance(this).registerReceiver(onTaskDone, iifDone);
 
@@ -130,12 +126,6 @@ public class MainActivityDB extends AppCompatActivity
     @Override
     protected void onPause() {
         super.onPause();
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(onTaskDelete);
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(onTaskDeleted);
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(onTaskDone);
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(onTaskAddProgress);
-
-        if(adapterDB != null) adapterDB.unregisterAdapterBroadcastReceivers();
     }
 
     private BroadcastReceiver onTaskDelete = new BroadcastReceiver() {
@@ -146,13 +136,6 @@ public class MainActivityDB extends AppCompatActivity
             adapterDB.deleteItem(dbHelper, rowId, position) ;
             justRefreshDecorators = true;
             startListFeedingTask();
-        }
-    };
-
-    private BroadcastReceiver onTaskDeleted = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            showInfoSnackbar(getResources().getString(R.string.task_deleted_msg), R.color.white);
         }
     };
 
@@ -174,6 +157,12 @@ public class MainActivityDB extends AppCompatActivity
     protected void onDestroy() {
         super.onDestroy();
         dbHelper.close();
+
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(onTaskDelete);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(onTaskDone);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(onTaskAddProgress);
+
+        if(adapterDB != null) adapterDB.unregisterAdapterBroadcastReceivers();
     }
 
     private void initLayout() {
@@ -673,17 +662,6 @@ public class MainActivityDB extends AppCompatActivity
         View snackbarView = snackbar.getView();
         TextView text = (TextView) snackbarView.findViewById(android.support.design.R.id.snackbar_text);
         text.setTextColor(getResources().getColor(R.color.firstQuadrant));
-        snackbar.show();
-    }
-
-    private void showInfoSnackbar(String messageToShow, int colorMsg) {
-        CoordinatorLayout layout = (CoordinatorLayout) findViewById(R.id.main_layout);
-        Snackbar snackbar = Snackbar.make(layout, messageToShow, Snackbar.LENGTH_INDEFINITE)
-                .setActionTextColor(Color.WHITE);
-
-        View snackbarView = snackbar.getView();
-        TextView text = (TextView) snackbarView.findViewById(android.support.design.R.id.snackbar_text);
-        text.setTextColor(getResources().getColor(colorMsg));
         snackbar.show();
     }
 

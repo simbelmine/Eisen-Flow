@@ -16,6 +16,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
+import android.util.Log;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,6 +33,9 @@ import java.util.Calendar;
  */
 public class EditTaskPreview extends AppCompatActivity implements View.OnClickListener, PopupMenu.OnMenuItemClickListener {
     public static final String ACTION_DELETED = "deleteDTaskAction";
+    private static final int MENU_TIMER_ID = 1;
+    private static final int MENU_PROGRESS_ID = 2;
+    private static final int MENU_SHARE_ID = 3;
     private LocalDataBaseHelper dbHelper;
     private DateTimeHelper dateTimeHelper;
     private Long rowId;
@@ -42,6 +47,8 @@ public class EditTaskPreview extends AppCompatActivity implements View.OnClickLi
     private FloatingActionButton taskPreviewFAB;
     private LinearLayout closeBtn;
     private LinearLayout menuBtn;
+    private int priorityGlobal;
+    private int position;
     int[] flags = new int[] {Intent.FLAG_ACTIVITY_NEW_TASK};
 
     @Override
@@ -65,6 +72,7 @@ public class EditTaskPreview extends AppCompatActivity implements View.OnClickLi
 
         dbHelper.open();
         setRowIdFromIntent();
+        setPositionFromIntent();
         populateLayout();
     }
 
@@ -75,6 +83,12 @@ public class EditTaskPreview extends AppCompatActivity implements View.OnClickLi
                     : null;
 
         }
+    }
+
+    private void setPositionFromIntent() {
+        Bundle extras = getIntent().getExtras();
+        position = extras != null ? extras.getInt("position")
+                : -1;
     }
 
     @Override
@@ -122,6 +136,7 @@ public class EditTaskPreview extends AppCompatActivity implements View.OnClickLi
             if (cursor != null && cursor.moveToFirst()) {
                 // ***  Priority  ***
                 int priority = cursor.getInt(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_PRIORITY));
+                priorityGlobal = priority;
                 setBgPriorityColor(priority);
 
                 // ***  Task Name  ***
@@ -267,7 +282,24 @@ public class EditTaskPreview extends AppCompatActivity implements View.OnClickLi
                 popup.setOnMenuItemClickListener(this);
                 MenuInflater inflater = popup.getMenuInflater();
                 inflater.inflate(R.menu.edit_preview_menu, popup.getMenu());
+
+                addItemToMenu(popup);
+
                 popup.show();
+                break;
+        }
+    }
+
+    private void addItemToMenu(PopupMenu popup) {
+        switch (priorityGlobal) {
+            case 0:
+                popup.getMenu().add(Menu.NONE, MENU_TIMER_ID, 0, "Start timer");
+                break;
+            case 1:
+                popup.getMenu().add(Menu.NONE, MENU_PROGRESS_ID, 0, "Add progress");
+                break;
+            case 2:
+                popup.getMenu().add(Menu.NONE, MENU_SHARE_ID, 0, "Share");
                 break;
         }
     }
@@ -306,6 +338,18 @@ public class EditTaskPreview extends AppCompatActivity implements View.OnClickLi
                 sendBroadcastMessage(ACTION_DELETED);
                 finish();
                 return true;
+            case MENU_TIMER_ID:
+                sendBroadcastMessage(NewTaskListAdapterDB.TIMER_ACTION);
+                finish();
+                return true;
+            case MENU_PROGRESS_ID:
+                sendBroadcastMessage(NewTaskListAdapterDB.PROGRESS_UP_ACTION);
+                finish();
+                return true;
+            case  MENU_SHARE_ID:
+                sendBroadcastMessage(NewTaskListAdapterDB.SHARE_ACTION);
+                finish();
+                return true;
             default:
                 return false;
         }
@@ -313,6 +357,8 @@ public class EditTaskPreview extends AppCompatActivity implements View.OnClickLi
 
     private void sendBroadcastMessage(String action) {
         Intent intent = new Intent(action);
+        intent.putExtra(LocalDataBaseHelper.KEY_ROW_ID, rowId.intValue());
+        intent.putExtra("position", position);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
