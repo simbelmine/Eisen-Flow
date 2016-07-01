@@ -114,8 +114,6 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
         setValueToField(holder, taskRow);
         setPriorityActionIcon(holder, priority);
 
-        PositionBasedOnClickListener positionListener = new PositionBasedOnClickListener(position);
-        holder.mainLayout.setOnClickListener(positionListener);
         holder.cardView.setOnTouchListener(new RecyclerItemSwipeDetector(context, holder, recyclerView, taskRow.getId(), position));
 
         setTaskPriority(holder, priority, position);
@@ -249,7 +247,7 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
             }
         }
 
-        Bundle b = null;
+        Bundle b;
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             b = ActivityOptions.makeScaleUpAnimation(view, 0, 0, view.getWidth(), view.getHeight()).toBundle();
             context.startActivity(intent, b);
@@ -569,23 +567,4 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
         return listWithHeaders;
     }
 
-    private class PositionBasedOnClickListener implements View.OnClickListener {
-        private int position;
-
-        public PositionBasedOnClickListener(int position) {
-            this.position = position;
-        }
-
-        @Override
-        public void onClick(View view) {
-            switch (view.getId()) {
-                case R.id.task_card_mainview:
-                    String[] extra_names = new String[]{LocalDataBaseHelper.KEY_ROW_ID};
-                    long[] extra_value = new long[]{tasksList.get(position).getId()};
-
-                    startActivity(EditTaskPreview.class, view, flags, extra_names, extra_value);
-                    break;
-            }
-        }
-    }
 }

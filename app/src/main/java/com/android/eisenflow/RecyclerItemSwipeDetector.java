@@ -1,7 +1,11 @@
 package com.android.eisenflow;
 
+import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
+import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -22,6 +26,7 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
     public static final String TIMER_ACTION = "StartTimer";
     public static final String PROGRESS_UP_ACTION = "IncreaseProgress";
     public static final String SHARE_ACTION = "ShareTask";
+    int[] flags = new int[] {Intent.FLAG_ACTIVITY_NEW_TASK};
     private Context context;
     private boolean motionInterceptDisallowed = false;
     private float downX, upX;
@@ -79,26 +84,12 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
                 upX = event.getX();
                 float deltaX = upX - downX;
 
-                if (Math.abs(deltaX) > MIN_DISTANCE) {
-                    // L to R  +
-                    // R to L -
-                    if(deltaX > 0) {
-                        deleteTask();
-                    }
-                    else {
-                        activateAction();
-                    }
-
-
-                } else {
-                    swipe(0);
+                if(upX == downX) {
+                    performClick(v);
                 }
-
-                if (recyclerView != null) {
-                    recyclerView.requestDisallowInterceptTouchEvent(false);
-                    motionInterceptDisallowed = false;
+                else {
+                    performSwipe(deltaX);
                 }
-                currentMenuLayout.setVisibility(View.VISIBLE);
 
                 return true;
 
@@ -227,5 +218,60 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
         intent.putExtra(LocalDataBaseHelper.KEY_ROW_ID, taskId);
         intent.putExtra("position", position);
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+    }
+
+    private void startActivity(Class<?> activityClass, View view, int[] flags, String[] extras_names, long[] extras_values) {
+        Intent intent = new Intent(context, activityClass);
+        if(flags != null) {
+            for(int i = 0; i < flags.length; i++) {
+                intent.addFlags(flags[i]);
+            }
+        }
+        if(extras_names != null && extras_values != null) {
+            if(extras_names.length == extras_values.length) {
+                for(int i = 0; i < extras_names.length; i++) {
+                    intent.putExtra(extras_names[i], extras_values[i]);
+                }
+            }
+        }
+
+        Bundle b;
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            b = ActivityOptions.makeScaleUpAnimation(view, 0, 0, view.getWidth(), view.getHeight()).toBundle();
+            context.startActivity(intent, b);
+        }
+        else {
+            context.startActivity(intent);
+        }
+    }
+
+    private void performClick(View v) {
+        String[] extra_names = new String[]{LocalDataBaseHelper.KEY_ROW_ID};
+        long[] extra_value = new long[]{taskId};
+
+        startActivity(EditTaskPreview.class, v, flags, extra_names, extra_value);
+    }
+
+    private void performSwipe(float deltaX) {
+        if (Math.abs(deltaX) > MIN_DISTANCE) {
+            // L to R  +
+            // R to L -
+            if(deltaX > 0) {
+                deleteTask();
+            }
+            else {
+                activateAction();
+            }
+
+
+        } else {
+            swipe(0);
+        }
+
+        if (recyclerView != null) {
+            recyclerView.requestDisallowInterceptTouchEvent(false);
+            motionInterceptDisallowed = false;
+        }
+        currentMenuLayout.setVisibility(View.VISIBLE);
     }
 }
