@@ -1,6 +1,7 @@
 package com.android.eisenflow;
 
 import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +10,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -461,7 +463,8 @@ public class MainActivityDB extends AppCompatActivity
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.fab: {
-                startAddTaskActivity();
+//                startAddTaskActivity();
+                startAddTaskActivity(view);
                 break;
             }
             case R.id.toolbar_month: {
@@ -619,7 +622,21 @@ public class MainActivityDB extends AppCompatActivity
     private void startAddTaskActivity() {
         Intent intent = new Intent(MainActivityDB.this, AddTaskDB.class);
         startActivityForResult(intent, ACTIVITY_CREATE);
-        overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
+//        overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
+    }
+
+    private void startAddTaskActivity(View view) {
+        Intent intent = new Intent(MainActivityDB.this, AddTaskDB.class);
+
+        Bundle b = null;
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            b = ActivityOptions.makeScaleUpAnimation(view, 0, 0, view.getWidth(), view.getHeight()).toBundle();
+            startActivityForResult(intent, ACTIVITY_CREATE, b);
+        }
+        else {
+            startAddTaskActivity();
+        }
+
     }
 
     @Override

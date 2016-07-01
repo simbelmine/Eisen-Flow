@@ -283,7 +283,8 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        overridePendingTransition(R.anim.slide_in_back, R.anim.slide_out_back);
+//        overridePendingTransition(R.anim.slide_in_back, R.anim.slide_out_back);
+        overridePendingTransition(0, 0);
     }
 
     @Override
@@ -291,7 +292,8 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
         switch (view.getId()) {
             case R.id.task_add_close_btn:
                 finish();
-                overridePendingTransition(R.anim.slide_in_back, R.anim.slide_out_back);
+//                overridePendingTransition(R.anim.slide_in_back, R.anim.slide_out_back);
+                overridePendingTransition(0, 0);
                 break;
             case R.id.task_add_save_btn:
                 hideSoftKbd();
@@ -1059,7 +1061,8 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
     private void closeActivityWithResult(int result) {
         returnResult(result);
         finish();
-        overridePendingTransition(R.anim.slide_in_back, R.anim.slide_out_back);
+//        overridePendingTransition(R.anim.slide_in_back, R.anim.slide_out_back);
+        overridePendingTransition(0, 0);
     }
 
     private void returnResult(int resultCode) {

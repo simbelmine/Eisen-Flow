@@ -1,6 +1,7 @@
 package com.android.eisenflow;
 
 import android.animation.ValueAnimator;
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.database.Cursor;
@@ -8,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -85,7 +87,8 @@ public class EditTaskPreview extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        overridePendingTransition(R.anim.slide_in_back, R.anim.slide_out_back);
+//        overridePendingTransition(R.anim.slide_in_back, R.anim.slide_out_back);
+        overridePendingTransition(0, 0);
     }
 
     private void initLayout() {
@@ -253,11 +256,12 @@ public class EditTaskPreview extends AppCompatActivity implements View.OnClickLi
             case R.id.fab_task_preview:
                 String[] extra_names = new String[]{LocalDataBaseHelper.KEY_ROW_ID};
                 long[] extra_value = new long[]{rowId};
-                startActivity(AddTaskDB.class, flags, extra_names, extra_value);
+                startActivity(AddTaskDB.class, view, flags, extra_names, extra_value);
                 break;
             case R.id.task_preview_close_btn:
                 finish();
-                overridePendingTransition(R.anim.slide_in_back, R.anim.slide_out_back);
+//                overridePendingTransition(R.anim.slide_in_back, R.anim.slide_out_back);
+                overridePendingTransition(0, 0);
                 break;
             case R.id.task_preview_menu_btn:
                 PopupMenu popup = new PopupMenu(this, view);
@@ -268,7 +272,7 @@ public class EditTaskPreview extends AppCompatActivity implements View.OnClickLi
         }
     }
 
-    private void startActivity(Class<?> activityClass, int[] flags, String[] extras_names, long[] extras_values) {
+    private void startActivity(Class<?> activityClass, View view, int[] flags, String[] extras_names, long[] extras_values) {
         Intent intent = new Intent(EditTaskPreview.this, activityClass);
         if(flags != null) {
             for(int i = 0; i < flags.length; i++) {
@@ -282,7 +286,16 @@ public class EditTaskPreview extends AppCompatActivity implements View.OnClickLi
                 }
             }
         }
-        startActivity(intent);
+
+        Bundle b = null;
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            b = ActivityOptions.makeScaleUpAnimation(view, 0, 0, view.getWidth(), view.getHeight()).toBundle();
+            startActivity(intent, b);
+        }
+        else {
+            startActivity(intent);
+        }
+
     }
 
     @Override

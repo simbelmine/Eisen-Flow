@@ -1,6 +1,7 @@
 package com.android.eisenflow;
 
 import android.app.Activity;
+import android.app.ActivityOptions;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -12,6 +13,7 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
@@ -23,7 +25,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -209,7 +210,7 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
         this.tasksList = getListWithHeaders(tasks);
     }
 
-    private void startActivity(Class<?> activityClass, int[] flags, String[] extras_names, long[] extras_values) {
+    private void startActivity(Class<?> activityClass, View view, int[] flags, String[] extras_names, long[] extras_values) {
         Intent intent = new Intent(context, activityClass);
         if(flags != null) {
             for(int i = 0; i < flags.length; i++) {
@@ -223,7 +224,16 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
                 }
             }
         }
-        context.startActivity(intent);
+
+        Bundle b = null;
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            b = ActivityOptions.makeScaleUpAnimation(view, 0, 0, view.getWidth(), view.getHeight()).toBundle();
+            context.startActivity(intent, b);
+        }
+        else {
+            context.startActivity(intent);
+        }
+
     }
 
     private void showShareOptions(Task task) {
@@ -436,7 +446,7 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
     private BroadcastReceiver onTimerTriggered = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            startActivity(TimerActivity.class, flags, null, null);
+            startActivity(TimerActivity.class, getParentView(), flags, null, null);
         }
     };
     private BroadcastReceiver onProgressUpTriggered = new BroadcastReceiver() {
@@ -549,7 +559,7 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
                     String[] extra_names = new String[]{LocalDataBaseHelper.KEY_ROW_ID};
                     long[] extra_value = new long[]{tasksList.get(position).getId()};
 
-                    startActivity(EditTaskPreview.class, flags, extra_names, extra_value);
+                    startActivity(EditTaskPreview.class, view, flags, extra_names, extra_value);
                     break;
             }
         }
