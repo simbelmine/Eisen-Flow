@@ -97,39 +97,63 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
     public void onBindViewHolder(TasksListHolder holder, int position) {
         Task taskRow = tasksList.get(position);
 
+
         if(taskRow.getTitle() != null) {
-            int priority = taskRow.getPriority();
-            setValueToField(holder, taskRow);
-            setPriorityActionIcon(holder, priority);
+            setTaskCardInfo(holder, taskRow, position);
 
-            PositionBasedOnClickListener positionListener = new PositionBasedOnClickListener(position);
-            holder.mainLayout.setOnClickListener(positionListener);
-            holder.cardView.setOnTouchListener(new RecyclerItemSwipeDetector(context, holder, recyclerView, taskRow.getId(), position));
-
-            setTaskPriority(holder, priority, position);
 //        crossTaskIfDone(holder, position);
 //        setOldTaskTextColor(holder, position);
         }
         else {
-            holder.text.setText(taskRow.getDate());
-            holder.text.setTextColor(context.getResources().getColor(R.color.date));
-
-            holder.cal_day_of_month.setText("");
-            holder.cal_day_of_week.setText("");
-
-            holder.task_time_txt.setVisibility(View.GONE);
-            holder.mainLayout.setBackgroundColor(context.getResources().getColor(R.color.white));
-
-
-            CardView.LayoutParams params = new CardView.LayoutParams(
-                    CardView.LayoutParams.MATCH_PARENT, (int)convertDpToPixel(40));
-            holder.cardView.setLayoutParams(params);
-
-            ((RelativeLayout)(holder.text.getParent())).setGravity(Gravity.TOP);
-            LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            p.setMargins(0, 16, 0, 0);
-            ((RelativeLayout)(holder.text.getParent())).setLayoutParams(p);
+           setMonthCardInfo(holder, taskRow);
         }
+    }
+
+    private void setTaskCardInfo(TasksListHolder holder, Task taskRow, int position) {
+        int priority = taskRow.getPriority();
+        setValueToField(holder, taskRow);
+        setPriorityActionIcon(holder, priority);
+
+        PositionBasedOnClickListener positionListener = new PositionBasedOnClickListener(position);
+        holder.mainLayout.setOnClickListener(positionListener);
+        holder.cardView.setOnTouchListener(new RecyclerItemSwipeDetector(context, holder, recyclerView, taskRow.getId(), position));
+
+        setTaskPriority(holder, priority, position);
+
+
+        holder.task_time_txt.setVisibility(View.VISIBLE);
+        holder.text.setTextColor(context.getResources().getColor(R.color.white));
+
+        CardView.LayoutParams params = new CardView.LayoutParams(
+                CardView.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.rightMargin = (int)context.getResources().getDimension(R.dimen.task_standard_margin);
+        holder.cardView.setLayoutParams(params);
+        ((RelativeLayout)(holder.text.getParent())).setGravity(Gravity.BOTTOM);
+
+        LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        p.setMargins(32, 16, 0, 5);
+        ((RelativeLayout)(holder.text).getParent()).setLayoutParams(p);
+    }
+
+    private void setMonthCardInfo(TasksListHolder holder, Task taskRow) {
+        holder.text.setText(taskRow.getDate());
+        holder.text.setTextColor(context.getResources().getColor(R.color.date));
+
+        holder.cal_day_of_month.setText("");
+        holder.cal_day_of_week.setText("");
+
+        holder.task_time_txt.setVisibility(View.GONE);
+        holder.mainLayout.setBackgroundColor(context.getResources().getColor(R.color.white));
+
+
+        CardView.LayoutParams params = new CardView.LayoutParams(
+                CardView.LayoutParams.MATCH_PARENT, (int)convertDpToPixel(40));
+        holder.cardView.setLayoutParams(params);
+
+        ((RelativeLayout)(holder.text.getParent())).setGravity(Gravity.TOP);
+        LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        p.setMargins(0, 16, 0, 0);
+        ((RelativeLayout)(holder.text.getParent())).setLayoutParams(p);
     }
 
     public float convertDpToPixel(int dp){
@@ -531,6 +555,7 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
 
         for(Task t : tasks) {
             cal = dateTimeHelper.getCalendar(t.getDate(), t.getTime());
+
             if(lastSeenMonth == -1 || cal.get(Calendar.MONTH) != lastSeenMonth) {
                 lastSeenMonth = cal.get(Calendar.MONTH);
 
@@ -539,7 +564,6 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
                 listWithHeaders.add(newTask);
             }
             listWithHeaders.add(t);
-
         }
 
         return listWithHeaders;
