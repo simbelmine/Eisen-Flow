@@ -54,6 +54,7 @@
             android:layout_height="match_parent"
             android:background="@color/list_item_bg"
             android:layout_toRightOf="@+id/list_cal_date"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
             >
             <ImageView
                 android:layout_width="23dp"

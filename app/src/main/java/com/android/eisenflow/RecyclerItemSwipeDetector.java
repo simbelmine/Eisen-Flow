@@ -72,6 +72,7 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
                 }
 
                 currentMenuLayout.setVisibility(View.VISIBLE);
+                holder.delete_action_layout.setPressed(true);
 
                 swipe((int) deltaX);
                 return true;
@@ -87,6 +88,8 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
                 else {
                     performSwipe(deltaX);
                 }
+
+                holder.delete_action_layout.setPressed(false);
 
                 return true;
 
