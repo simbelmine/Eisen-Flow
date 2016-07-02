@@ -268,7 +268,8 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putLong(LocalDataBaseHelper.KEY_ROW_ID, rowId);
+        if (rowId != null)
+            outState.putLong(LocalDataBaseHelper.KEY_ROW_ID, rowId);
     }
 
     private void setRowIdFromIntent() {
