@@ -15,7 +15,6 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
@@ -211,16 +210,16 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
     private void setPriorityActionIcon(TasksListHolder holder, int priority) {
         switch (priority) {
             case 0:
-                holder.card_right_action.setImageDrawable(context.getResources().getDrawable(R.drawable.timer));
-                holder.card_right_action.setTag(priority);
+                holder.right_action_icon.setImageDrawable(context.getResources().getDrawable(R.drawable.timer));
+                holder.right_action_icon.setTag(priority);
                 break;
             case 1:
-                holder.card_right_action.setImageDrawable(context.getResources().getDrawable(R.drawable.calendar_plus));
-                holder.card_right_action.setTag(priority);
+                holder.right_action_icon.setImageDrawable(context.getResources().getDrawable(R.drawable.calendar_plus));
+                holder.right_action_icon.setTag(priority);
                 break;
             case 2:
-                holder.card_right_action.setImageDrawable(context.getResources().getDrawable(R.drawable.share));
-                holder.card_right_action.setTag(priority);
+                holder.right_action_icon.setImageDrawable(context.getResources().getDrawable(R.drawable.share));
+                holder.right_action_icon.setTag(priority);
                 break;
         }
     }

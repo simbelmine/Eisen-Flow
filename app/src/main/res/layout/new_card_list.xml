@@ -49,14 +49,15 @@
 
         <!-- **************  DELETE - ACTION  ******************** -->
         <RelativeLayout
-            android:id="@+id/delete_done_layout"
+            android:id="@+id/delete_action_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/list_item_bg"
             android:layout_toRightOf="@+id/list_cal_date"
-            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:foreground="?attr/selectableItemBackground"
             >
             <ImageView
+                android:id="@+id/action_delete_icon"
                 android:layout_width="23dp"
                 android:layout_height="23dp"
                 android:src="@drawable/delete"
@@ -64,7 +65,7 @@
                 android:layout_marginLeft="7dp"
                 />
             <ImageView
-                android:id="@+id/card_right_action"
+                android:id="@+id/right_action_icon"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:layout_centerVertical="true"
