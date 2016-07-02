@@ -10,6 +10,6 @@
         android:innerRadiusRatio="2.32"
         android:shape="ring"
         android:thickness="8sp" >
-        <solid android:color="@color/dark_blue" />
+        <solid android:color="@color/timer_color" />
     </shape>
 </rotate>

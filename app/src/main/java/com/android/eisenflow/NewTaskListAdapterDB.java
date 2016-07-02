@@ -493,6 +493,7 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
     private BroadcastReceiver onTimerTriggered = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            LocalBroadcastManager.getInstance(context).unregisterReceiver(this);
             startActivity(TimerActivity.class, getParentView(), flags, null, null);
         }
     };
@@ -507,8 +508,6 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
         @Override
         public void onReceive(Context context, Intent intent) {
             int taskId = intent.getIntExtra(LocalDataBaseHelper.KEY_ROW_ID, -1);
-
-            Log.v("eisen", "SHARE   " + taskId);
 
             if(taskId != -1) {
                 Task task = getTaskById(taskId);

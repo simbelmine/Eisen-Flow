@@ -28,4 +28,5 @@
     <color name="divider_border">#dde0e1</color>
 
     <color name="event_color">#9C5F6E</color>
+    <color name="timer_color">#6e3e39</color>
 </resources>

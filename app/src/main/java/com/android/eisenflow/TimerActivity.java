@@ -94,6 +94,7 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
                 break;
             case R.id.close_timer_btn:
                 finish();
+                overridePendingTransition(0, 0);
                 break;
         }
     }
@@ -307,5 +308,6 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
     public void onBackPressed() {
         super.onBackPressed();
         finish();
+        overridePendingTransition(0, 0);
     }
 }

@@ -4,31 +4,37 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/date"
+    android:background="@color/firstQuadrant"
     android:id="@+id/timer_layout"
     android:weightSum="5"
     >
 
     <LinearLayout
         android:id="@+id/close_timer_btn"
-        android:layout_width="50dp"
+        android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_marginTop="35dp"
-        android:gravity="center"
-        android:layout_gravity="right"
-        android:layout_weight=".3"
+        android:layout_marginTop="@dimen/task_name_buttons_margin"
+        android:gravity="left|center_vertical"
+        android:layout_gravity="left"
+        android:clickable="true"
+        android:layout_weight=".4"
         >
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/task_name_buttons_height"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="@dimen/task_standard_margin"
+            android:layout_marginRight="@dimen/task_standard_margin"
             android:src="@mipmap/close"
+            android:background="?attr/selectableItemBackgroundBorderless"
             />
     </LinearLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="3.7"
+        android:layout_weight="3.6"
         >
         <ProgressBar
             android:id="@+id/progressBar_dummy"
@@ -39,6 +45,7 @@
             android:max="500"
             android:progress="0"
             android:progressDrawable="@drawable/circular_progress_dummy"
+            android:layout_margin="20dp"
             />
 
         <ProgressBar
@@ -48,6 +55,7 @@
             android:layout_height="match_parent"
             android:layout_centerInParent="true"
             android:progressDrawable="@drawable/circular_progress_bar_shape"
+            android:layout_margin="20dp"
             />
 
         <LinearLayout
@@ -63,7 +71,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@color/transparent"
-                android:textColor="@color/dark_blue"
+                android:textColor="@color/timer_color"
                 android:textSize="45sp"
                 android:inputType="phone"
                 android:hint="0"
@@ -71,7 +79,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/lighter_dark_blue"
+                android:textColor="@color/white"
                 android:textSize="20sp"
                 android:text="H"
                 />
@@ -81,7 +89,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@color/transparent"
-                android:textColor="@color/dark_blue"
+                android:textColor="@color/timer_color"
                 android:textSize="45sp"
                 android:inputType="phone"
                 android:hint="00"
@@ -89,7 +97,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/lighter_dark_blue"
+                android:textColor="@color/white"
                 android:textSize="20sp"
                 android:text="M"
                 />
@@ -109,7 +117,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@color/transparent"
-                    android:textColor="@color/dark_blue"
+                    android:textColor="@color/timer_color"
                     android:textSize="20sp"
                     android:inputType="phone"
                     android:cursorVisible="false"
@@ -120,7 +128,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/lighter_dark_blue"
+                    android:textColor="@color/white"
                     android:textSize="10sp"
                     android:text="S"
                     android:focusable="false"
