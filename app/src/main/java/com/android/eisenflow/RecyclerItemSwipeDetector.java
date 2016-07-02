@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -32,8 +33,10 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
     private TasksListHolder holder;
     private RecyclerView recyclerView;
     private RelativeLayout currentMenuLayout;
+    private SwipeRefreshLayout pullToRefreshLayout;
     private int taskId;
     private int position;
+    private int priority;
 
     boolean isLeftToRight = false;
 
@@ -43,12 +46,13 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
     boolean isLtoRtriggered = false;
     boolean isRtoLtriggered = false;
 
-    public RecyclerItemSwipeDetector(Context context, TasksListHolder holder, RecyclerView recyclerView, int taskId, int position) {
+    public RecyclerItemSwipeDetector(Context context, TasksListHolder holder, RecyclerView recyclerView, int taskId, int position, int priority) {
         this.context = context;
         this.holder = holder;
         this.recyclerView = recyclerView;
         this.taskId = taskId;
         this.position = position;
+        this.priority = priority;
 
          animZoomIn = AnimationUtils.loadAnimation(context,
                 R.anim.zoom_in);
@@ -56,6 +60,9 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
                 R.anim.zoom_out);
 
         currentMenuLayout = getCorrectLayout();
+
+
+        pullToRefreshLayout =  (SwipeRefreshLayout)recyclerView.getParent().getParent();
     }
 
 
@@ -70,6 +77,9 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
             case MotionEvent.ACTION_MOVE: {
                 upX = event.getX();
                 float deltaX = downX - upX;
+
+
+                pullToRefreshLayout.setEnabled(false);
 
                 // If we opened the menu enough => the RecyclerView is going to accept the change if not, skip it
                 if (Math.abs(deltaX) > MIN_LOCK_DISTANCE && recyclerView != null && !motionInterceptDisallowed) {
@@ -88,6 +98,7 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
                 }
 
                 currentMenuLayout.setVisibility(View.VISIBLE);
+                if(priority == 1) holder.task_p1_progress.setVisibility(View.INVISIBLE);
                 holder.delete_action_layout.setPressed(true);
 
 
@@ -107,11 +118,13 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
                 }
 
                 holder.delete_action_layout.setPressed(false);
+                if(priority == 1) holder.task_p1_progress.setVisibility(View.VISIBLE);
 
                 return true;
 
             case MotionEvent.ACTION_CANCEL:
                 currentMenuLayout.setVisibility(View.VISIBLE);
+                pullToRefreshLayout.setEnabled(true);
                 return true;
         }
 
@@ -302,7 +315,6 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
             else {
                 activateAction();
             }
-
 
         } else {
             swipe(0);

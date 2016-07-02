@@ -119,7 +119,7 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
         setValueToField(holder, taskRow);
         setPriorityActionIcon(holder, priority);
 
-        holder.cardView.setOnTouchListener(new RecyclerItemSwipeDetector(context, holder, recyclerView, taskRow.getId(), position));
+        holder.cardView.setOnTouchListener(new RecyclerItemSwipeDetector(context, holder, recyclerView, taskRow.getId(), position, priority));
 
         setTaskPriority(holder, priority, position);
 
