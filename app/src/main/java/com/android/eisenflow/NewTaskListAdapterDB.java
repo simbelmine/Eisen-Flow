@@ -234,6 +234,7 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
 
     public void setList(List<Task> tasks) {
 //        this.tasksList = tasks;
+        lastSeenDate = null;
         this.tasksList = getListWithHeaders(tasks);
     }
 
