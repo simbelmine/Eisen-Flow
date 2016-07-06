@@ -23,17 +23,26 @@
 
             <LinearLayout
                 android:id="@+id/main_toolbar_layout"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="left"
-                android:orientation="vertical">
+                android:clickable="true"
+                android:orientation="horizontal"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                >
                 <TextView
                     android:id="@+id/toolbar_month"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:clickable="true"
-                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:gravity="top"
                     style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+                    />
+                <ImageView
+                    android:id="@+id/toolbar_arrow"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_gravity="top"
+                    android:src="@mipmap/ic_arrow_up_light"
                     />
             </LinearLayout>
 

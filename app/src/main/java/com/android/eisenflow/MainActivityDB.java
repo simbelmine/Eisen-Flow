@@ -1,5 +1,6 @@
 package com.android.eisenflow;
 
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.BroadcastReceiver;
@@ -27,9 +28,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -72,7 +75,9 @@ public class MainActivityDB extends AppCompatActivity
     private NavigationView navigationView;
     private RecyclerView tasksRecyclerView;
     private LinearLayoutManager quadrantOneManager;
+    private LinearLayout toolbarActionLayout;
     private TextView monthToolbar;
+    private ImageView arrowToolbar;
     private SlidingUpPanelLayout slidingLayout;
     private TextView dateSlideTxt;
     private Date date;
@@ -174,9 +179,12 @@ public class MainActivityDB extends AppCompatActivity
         // Init Toolbar
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         // Toolbar Month Name
+        toolbarActionLayout = (LinearLayout) findViewById(R.id.main_toolbar_layout);
+        toolbarActionLayout.setOnClickListener(this);
         monthToolbar = (TextView)findViewById(R.id.toolbar_month);
         monthToolbar.setText(dateTimeHelper.getMonthName(Calendar.getInstance()));
-        monthToolbar.setOnClickListener(this);
+        arrowToolbar = (ImageView) findViewById(R.id.toolbar_arrow);
+        setArrowAnimation(arrowToolbar, true);
         // FAB init
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(this);
@@ -194,6 +202,32 @@ public class MainActivityDB extends AppCompatActivity
         tasksRecyclerView.setHasFixedSize(true);
         // Sliding Layout
         slidingLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
+        slidingLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
+            @Override
+            public void onPanelSlide(View panel, float slideOffset) {
+
+            }
+
+            @Override
+            public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
+
+                if(newState == SlidingUpPanelLayout.PanelState.COLLAPSED) {
+                    setArrowAnimation(arrowToolbar, true);
+                }
+                else if(newState == SlidingUpPanelLayout.PanelState.ANCHORED || newState == SlidingUpPanelLayout.PanelState.EXPANDED) {
+                    setArrowAnimation(arrowToolbar, false);
+                }
+
+//                if(previousState == SlidingUpPanelLayout.PanelState.COLLAPSED || newState == SlidingUpPanelLayout.PanelState.ANCHORED || newState == SlidingUpPanelLayout.PanelState.EXPANDED) {
+//                    setArrowAnimation(arrowToolbar, false);
+//                }
+//                else {
+//                    setArrowAnimation(arrowToolbar, true);
+//                }
+
+
+            }
+        });
         // Date Day Txt on slide
         dateSlideTxt = (TextView) findViewById(R.id.day_date_txt);
         date = Calendar.getInstance().getTime();
@@ -468,10 +502,20 @@ public class MainActivityDB extends AppCompatActivity
                 startAddTaskActivity(view);
                 break;
             }
-            case R.id.toolbar_month: {
+            case R.id.main_toolbar_layout: {
                 // Return Calendar to Current Date
                 setCalendarCurrentDate();
                 monthToolbar.setText(dateTimeHelper.getMonthName(Calendar.getInstance()));
+
+                if(slidingLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) {
+                    setArrowAnimation(arrowToolbar, false);
+                    slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.ANCHORED);
+                }
+                else {
+                    setArrowAnimation(arrowToolbar, true);
+                    slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                }
+
                 break;
             }
         }
@@ -716,6 +760,7 @@ public class MainActivityDB extends AppCompatActivity
             @Override
             public void onSwipeDown() {
                 slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.ANCHORED);
+                setArrowAnimation(arrowToolbar, false);
             }
         });
     }
@@ -752,5 +797,15 @@ public class MainActivityDB extends AppCompatActivity
 
     private void setTipReminder(Calendar whenToRepeat) {
         new ReminderManager(this).setOldTasksReminder(whenToRepeat);
+    }
+
+    private void setArrowAnimation(View v, boolean pflipDown) {
+        int rotationAngle = 0;
+        if(pflipDown) {
+            rotationAngle = rotationAngle + 180;
+        }
+        ObjectAnimator anim = ObjectAnimator.ofFloat(v, "rotation",rotationAngle, rotationAngle);
+        anim.setDuration(500);
+        anim.start();
     }
 }
