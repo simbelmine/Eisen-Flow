@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -22,6 +23,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewAnimationUtils;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CalendarView;
@@ -34,6 +37,7 @@ import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.android.eisenflow.reminders.ReminderManager;
 
@@ -108,6 +112,9 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
     private String oldDateStr;
     private String oldTimeStr;
     private int isDone;
+    private View dummyKbdView;
+    private InputMethodManager imm;
+    private boolean isKbdOpen = false;
 
     private DateTimeHelper dateTimeHelper;
     private LocalDataBaseHelper dbHelper;
@@ -126,6 +133,7 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
                 : null;
 
         initLayout();
+        showHideDummyKbdView();
     }
 
     private void initLayout() {
@@ -231,6 +239,9 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
         mainDueDateTxtLayout = (RelativeLayout) findViewById(R.id.main_due_date_txt_layout);
         mainDueDateTxtLayout.setVisibility(View.GONE);
         arrowDueDate = (ImageView) findViewById(R.id.arrow_due_date);
+
+        dummyKbdView = findViewById(R.id.dummy_kbd_view);
+        imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
     }
 
     private void populateLayout() {
@@ -300,7 +311,8 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
                     saveNewTask();
                 }
                 break;
-            case R.id.priority_layout:
+            case R.id.task_name:
+                showHideDummyKbdView();
                 break;
             case R.id.do_it_l:
                 hideSoftKbd();
@@ -380,6 +392,7 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
                     setFocusToView(view);
                     setArrowAnimation(arrowNote, true);
                 }
+                showHideDummyKbdView();
                 break;
             case R.id.curr_date_txt:
                 calendarView.setDate(Calendar.getInstance().getTimeInMillis(), true, true);
@@ -1158,6 +1171,43 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
 
     private void setTaskRepeatingReminder(String reminderOccurrence, int weekDayInt, String reminderDate, String reminderTime) {
         new ReminderManager(this).setRepeatingReminder(rowId, reminderOccurrence, weekDayInt, reminderDate, reminderTime);
+    }
+
+    private void showHideDummyKbdView() {
+        final ViewGroup rootView = (ViewGroup) ((ViewGroup) this.findViewById(android.R.id.content)).getChildAt(0);
+        rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                Rect r = new Rect();
+                rootView.getWindowVisibleDisplayFrame(r);
+                int screenHeight = rootView.getRootView().getHeight();
+                int keypadHeight = screenHeight - r.bottom;
+                boolean isOpen;
+
+                if (keypadHeight > screenHeight * 0.15) { // 0.15 ratio is perhaps enough to determine keypad height.
+                    // keyboard is opened
+                    isOpen = true;
+                }
+                else{
+                    // keyboard is closed
+                    isOpen = false;
+                }
+
+                // ******************************************** //
+                // **** Deal with double Open/Close events **** //
+                // ******************************************** //
+                if(isOpen && (isKbdOpen != isOpen)) {
+                    isKbdOpen = isOpen;
+                    dummyKbdView.getLayoutParams().height = keypadHeight;
+                    dummyKbdView.setVisibility(View.VISIBLE);
+                    dummyKbdView.requestLayout();
+                }
+                else if(!isOpen && (isKbdOpen != isOpen)){
+                    isKbdOpen = isOpen;
+                    dummyKbdView.setVisibility(View.GONE);
+                }
+            }
+        });
     }
 }
 

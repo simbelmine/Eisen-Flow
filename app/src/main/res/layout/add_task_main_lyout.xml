@@ -65,6 +65,13 @@
                     android:background="@color/divider_border"
                     android:layout_marginTop="@dimen/task_standard_margin"
                     />
+                <View
+                    android:id="@+id/dummy_kbd_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:visibility="gone"
+                    android:layout_below="@id/note_divider"
+                    />
             </RelativeLayout>
         </ScrollView>
     </LinearLayout>
