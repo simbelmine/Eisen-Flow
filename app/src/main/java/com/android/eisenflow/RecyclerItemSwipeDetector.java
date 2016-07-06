@@ -79,10 +79,6 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
                 upX = event.getX();
                 float deltaX = downX - upX;
 
-
-                Log.v("eisen", " " + deltaX);
-
-
                 pullToRefreshLayout.setEnabled(false);
 
                 // If we opened the menu enough => the RecyclerView is going to accept the change if not, skip it
@@ -118,7 +114,6 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
                 if (upX == downX) {
                     performClick(v);
                 } else {
-                    Log.v("eisen", "UP");
                     performSwipeAction(deltaX);
                 }
 

@@ -145,7 +145,7 @@
 
                 <TextView
                     android:id="@+id/task_p1_percentage"
-                    android:layout_width="wrap_content"
+                    android:layout_width="30dp"
                     android:layout_height="match_parent"
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="@dimen/card_padding"
@@ -157,16 +157,15 @@
 
                 <ImageView
                     android:id="@+id/done_divider"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="1.4dp"
                     android:background="@color/white"
-                    android:layout_gravity="center"
+                    android:layout_gravity="center_vertical|left"
                     android:layout_marginTop="2dp"
-                    android:layout_above="@+id/task_time_txt"
-                    android:layout_toLeftOf="@+id/task_p1_percentage"
                     android:layout_marginBottom="8dp"
+                    android:layout_above="@+id/task_time_txt"
                     android:layout_marginRight="@dimen/card_padding"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     />
             </RelativeLayout>
         </LinearLayout>

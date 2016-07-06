@@ -26,6 +26,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -102,15 +103,14 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
     public void onBindViewHolder(TasksListHolder holder, int position) {
         Task taskRow = tasksList.get(position);
 
-
         if(taskRow.getTitle() != null) {
             setTaskCardInfo(holder, taskRow, position);
 
-        crossTaskIfDone(holder, position);
+            crossTaskIfDone(holder, position);
 //        setOldTaskTextColor(holder, position);
         }
         else {
-           setMonthCardInfo(holder, taskRow);
+            setMonthCardInfo(holder, taskRow);
         }
     }
 
@@ -300,9 +300,11 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
     private void crossTaskIfDone(TasksListHolder holder, int position) {
         if(tasksList.get(position).getIsDone() == 1) {
             holder.task_done_line.setVisibility(View.VISIBLE);
+            holder.task_done_line.getLayoutParams().width = getTaskTextWidth(holder);
         }
         else {
-            holder.task_done_line.setVisibility(View.INVISIBLE);
+            holder.task_done_line.setVisibility(View.GONE);
+//            setDoneLine(holder, View.INVISIBLE);
         }
     }
 
@@ -592,4 +594,14 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
         return listWithHeaders;
     }
 
+    private int getTaskTextWidth(final TasksListHolder holder) {
+        int totalWidth = 0;
+        View chView = holder.text;
+        chView.measure(
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+        totalWidth += chView.getMeasuredWidth();
+
+        return totalWidth;
+    }
 }
