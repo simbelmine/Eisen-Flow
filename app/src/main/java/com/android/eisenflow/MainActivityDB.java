@@ -72,7 +72,7 @@ public class MainActivityDB extends AppCompatActivity
     private NavigationView navigationView;
     private RecyclerView tasksRecyclerView;
     private LinearLayoutManager quadrantOneManager;
-    private TextView month;
+    private TextView monthToolbar;
     private SlidingUpPanelLayout slidingLayout;
     private TextView dateSlideTxt;
     private Date date;
@@ -174,9 +174,9 @@ public class MainActivityDB extends AppCompatActivity
         // Init Toolbar
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         // Toolbar Month Name
-        month = (TextView)findViewById(R.id.toolbar_month);
-        month.setText(dateTimeHelper.getMonthName(Calendar.getInstance()));
-        month.setOnClickListener(this);
+        monthToolbar = (TextView)findViewById(R.id.toolbar_month);
+        monthToolbar.setText(dateTimeHelper.getMonthName(Calendar.getInstance()));
+        monthToolbar.setOnClickListener(this);
         // FAB init
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(this);
@@ -471,6 +471,7 @@ public class MainActivityDB extends AppCompatActivity
             case R.id.toolbar_month: {
                 // Return Calendar to Current Date
                 setCalendarCurrentDate();
+                monthToolbar.setText(dateTimeHelper.getMonthName(Calendar.getInstance()));
                 break;
             }
         }
@@ -482,10 +483,12 @@ public class MainActivityDB extends AppCompatActivity
 
         if (!pressedCalendarDate.equals(currentDate)) {
             updateCalendarSelectedDateTxtColor(pressedCalendarDate.getDate(), R.color.gray);
+            monthToolbar.setText(getString(R.string.today_txt));
         }
         else
         {
             updateCalendarSelectedDateTxtColor(currentDate.getDate(), R.color.colorAccent);
+            monthToolbar.setText(dateTimeHelper.getMonthName(Calendar.getInstance()));
         }
 
         hidePriorityTipMessage();
