@@ -217,15 +217,6 @@ public class MainActivityDB extends AppCompatActivity
                 else if(newState == SlidingUpPanelLayout.PanelState.ANCHORED || newState == SlidingUpPanelLayout.PanelState.EXPANDED) {
                     setArrowAnimation(arrowToolbar, false);
                 }
-
-//                if(previousState == SlidingUpPanelLayout.PanelState.COLLAPSED || newState == SlidingUpPanelLayout.PanelState.ANCHORED || newState == SlidingUpPanelLayout.PanelState.EXPANDED) {
-//                    setArrowAnimation(arrowToolbar, false);
-//                }
-//                else {
-//                    setArrowAnimation(arrowToolbar, true);
-//                }
-
-
             }
         });
         // Date Day Txt on slide
@@ -576,7 +567,7 @@ public class MainActivityDB extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+//        getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
@@ -587,12 +578,11 @@ public class MainActivityDB extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        switch (id) {
-            case  R.id.action_settings:
-                return true;
-        }
-
-
+//        switch (id) {
+//            case  R.id.action_settings:
+//                return true;
+//        }
+        
         return super.onOptionsItemSelected(item);
     }
 
