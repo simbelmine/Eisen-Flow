@@ -22,8 +22,9 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
     //    private static final int MIN_LOCK_DISTANCE = 30; // disallow motion intercept
 //    private static final int MIN_DISTANCE = 550;
     private static final int MIN_LOCK_DISTANCE = 300; // disallow motion intercept
-    private static final int MIN_DISTANCE = 300;
-    private static final int DISTANCE = 100;
+    private static final int MIN_DISTANCE = 100;
+    private static final int DISTANCE = 70;
+    private static final int ICON_SHOW_DELAY = 300;
     private static final int DISMISS_DELAY = 3000;
     private static final int ACTION_DELAY = 1500;
     int[] flags = new int[] {Intent.FLAG_ACTIVITY_NEW_TASK};
@@ -43,8 +44,8 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
     Animation animZoomIn;
     Animation animZoomOut;
     float oldDeltaX = -1;
-    boolean isLtoRtriggered = false;
-    boolean isRtoLtriggered = false;
+    boolean isTriggered_LtoR = false;
+    boolean isTriggered_RtoL = false;
 
     public RecyclerItemSwipeDetector(Context context, TasksListHolder holder, RecyclerView recyclerView, int taskId, int position, int priority) {
         this.context = context;
@@ -54,9 +55,9 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
         this.position = position;
         this.priority = priority;
 
-         animZoomIn = AnimationUtils.loadAnimation(context,
+        animZoomIn = AnimationUtils.loadAnimation(context,
                 R.anim.zoom_in);
-         animZoomOut = AnimationUtils.loadAnimation(context,
+        animZoomOut = AnimationUtils.loadAnimation(context,
                 R.anim.zoom_out);
 
         currentMenuLayout = getCorrectLayout();
@@ -77,6 +78,9 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
             case MotionEvent.ACTION_MOVE: {
                 upX = event.getX();
                 float deltaX = downX - upX;
+
+
+                Log.v("eisen", " " + deltaX);
 
 
                 pullToRefreshLayout.setEnabled(false);
@@ -102,30 +106,45 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
                 holder.delete_action_layout.setPressed(true);
 
 
-                swipe((int) deltaX);
+
+                swipe(v, (int) deltaX);
                 return true;
             }
 
-            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_UP: {
                 upX = event.getX();
                 float deltaX = upX - downX;
 
-                if(upX == downX) {
+                if (upX == downX) {
                     performClick(v);
+                } else {
+                    Log.v("eisen", "UP");
+                    performSwipeAction(deltaX);
                 }
-                else {
-                    performSwipe(deltaX);
+
+
+                if (recyclerView != null) {
+                    recyclerView.requestDisallowInterceptTouchEvent(false);
+                    motionInterceptDisallowed = false;
                 }
 
                 holder.delete_action_layout.setPressed(false);
-                if(priority == 1) holder.task_p1_progress.setVisibility(View.VISIBLE);
+                if (priority == 1) holder.task_p1_progress.setVisibility(View.VISIBLE);
 
                 return true;
+            }
 
-            case MotionEvent.ACTION_CANCEL:
+            case MotionEvent.ACTION_CANCEL: {
                 currentMenuLayout.setVisibility(View.VISIBLE);
                 pullToRefreshLayout.setEnabled(true);
+
+                upX = event.getX();
+                float deltaX = upX - downX;
+                if(Math.abs(deltaX) > MIN_DISTANCE) {
+                    performSwipeAction(deltaX);
+                }
                 return true;
+            }
         }
 
         return true;
@@ -134,35 +153,44 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
     private void performIconAnimations(float deltaX) {
         if(oldDeltaX == -1) oldDeltaX = deltaX;
         if(deltaX > oldDeltaX) {
-            if(!isRtoLtriggered) {
+            if(!isTriggered_RtoL) {
                 holder.action_delete_icon.startAnimation(animZoomOut);
                 holder.right_action_icon.startAnimation(animZoomIn);
-                isRtoLtriggered = true;
-                isLtoRtriggered = false;
+                isTriggered_RtoL = true;
+                isTriggered_LtoR = false;
             }
         }
         else if(deltaX < oldDeltaX) {
-            if (!isLtoRtriggered) {
+            if (!isTriggered_LtoR) {
                 holder.action_delete_icon.startAnimation(animZoomIn);
                 holder.right_action_icon.startAnimation(animZoomOut);
-                isLtoRtriggered = true;
-                isRtoLtriggered = false;
+                isTriggered_LtoR = true;
+                isTriggered_RtoL = false;
             }
         }
         oldDeltaX = deltaX;
     }
 
-    private void swipe(int distance) {
+    private void swipe(View v, int distance) {
         View animationView = holder.mainLayout;
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) animationView.getLayoutParams();
         int rightMargin, leftMargin;
 
         if(distance == 0)  holder.action_delete_icon.startAnimation(animZoomOut);
 
+        if(v != null && Math.abs(distance) >= DISTANCE) {
+            if(distance < 0)
+                distance = -v.getWidth()/2;
+            else
+                distance = v.getWidth()/2;
+        }
+
+        // L to R
         if(distance < 0) {
             rightMargin = 0;
             leftMargin = -distance;
         }
+        // R to L
         else {
             rightMargin = distance;
             leftMargin = 0;
@@ -178,10 +206,17 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
     }
 
     private void deleteTask() {
-        holder.delete_action_layout.setVisibility(View.INVISIBLE);
-        holder.undo_layout.setVisibility(View.VISIBLE);
-        holder.action_undo_btn.setVisibility(View.INVISIBLE);
-        holder.undo_btn.setVisibility(View.VISIBLE);
+        holder.delete_action_layout.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if(holder.delete_action_layout.getVisibility() == View.VISIBLE) {
+                    holder.delete_action_layout.setVisibility(View.INVISIBLE);
+                    holder.undo_layout.setVisibility(View.VISIBLE);
+                    holder.action_undo_btn.setVisibility(View.INVISIBLE);
+                    holder.undo_btn.setVisibility(View.VISIBLE);
+                }
+            }
+        }, ICON_SHOW_DELAY);
 
         holder.undo_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -190,7 +225,7 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
                 holder.undo_layout.setVisibility(View.INVISIBLE);
                 holder.delete_action_layout.setVisibility(View.VISIBLE);
                 holder.mainLayout.setVisibility(View.VISIBLE);
-                swipe(0);
+                swipe(null, 0);
             }
         });
 
@@ -213,10 +248,17 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
 
     private void activateAction() {
         if(holder.right_action_icon.getTag() != null) {
-            holder.delete_action_layout.setVisibility(View.INVISIBLE);
-            holder.undo_layout.setVisibility(View.VISIBLE);
-            holder.action_undo_btn.setVisibility(View.VISIBLE);
-            holder.undo_btn.setVisibility(View.INVISIBLE);
+            holder.right_action_icon.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (holder.right_action_icon.getVisibility() == View.VISIBLE) {
+                        holder.delete_action_layout.setVisibility(View.INVISIBLE);
+                        holder.undo_layout.setVisibility(View.VISIBLE);
+                        holder.action_undo_btn.setVisibility(View.VISIBLE);
+                        holder.undo_btn.setVisibility(View.INVISIBLE);
+                    }
+                }
+            }, ICON_SHOW_DELAY);
 
             holder.action_undo_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -225,7 +267,7 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
                     holder.undo_layout.setVisibility(View.INVISIBLE);
                     holder.delete_action_layout.setVisibility(View.VISIBLE);
                     holder.mainLayout.setVisibility(View.VISIBLE);
-                    swipe(0);
+                    swipe(null, 0);
                 }
             });
 
@@ -237,21 +279,21 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
                             case 0:
                                 Log.v("eisen", "Action -> Timer");
                                 sendCardActionBroadcast(NewTaskListAdapterDB.TIMER_ACTION);
-                                swipe(0);
+                                swipe(null, 0);
                                 holder.undo_layout.setVisibility(View.INVISIBLE);
                                 holder.delete_action_layout.setVisibility(View.VISIBLE);
                                 break;
                             case 1:
                                 Log.v("eisen", "Action -> Up++");
                                 sendCardActionBroadcast(NewTaskListAdapterDB.PROGRESS_UP_ACTION);
-                                swipe(0);
+                                swipe(null, 0);
                                 holder.undo_layout.setVisibility(View.INVISIBLE);
                                 holder.delete_action_layout.setVisibility(View.VISIBLE);
                                 break;
                             case 2:
                                 Log.v("eisen", "Action -> Share");
                                 sendCardActionBroadcast(NewTaskListAdapterDB.SHARE_ACTION);
-                                swipe(0);
+                                swipe(null, 0);
                                 holder.undo_layout.setVisibility(View.INVISIBLE);
                                 holder.delete_action_layout.setVisibility(View.VISIBLE);
                                 break;
@@ -305,10 +347,12 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
         startActivity(EditTaskPreview.class, v, flags, extra_names, extra_value);
     }
 
-    private void performSwipe(float deltaX) {
-        if (Math.abs(deltaX) > MIN_DISTANCE) {
+    private void performSwipeAction(float deltaX) {
+
+//        if (Math.abs(deltaX) >= MIN_DISTANCE || Math.abs(deltaX) >= DISTANCE) {
+        if (Math.abs(deltaX) > DISTANCE) {
             // L to R  +
-            // R to L -
+            // R to L  -
             if(deltaX > 0) {
                 deleteTask();
             }
@@ -317,7 +361,7 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
             }
 
         } else {
-            swipe(0);
+            swipe(null, 0);
         }
 
         if (recyclerView != null) {
