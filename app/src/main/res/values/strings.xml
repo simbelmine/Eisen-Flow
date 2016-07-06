@@ -33,6 +33,7 @@
     <string name="fri_txt">Fri</string>
     <string name="sat_txt">Sat</string>
     <string name="sun_txt">Sun</string>
+    <string name="today_txt">Today</string>
 
 
     <!-- Priority Dialog -->

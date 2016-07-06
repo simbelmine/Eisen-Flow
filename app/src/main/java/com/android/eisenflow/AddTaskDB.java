@@ -241,8 +241,6 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
             String dateStr = dateTimeHelper.getDateString(Calendar.getInstance());
             String timeStr = dateTimeHelper.getTimeString(Calendar.getInstance());
             dateTxt.setText(dateStr);
-            currDateTxt.setText(dateStr);
-            reminderCurrDateTxt.setText(dateStr);
             reminderDateTxt.setText(dateStr);
             timeTxt.setText(timeStr);
             reminderTimeTxt.setText(timeStr);
@@ -385,11 +383,9 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
                 break;
             case R.id.curr_date_txt:
                 calendarView.setDate(Calendar.getInstance().getTimeInMillis(), true, true);
-                dateTxt.setText(dateTimeHelper.getDateString(Calendar.getInstance()));
                 break;
             case R.id.reminder_curr_date_txt:
                 reminderCalendarView.setDate(Calendar.getInstance().getTimeInMillis(), true, true);
-                reminderDateTxt.setText(dateTimeHelper.getDateString(Calendar.getInstance()));
                 break;
 
 
