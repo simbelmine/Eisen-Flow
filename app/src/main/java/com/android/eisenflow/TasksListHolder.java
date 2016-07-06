@@ -71,6 +71,7 @@ public class TasksListHolder extends RecyclerView.ViewHolder
         action_undo_btn = (TextView) itemView.findViewById(R.id.action_undo_btn);
 
         action_delete_icon = (ImageView) itemView.findViewById(R.id.action_delete_icon);
+        task_done_line = (ImageView) itemView.findViewById(R.id.done_divider);
 
 //        timerIconLayout = (LinearLayout) cardView.findViewById(R.id.timer_list_icon);
 //        calendarPlusIconLayout = (LinearLayout) cardView.findViewById(R.id.calendar_plus_list_icon);
@@ -86,7 +87,6 @@ public class TasksListHolder extends RecyclerView.ViewHolder
 //        priorityColor = (ImageView) cardView.findViewById(R.id.list_img);
 //
 //        task_check = (CheckBox) cardView.findViewById(R.id.task_check);
-//        task_done_line = (ImageView) cardView.findViewById(R.id.done_divider);
 //
 //        share_icon = (LinearLayout) cardView.findViewById(R.id.share_icon);
     }

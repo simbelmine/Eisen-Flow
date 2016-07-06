@@ -582,7 +582,7 @@ public class MainActivityDB extends AppCompatActivity
 //            case  R.id.action_settings:
 //                return true;
 //        }
-        
+
         return super.onOptionsItemSelected(item);
     }
 

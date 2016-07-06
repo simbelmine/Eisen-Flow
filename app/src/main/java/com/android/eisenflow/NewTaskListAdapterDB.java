@@ -106,7 +106,7 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
         if(taskRow.getTitle() != null) {
             setTaskCardInfo(holder, taskRow, position);
 
-//        crossTaskIfDone(holder, position);
+        crossTaskIfDone(holder, position);
 //        setOldTaskTextColor(holder, position);
         }
         else {
@@ -299,11 +299,9 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
 
     private void crossTaskIfDone(TasksListHolder holder, int position) {
         if(tasksList.get(position).getIsDone() == 1) {
-            holder.task_check.setChecked(true);
             holder.task_done_line.setVisibility(View.VISIBLE);
         }
         else {
-            holder.task_check.setChecked(false);
             holder.task_done_line.setVisibility(View.INVISIBLE);
         }
     }
