@@ -98,6 +98,7 @@ public class ReminderDoneReceiver extends BroadcastReceiver {
 
     private void sendDoneBroadcastMsg() {
         Intent intentToSend = new Intent(NOTIFICATION_DONE_ACTION);
+        intentToSend.putExtra(LocalDataBaseHelper.KEY_ROW_ID, rowId);
         LocalBroadcastManager.getInstance(context).sendBroadcast(intentToSend);
     }
 }

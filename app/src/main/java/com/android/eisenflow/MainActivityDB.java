@@ -28,7 +28,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -119,7 +118,7 @@ public class MainActivityDB extends AppCompatActivity
         LocalBroadcastManager.getInstance(this).registerReceiver(onTaskDelete, iifDelete);
 
         IntentFilter iifDone = new IntentFilter(ReminderDoneReceiver.NOTIFICATION_DONE_ACTION);
-        LocalBroadcastManager.getInstance(this).registerReceiver(onTaskDone, iifDone);
+        LocalBroadcastManager.getInstance(this).registerReceiver(onTaskDoneNotification, iifDone);
 
         IntentFilter iifAddProgress = new IntentFilter(AddProgressReceiver.NOTIFICATION_ADD_PROGRESS_ACTION);
         LocalBroadcastManager.getInstance(this).registerReceiver(onTaskAddProgress, iifAddProgress);
@@ -144,10 +143,19 @@ public class MainActivityDB extends AppCompatActivity
         }
     };
 
-    private BroadcastReceiver onTaskDone = new BroadcastReceiver() {
+    private BroadcastReceiver onTaskDoneNotification = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            startListFeedingTask();
+//            startListFeedingTask();
+            long rowId = intent.getLongExtra(LocalDataBaseHelper.KEY_ROW_ID, -1);
+            if(rowId != -1) {
+                Task task = adapterDB.getTaskById(rowId);
+                int pos = adapterDB.getPositionById(rowId);
+                if(pos != -1) {
+                    task.setIsDone(1);
+                    adapterDB.notifyItemChanged(pos);
+                }
+            }
         }
     };
 
@@ -164,7 +172,7 @@ public class MainActivityDB extends AppCompatActivity
         dbHelper.close();
 
         LocalBroadcastManager.getInstance(this).unregisterReceiver(onTaskDelete);
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(onTaskDone);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(onTaskDoneNotification);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(onTaskAddProgress);
 
         if(adapterDB != null) adapterDB.unregisterAdapterBroadcastReceivers();

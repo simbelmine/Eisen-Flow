@@ -6,4 +6,9 @@
         android:title="@string/action_delete"
         android:orderInCategory="1"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_done"
+        android:title="@string/action_done"
+        android:orderInCategory="2"
+        app:showAsAction="never" />
 </menu>

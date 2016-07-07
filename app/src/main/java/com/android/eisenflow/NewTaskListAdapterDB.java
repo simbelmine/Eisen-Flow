@@ -26,7 +26,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -104,14 +103,17 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
         Task taskRow = tasksList.get(position);
 
         if(taskRow.getTitle() != null) {
-            setTaskCardInfo(holder, taskRow, position);
-
-            crossTaskIfDone(holder, position);
-//        setOldTaskTextColor(holder, position);
+            updateTaskFieldsByPosition(holder, taskRow, position);
         }
         else {
             setMonthCardInfo(holder, taskRow);
         }
+    }
+
+    private void updateTaskFieldsByPosition(TasksListHolder holder, Task taskRow, int position) {
+        setTaskCardInfo(holder, taskRow, position);
+        crossTaskIfDone(holder, position);
+//        setOldTaskTextColor(holder, position);
     }
 
     private void setTaskCardInfo(TasksListHolder holder, Task taskRow, int position) {
@@ -255,8 +257,10 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
 
         Bundle b;
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            b = ActivityOptions.makeScaleUpAnimation(view, 0, 0, view.getWidth(), view.getHeight()).toBundle();
-            context.startActivity(intent, b);
+            if(view != null) {
+                b = ActivityOptions.makeScaleUpAnimation(view, 0, 0, view.getWidth(), view.getHeight()).toBundle();
+                context.startActivity(intent, b);
+            }
         }
         else {
             context.startActivity(intent);
@@ -304,7 +308,6 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
         }
         else {
             holder.task_done_line.setVisibility(View.GONE);
-//            setDoneLine(holder, View.INVISIBLE);
         }
     }
 
@@ -386,17 +389,11 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
     public void deleteItem(LocalDataBaseHelper dbHelper, int taskId, int position) {
         if(taskId >= 0 && position >=0) {
             cancelTaskAlarm(taskId);
-            cancelReminders(taskId, position);
+            cancelReminders(taskId);
             dbHelper.deleteTask(taskId);
             tasksList.remove(position);
             notifyItemRemoved(position);
         }
-    }
-
-    private void sendBroadcastDeleted(int position) {
-        Intent intent = new Intent(ACTION_DELETE);
-        intent.putExtra("taskPosition", position);
-        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
 
 
@@ -413,9 +410,11 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
         return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_ONE_SHOT);
     }
 
-    private void cancelReminders(int taskId, int position) {
-        if(tasksList.get(position).getPriority() == 1) {
-            if(tasksList.get(position).getReminderWhen().length() > 0) {
+    private void cancelReminders(int taskId) {
+        Task task = getTaskById(taskId);
+
+        if(task.getPriority() == 1) {
+            if(task.getReminderWhen().length() > 0) {
                 cancelWeeklyReminder(taskId);
             }
             else {
@@ -464,14 +463,17 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
         IntentFilter timerIF= new IntentFilter(TIMER_ACTION);
         LocalBroadcastManager.getInstance(context).registerReceiver(onTimerTriggered, timerIF);
 
-        IntentFilter progressUpIF= new IntentFilter(PROGRESS_UP_ACTION);
+        IntentFilter progressUpIF = new IntentFilter(PROGRESS_UP_ACTION);
         LocalBroadcastManager.getInstance(context).registerReceiver(onProgressUpTriggered, progressUpIF);
 
-        IntentFilter shareIF= new IntentFilter(SHARE_ACTION);
+        IntentFilter shareIF = new IntentFilter(SHARE_ACTION);
         LocalBroadcastManager.getInstance(context).registerReceiver(onShareTriggered, shareIF);
 
-        IntentFilter deletedIF= new IntentFilter(EditTaskPreview.ACTION_DELETED);
+        IntentFilter deletedIF = new IntentFilter(EditTaskPreview.ACTION_DELETED);
         LocalBroadcastManager.getInstance(context).registerReceiver(onDeleted, deletedIF);
+
+        IntentFilter doneIF = new IntentFilter(EditTaskPreview.ACTION_DONE);
+        LocalBroadcastManager.getInstance(context).registerReceiver(onDoneTriggered, doneIF);
     }
 
     private BroadcastReceiver onDeleted = new BroadcastReceiver() {
@@ -480,16 +482,6 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
             showInfoSnackbar(context.getResources().getString(R.string.task_deleted_msg), R.color.white);
         }
     };
-    private void showInfoSnackbar(String messageToShow, int colorMsg) {
-        Snackbar snackbar = Snackbar.make(getParentView(), messageToShow, Snackbar.LENGTH_LONG)
-                .setActionTextColor(Color.WHITE);
-
-        View snackbarView = snackbar.getView();
-        TextView text = (TextView) snackbarView.findViewById(android.support.design.R.id.snackbar_text);
-        text.setTextColor(context.getResources().getColor(colorMsg));
-        snackbar.show();
-    }
-
     private BroadcastReceiver onTimerTriggered = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -517,8 +509,29 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
             }
         }
     };
+    private BroadcastReceiver onDoneTriggered = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            int rowId = intent.getIntExtra(LocalDataBaseHelper.KEY_ROW_ID, -1);
+            if(rowId != -1) {
+                cancelTaskAlarm(rowId);
+                cancelReminders(rowId);
+            }
+        }
+    };
 
-    private Task getTaskById(int taskId) {
+
+    private void showInfoSnackbar(String messageToShow, int colorMsg) {
+        Snackbar snackbar = Snackbar.make(getParentView(), messageToShow, Snackbar.LENGTH_LONG)
+                .setActionTextColor(Color.WHITE);
+
+        View snackbarView = snackbar.getView();
+        TextView text = (TextView) snackbarView.findViewById(android.support.design.R.id.snackbar_text);
+        text.setTextColor(context.getResources().getColor(colorMsg));
+        snackbar.show();
+    }
+
+    public Task getTaskById(long taskId) {
         for(Task t : tasksList) {
             if (t.getId() == taskId) {
                 return t;
@@ -528,11 +541,21 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
         return null;
     }
 
+    public int getPositionById(long taskId) {
+        for(int i = 0; i < tasksList.size(); i++) {
+            if(taskId == tasksList.get(i).getId())
+                return i;
+        }
+
+        return -1;
+    }
+
     public void unregisterAdapterBroadcastReceivers() {
         LocalBroadcastManager.getInstance(context).unregisterReceiver(onTimerTriggered);
         LocalBroadcastManager.getInstance(context).unregisterReceiver(onProgressUpTriggered);
         LocalBroadcastManager.getInstance(context).unregisterReceiver(onShareTriggered);
         LocalBroadcastManager.getInstance(context).unregisterReceiver(onDeleted);
+        LocalBroadcastManager.getInstance(context).unregisterReceiver(onDoneTriggered);
     }
 
     private View getParentView() {

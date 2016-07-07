@@ -30,6 +30,7 @@ public class ReminderService extends WakeReminderIntentService {
     private String weekDay;
     private int weekDayOfTip;
     private DateTimeHelper dateTimeHelper;
+    private long rowId;
 
     public ReminderService() {
         super("ReminderService");
@@ -40,7 +41,7 @@ public class ReminderService extends WakeReminderIntentService {
         Log.d("eisen", "ReminderService: Doing work.");
         dateTimeHelper = new DateTimeHelper(this);
 
-        Long rowId = intent.getExtras().getLong(LocalDataBaseHelper.KEY_ROW_ID);
+        rowId = intent.getExtras().getLong(LocalDataBaseHelper.KEY_ROW_ID);
         isReminder = intent.getBooleanExtra("isReminder", false);
         weekDay = intent.getStringExtra("weekDay");
         weekDayOfTip = intent.getIntExtra("weekDayOfTip", -1);
@@ -60,18 +61,16 @@ public class ReminderService extends WakeReminderIntentService {
             }
         }
         else {
-            new StartFeedingNotificationAsyncTask(this, rowId).execute();
+            new StartFeedingNotificationAsyncTask(this).execute();
         }
 
     }
 
     private class StartFeedingNotificationAsyncTask extends AsyncTask<Void, Void, Cursor> {
         private Context context;
-        private long rowId;
 
-        public StartFeedingNotificationAsyncTask(Context context, long rowId) {
+        public StartFeedingNotificationAsyncTask(Context context) {
             this.context = context;
-            this.rowId = rowId;
         }
 
         @Override
@@ -86,11 +85,14 @@ public class ReminderService extends WakeReminderIntentService {
             if (cursor != null && cursor.moveToFirst()) {
 
                 NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                // Created Task
                 Intent taskIntent = new Intent(context, AddTaskDB.class);
                 taskIntent.putExtra(LocalDataBaseHelper.KEY_ROW_ID, rowId);
+                // DOne Task
                 Intent doneTaskIntent = new Intent(context, ReminderDoneReceiver.class);
                 doneTaskIntent.putExtra(LocalDataBaseHelper.KEY_ROW_ID, rowId);
                 doneTaskIntent.putExtra("weekDay", weekDay);
+                // Progress Task
                 Intent addProgressIntent = new Intent(context, AddProgressReceiver.class);
                 addProgressIntent.putExtra(LocalDataBaseHelper.KEY_ROW_ID, rowId);
 

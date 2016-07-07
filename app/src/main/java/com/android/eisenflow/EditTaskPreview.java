@@ -2,6 +2,9 @@ package com.android.eisenflow;
 
 import android.animation.ValueAnimator;
 import android.app.ActivityOptions;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.database.Cursor;
@@ -12,7 +15,9 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
@@ -26,13 +31,18 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.eisenflow.reminders.OnAlarmReceiver;
+import com.android.eisenflow.reminders.ReminderDoneReceiver;
+
 import java.util.Calendar;
+import java.util.Map;
 
 /**
  * Created by Sve on 6/30/16.
  */
 public class EditTaskPreview extends AppCompatActivity implements View.OnClickListener, PopupMenu.OnMenuItemClickListener {
     public static final String ACTION_DELETED = "deleteDTaskAction";
+    public static final String ACTION_DONE = "doneTaskAction";
     private static final int MENU_TIMER_ID = 1;
     private static final int MENU_PROGRESS_ID = 2;
     private static final int MENU_SHARE_ID = 3;
@@ -338,6 +348,10 @@ public class EditTaskPreview extends AppCompatActivity implements View.OnClickLi
                 sendBroadcastMessage(ACTION_DELETED);
                 finish();
                 return true;
+            case R.id.action_done:
+                new StartUpdateAsyncTask().execute();
+                finish();
+                return true;
             case MENU_TIMER_ID:
                 sendBroadcastMessage(NewTaskListAdapterDB.TIMER_ACTION);
                 finish();
@@ -362,5 +376,29 @@ public class EditTaskPreview extends AppCompatActivity implements View.OnClickLi
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
+    private class StartUpdateAsyncTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... voids) {
+            if(dbHelper.updateTaskIntColumn(rowId, LocalDataBaseHelper.KEY_DONE, 1)) {
+                sendBroadcastMessage(ACTION_DONE);
+            }
+            else {
+                showAlertSnackbar(getString(R.string.db_alert));
+            }
+            dbHelper.close();
+            return null;
+        }
+    }
 
+    private void showAlertSnackbar (String messageToShow) {
+        CoordinatorLayout layout = (CoordinatorLayout) findViewById(R.id.main_layout);
+        Snackbar snackbar = Snackbar.make(layout, messageToShow, Snackbar.LENGTH_LONG)
+                .setActionTextColor(Color.WHITE)
+                .setAction(getResources().getString(R.string.ok_btn), null);
+
+        View snackbarView = snackbar.getView();
+        TextView text = (TextView) snackbarView.findViewById(android.support.design.R.id.snackbar_text);
+        text.setTextColor(getResources().getColor(R.color.firstQuadrant));
+        snackbar.show();
+    }
 }
