@@ -391,11 +391,23 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
             cancelTaskAlarm(taskId);
             cancelReminders(taskId);
             dbHelper.deleteTask(taskId);
-            tasksList.remove(position);
+            removeTaskById(taskId);
             notifyItemRemoved(position);
         }
     }
 
+    private void removeTaskById(int taskId) {
+        int posToDelete = -1;
+        for(int pos = 0; pos < tasksList.size(); pos++) {
+            if(tasksList.get(pos).getId() == taskId) {
+                posToDelete = pos;
+            }
+        }
+
+        if(posToDelete != -1) {
+            tasksList.remove(posToDelete);
+        }
+    }
 
     private void cancelTaskAlarm(int taskId) {
         PendingIntent alarmPendingIntent = getAlarmPendingIntent(taskId);
@@ -403,7 +415,7 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
         am.cancel(alarmPendingIntent);
     }
 
-    private PendingIntent getAlarmPendingIntent(int taskId) {
+    private PendingIntent getAlarmPendingIntent(long taskId) {
         Intent intent = new Intent(context, OnAlarmReceiver.class);
         intent.putExtra(LocalDataBaseHelper.KEY_ROW_ID, taskId);
 

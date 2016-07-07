@@ -105,6 +105,7 @@ public class ReminderService extends WakeReminderIntentService {
                 String date = cursor.getString(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_DATE));
                 String time = cursor.getString(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_TIME));
 
+                Log.v("eisen", "*** NOTIFICATION rowId = " + rowId);
                 NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(ReminderService.this)
                         .setSmallIcon(R.mipmap.ic_stat_fish_icon)
                         .setContentTitle(getString(R.string.app_name))
@@ -150,6 +151,9 @@ public class ReminderService extends WakeReminderIntentService {
                 int id = (int)((long)rowId);
                 notificationManager.notify(id, notificationBuilder.build());
                 dbHelper.close();
+            }
+            else {
+                Log.e("eisen", "Couldn\'t fetch task to show Notification");
             }
         }
     }

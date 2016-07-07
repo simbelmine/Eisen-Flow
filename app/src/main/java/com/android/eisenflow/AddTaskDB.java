@@ -1034,6 +1034,7 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
 
             if (id > 0) {
                 rowId = id;
+                setTaskAlarms(date, time, reminderOccurrence, reminderWhen, reminderDate, reminderTime);
                 closeActivityWithResult(Activity.RESULT_OK);
             }
             else {
@@ -1043,13 +1044,16 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
         else {
             if (dbHelper.updateTask(rowId, priorityInt, title, date, time, dateMillis,
                     reminderOccurrence, reminderWhen, reminderDate, reminderTime, note, progress, isDone)) {
+                setTaskAlarms(date, time, reminderOccurrence, reminderWhen, reminderDate, reminderTime);
                 closeActivityWithResult(Activity.RESULT_OK);
             }
             else {
                 closeActivityWithResult(Activity.RESULT_CANCELED);
             }
         }
+    }
 
+    private void setTaskAlarms(String date, String time, String reminderOccurrence, String reminderWhen, String reminderDate, String reminderTime) {
         if(isGreenTask(priorityInt)) {
             if(reminderWhen.length() > 0) {
                 ArrayList<String> weekDays = dateTimeHelper.getWeekDaysList(reminderWhen);
