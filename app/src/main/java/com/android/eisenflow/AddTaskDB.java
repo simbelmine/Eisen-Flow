@@ -1034,7 +1034,7 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
 
             if (id > 0) {
                 rowId = id;
-                setTaskAlarms(date, time, reminderOccurrence, reminderWhen, reminderDate, reminderTime);
+                setTaskAlarms(id, date, time, reminderOccurrence, reminderWhen, reminderDate, reminderTime);
                 closeActivityWithResult(Activity.RESULT_OK);
             }
             else {
@@ -1044,7 +1044,7 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
         else {
             if (dbHelper.updateTask(rowId, priorityInt, title, date, time, dateMillis,
                     reminderOccurrence, reminderWhen, reminderDate, reminderTime, note, progress, isDone)) {
-                setTaskAlarms(date, time, reminderOccurrence, reminderWhen, reminderDate, reminderTime);
+                setTaskAlarms(-1, date, time, reminderOccurrence, reminderWhen, reminderDate, reminderTime);
                 closeActivityWithResult(Activity.RESULT_OK);
             }
             else {
@@ -1053,7 +1053,9 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
         }
     }
 
-    private void setTaskAlarms(String date, String time, String reminderOccurrence, String reminderWhen, String reminderDate, String reminderTime) {
+    private void setTaskAlarms(long id, String date, String time, String reminderOccurrence, String reminderWhen, String reminderDate, String reminderTime) {
+        if(id == -1) id = rowId;
+
         if(isGreenTask(priorityInt)) {
             if(reminderWhen.length() > 0) {
                 ArrayList<String> weekDays = dateTimeHelper.getWeekDaysList(reminderWhen);
@@ -1061,15 +1063,15 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
                     String weekDay = weekDays.get(i); Log.v("eisen", weekDay);
                     int weekDayInt = dateTimeHelper.dayOfMonthsMap.get(weekDay);
 
-                    setTaskRepeatingReminder(reminderOccurrence, weekDayInt, reminderDate, reminderTime);
+                    setTaskRepeatingReminder(id, reminderOccurrence, weekDayInt, reminderDate, reminderTime);
                 }
             }
             else {
-                setTaskRepeatingReminder(reminderOccurrence, -1, reminderDate, reminderTime);
+                setTaskRepeatingReminder(id, reminderOccurrence, -1, reminderDate, reminderTime);
             }
         }
 
-        setTaskReminder(date, time);
+        setTaskReminder(id, date, time);
     }
 
     private void closeActivityWithResult(int result) {
@@ -1166,14 +1168,14 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
         }
     }
 
-    private void setTaskReminder(String date, String time) {
+    private void setTaskReminder(long rowId, String date, String time) {
         Calendar calReminder = dateTimeHelper.getCalendar(date , time);
         if(calReminder != null) {
             new ReminderManager(this).setReminder(rowId, calReminder);
         }
     }
 
-    private void setTaskRepeatingReminder(String reminderOccurrence, int weekDayInt, String reminderDate, String reminderTime) {
+    private void setTaskRepeatingReminder(long rowId, String reminderOccurrence, int weekDayInt, String reminderDate, String reminderTime) {
         new ReminderManager(this).setRepeatingReminder(rowId, reminderOccurrence, weekDayInt, reminderDate, reminderTime);
     }
 

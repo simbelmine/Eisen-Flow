@@ -195,8 +195,6 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
     }
 
     private void setVerticalCalendarDate(TasksListHolder holder, Task taskRow) {
-        Log.v("eisen", "Set veritcal Date");
-
         String taskDate = taskRow.getDate();
         String taskTime = taskRow.getTime();
         if(lastSeenDate == null || !lastSeenDate.equals(taskDate) || taskRow.getIsDone() == 1) {
