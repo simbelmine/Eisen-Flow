@@ -166,7 +166,6 @@ public class ReminderService extends WakeReminderIntentService {
 
         @Override
         protected void onPostExecute(Cursor cursor) {
-            Log.v("eisen", "---- OnPostExecute");
             boolean isAnyOldTask = false;
             if (cursor != null) {
                 while (cursor.moveToNext()) {

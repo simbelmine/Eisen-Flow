@@ -413,12 +413,13 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
     private void cancelReminders(int taskId) {
         Task task = getTaskById(taskId);
 
-        if(task.getPriority() == 1) {
-            if(task.getReminderWhen().length() > 0) {
-                cancelWeeklyReminder(taskId);
-            }
-            else {
-                cancelReminder(taskId);
+        if(task != null && task.getIsDone() != 1) {
+            if (task.getPriority() == 1) {
+                if (task.getReminderWhen().length() > 0) {
+                    cancelWeeklyReminder(taskId);
+                } else {
+                    cancelReminder(taskId);
+                }
             }
         }
     }
