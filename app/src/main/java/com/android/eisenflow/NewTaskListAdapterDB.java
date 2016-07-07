@@ -195,9 +195,11 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
     }
 
     private void setVerticalCalendarDate(TasksListHolder holder, Task taskRow) {
+        Log.v("eisen", "Set veritcal Date");
+
         String taskDate = taskRow.getDate();
         String taskTime = taskRow.getTime();
-        if(lastSeenDate == null || !lastSeenDate.equals(taskDate)) {
+        if(lastSeenDate == null || !lastSeenDate.equals(taskDate) || taskRow.getIsDone() == 1) {
             Calendar cal = dateTimeHelper.getCalendar(taskDate, taskTime);
             holder.cal_day_of_month.setText(String.valueOf(cal.get(Calendar.DAY_OF_MONTH)));
             holder.cal_day_of_week.setText(cal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault()));
