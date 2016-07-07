@@ -113,7 +113,7 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
     private void updateTaskFieldsByPosition(TasksListHolder holder, Task taskRow, int position) {
         setTaskCardInfo(holder, taskRow, position);
         crossTaskIfDone(holder, position);
-//        setOldTaskTextColor(holder, position);
+        setOldTaskTextColor(holder, position);
     }
 
     private void setTaskCardInfo(TasksListHolder holder, Task taskRow, int position) {
@@ -312,16 +312,11 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
     }
 
     private void setOldTaskTextColor(TasksListHolder holder, int position) {
-//        Calendar calDate = Calendar.getInstance();
-//        String dateStr = tasksList.get(position).getDate();
-//        calDate.setTime(dateTimeHelper.getDate(dateStr));
-
         Calendar calDate = dateTimeHelper.getCalendarDateWithTime(tasksList.get(position).getDate(), tasksList.get(position).getTime());
 
-
         if(dateTimeHelper.isPastDate(calDate) && tasksList.get(position).getIsDone() == 0) {
-            holder.task_time_txt.setTextColor(context.getResources().getColor(R.color.firstQuadrant));
-            holder.task_time_txt.setTypeface(null, Typeface.BOLD);
+            holder.cal_day_of_month.setTextColor(context.getResources().getColor(R.color.firstQuadrant));
+            holder.cal_day_of_week.setTextColor(context.getResources().getColor(R.color.firstQuadrant));
         }
     }
 
