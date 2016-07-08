@@ -34,6 +34,16 @@ import android.widget.Toast;
 import com.android.eisenflow.oldClasses.MainActivity;
 import com.android.eisenflow.reminders.OnAlarmReceiver;
 
+import net.danlew.android.joda.DateUtils;
+
+import org.joda.time.DateTime;
+import org.joda.time.Duration;
+import org.joda.time.LocalDate;
+import org.joda.time.Period;
+import org.joda.time.PeriodType;
+import org.joda.time.format.PeriodFormatter;
+import org.joda.time.format.PeriodFormatterBuilder;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -170,7 +180,7 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
 
     private void setValueToField(TasksListHolder holder, Task taskRow) {
         holder.text.setText(taskRow.getTitle());
-        holder.task_time_txt.setText(taskRow.getDate());
+        holder.task_time_txt.setText(getTimeLeft(taskRow.getDate(), taskRow.getTime()));
 
         setVerticalCalendarDate(holder, taskRow);
 
@@ -191,6 +201,38 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
         }
         else {
             holder.task_p1_progress.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    private String getTimeLeft(String date, String time) {
+        Calendar cal = dateTimeHelper.getCalendar(date, time);
+
+        DateTime startDate = DateTime.now();
+        DateTime endDate = new DateTime(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH)+1, cal.get(Calendar.DAY_OF_MONTH), 0, 0);
+
+        Period period = new Period(startDate, endDate);
+
+        if(period.getDays() < 0) {
+            return "Overdue";
+        }
+        else if(DateUtils.isToday(endDate.toLocalDate())) {
+            return "Due Today";
+        }
+        else if(period.getDays() == 0) {
+            return "Due Tomorrow";
+        }
+        else {
+            PeriodFormatter formatter = new PeriodFormatterBuilder()
+                    .appendYears().appendSuffix(" year ", " years ")
+                    .appendMonths().appendSuffix(" month ", " months ")
+                    .appendWeeks().appendSuffix(" week ", " weeks ")
+                    .toFormatter();
+
+            int days = period.getDays()+1;
+            String daysSuffix = " days ";
+            if(days == 1) daysSuffix = " day ";
+
+            return "Due in " + formatter.print(period) + days + daysSuffix;
         }
     }
 
