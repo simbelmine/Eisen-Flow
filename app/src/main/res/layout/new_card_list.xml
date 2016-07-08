@@ -145,7 +145,7 @@
 
                 <TextView
                     android:id="@+id/task_p1_percentage"
-                    android:layout_width="30dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="@dimen/card_padding"
