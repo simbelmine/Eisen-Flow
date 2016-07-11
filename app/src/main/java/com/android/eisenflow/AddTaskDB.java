@@ -1034,6 +1034,7 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
 
             if (id > 0) {
                 rowId = id;
+                dbHelper.updateTaskIntColumn(rowId, LocalDataBaseHelper.KEY_TOTAL_DAYS_PERIOD, dbHelper.getTotalDays(this, date));
                 setTaskAlarms(id, date, time, reminderOccurrence, reminderWhen, reminderDate, reminderTime);
                 closeActivityWithResult(Activity.RESULT_OK);
             }
@@ -1044,6 +1045,7 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
         else {
             if (dbHelper.updateTask(rowId, priorityInt, title, date, time, dateMillis,
                     reminderOccurrence, reminderWhen, reminderDate, reminderTime, note, progress, isDone)) {
+                dbHelper.updateTaskIntColumn(rowId, LocalDataBaseHelper.KEY_TOTAL_DAYS_PERIOD, dbHelper.getTotalDays(this, date));
                 setTaskAlarms(-1, date, time, reminderOccurrence, reminderWhen, reminderDate, reminderTime);
                 closeActivityWithResult(Activity.RESULT_OK);
             }

@@ -144,34 +144,28 @@ public class Task {
         setId(cursor.getInt(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_DONE)));
     }
 
-    public int calculateProgress(Context context) {
-        int progress = getProgress();
-        long totalDays = getTotalDays(context);
-//        int monthlyPercentage = (int) Math.round((100/(double)totalDays));
-        double monthlyPercentage = 100/(double)totalDays;
+    public int calculateProgress(Context context, LocalDataBaseHelper dbHelper, long rowId) {
+        int progressToReturn = -1;
 
-//        Log.v("eisen", "T total days = " + totalDays);
-//        Log.v("eisen", "T progress = " + progress);
+        if(dbHelper != null) {
+            Cursor cursor = dbHelper.fetchTask(rowId);
+            if (cursor != null) {
+                double totalDays = cursor.getDouble(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_TOTAL_DAYS_PERIOD));
 
-//        progress++;
-//        setProgress(progress);
+                int progress = getProgress();
+                double monthlyPercentage = 100 / totalDays;
 
-//        int progressToReturn = monthlyPercentage * progress;
-        int progressToReturn = (int) (Math.round(progress * monthlyPercentage));
-//        Log.v("eisen", "    T progress to return = " + progressToReturn);
+//                Log.v("eisen", "T  total days = " + totalDays);
+//                Log.v("eisen", "T  progress = " + progress);
 
-        if(progress == totalDays || progressToReturn > 100) progressToReturn = 100;
+                progressToReturn = (int) (Math.round(progress * monthlyPercentage));
+
+//                Log.v("eisen", "    T progress to return = " + progressToReturn);
+
+                if (progress == totalDays || progressToReturn > 100) progressToReturn = 100;
+            }
+        }
 
         return progressToReturn;
-    }
-
-    private long getTotalDays(Context context) {
-        DateTimeHelper dateTimeHelper = new DateTimeHelper(context);
-        Calendar calNow = Calendar.getInstance();
-        Calendar calDate = Calendar.getInstance();
-        calDate.setTime(dateTimeHelper.getDate(getDate()));
-
-        long diff = calDate.getTimeInMillis() - calNow.getTimeInMillis();
-        return (diff / (24 * 60 * 60 * 1000)) + 1;
     }
 }

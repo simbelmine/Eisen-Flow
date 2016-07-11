@@ -109,7 +109,7 @@ public class TasksListAdapterDB extends RecyclerView.Adapter<TasksListHolder> {
         holder.task_time_txt.setTextColor(context.getResources().getColor(R.color.gray_light));
         if(taskRow.getPriority() == 1) {
             holder.task_p1_progress.setVisibility(View.VISIBLE);
-            holder.task_p1_progress.setText(setProgressValue(taskRow.calculateProgress(context)));
+            holder.task_p1_progress.setText(setProgressValue(taskRow.calculateProgress(context, dbHelper, taskRow.getId())));
         }
         else {
             holder.task_p1_progress.setVisibility(View.INVISIBLE);
@@ -339,7 +339,7 @@ public class TasksListAdapterDB extends RecyclerView.Adapter<TasksListHolder> {
         int currProgress = task.getProgress();
         currProgress++;
         task.setProgress(currProgress);
-        int taskCurrentProgress = task.calculateProgress(context);
+        int taskCurrentProgress = task.calculateProgress(context, dbHelper, taskId);
 
         if(taskCurrentProgress >= 100) {
             showTipMessagePercentage(view);

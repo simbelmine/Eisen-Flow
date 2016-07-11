@@ -135,7 +135,6 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
 
         setTaskPriority(holder, priority, position);
 
-
         holder.task_time_txt.setVisibility(View.VISIBLE);
         holder.text.setTextColor(context.getResources().getColor(R.color.white));
 
@@ -187,11 +186,13 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
 //        holder.text.setTextColor(context.getResources().getColor(R.color.gray));
 //        holder.task_time_txt.setTextColor(context.getResources().getColor(R.color.gray_light));
 
+
+
         if(taskRow.getPriority() == 1) {
             if(!"".equals(taskRow.reminderOccurrence)) {
                 holder.task_p1_progress.setVisibility(View.VISIBLE);
 
-                int currProgress = taskRow.calculateProgress(context);
+                int currProgress = taskRow.calculateProgress(context, dbHelper, taskRow.getId());
                 if (currProgress >= 100) {
                     holder.task_p1_progress.setText(setProgressValue(100));
                 } else {
@@ -637,7 +638,7 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
                     Log.v("eisen", "Column Update UNsuccessful!");
                 }
 
-                int taskCurrentProgress = task.calculateProgress(context);
+                int taskCurrentProgress = task.calculateProgress(context, dbHelper, taskId);
                 if (taskCurrentProgress == 100) {
                     if(view != null) showTipMessagePercentage(view);
                     if(position!= -1) notifyItemChanged(position);

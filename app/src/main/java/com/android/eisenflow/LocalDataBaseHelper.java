@@ -8,6 +8,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.text.DecimalFormat;
+import java.util.Calendar;
+
 /**
  * Created by Sve on 6/7/16.
  */
@@ -29,6 +32,7 @@ public class LocalDataBaseHelper {
     public static final String KEY_NOTE = "note";
     public static final String KEY_PROGRESS = "progress";
     public static final String KEY_DONE = "done";
+    public static final String KEY_TOTAL_DAYS_PERIOD = "total";
 
     private static final String TAG = "eisen";
     private DatabaseHelper dbHelper;
@@ -45,6 +49,7 @@ public class LocalDataBaseHelper {
                     + KEY_DATE + " text not null, "
                     + KEY_TIME + " text not null, "
                     + KEY_DATE_MILLIS + " integer, "
+                    + KEY_TOTAL_DAYS_PERIOD + " real, "
                     + KEY_REMINDER_OCCURRENCE + " text not null, "
                     + KEY_REMINDER_WHEN + " text not null, "
                     + KEY_REMINDER_DATE + " text not null, "
@@ -149,6 +154,7 @@ public class LocalDataBaseHelper {
         initialValues.put(KEY_REMINDER_TIME, taskReminderTime);
         initialValues.put(KEY_NOTE, note);
         initialValues.put(KEY_PROGRESS, progress);
+        initialValues.put(KEY_TOTAL_DAYS_PERIOD, -1);
 
 //        Log.v(TAG, "DB = " + eisenDb);
 
@@ -188,7 +194,7 @@ public class LocalDataBaseHelper {
     public Cursor fetchTask(long rowId) throws SQLException {
         Cursor mCursor =
                 eisenDb.query(true, DATABASE_TABLE, new String[] {KEY_ROW_ID,
-                                KEY_PRIORITY, KEY_TITLE, KEY_DATE, KEY_TIME, KEY_DATE_MILLIS, KEY_REMINDER_OCCURRENCE, KEY_REMINDER_WHEN,
+                                KEY_PRIORITY, KEY_TITLE, KEY_DATE, KEY_TIME, KEY_DATE_MILLIS, KEY_TOTAL_DAYS_PERIOD, KEY_REMINDER_OCCURRENCE, KEY_REMINDER_WHEN,
                         KEY_REMINDER_DATE, KEY_REMINDER_TIME, KEY_NOTE, KEY_PROGRESS, KEY_DONE},
                         KEY_ROW_ID + "=" + rowId, null,
                         null, null, null, null);
@@ -244,7 +250,7 @@ public class LocalDataBaseHelper {
      * @param columnValue integer value of the column
      * @return true if the reminder was successfully updated, false otherwise
      */
-    public boolean updateTaskIntColumn(long rowId, String columnName, int columnValue) {
+    public boolean updateTaskIntColumn(long rowId, String columnName, double columnValue) {
         ContentValues args = new ContentValues();
         args.put(columnName, columnValue);
 
@@ -265,5 +271,16 @@ public class LocalDataBaseHelper {
         args.put(columnName, columnValue);
 
         return eisenDb.update(DATABASE_TABLE, args, KEY_ROW_ID + "=" + rowId, null) > 0;
+    }
+
+    public double getTotalDays(Context context, String date) {
+        DecimalFormat precision = new DecimalFormat("0.00");
+        DateTimeHelper dateTimeHelper = new DateTimeHelper(context);
+        Calendar calNow = Calendar.getInstance();
+        Calendar calDate = Calendar.getInstance();
+        calDate.setTime(dateTimeHelper.getDate(date));
+
+        double diff = calDate.getTimeInMillis() - calNow.getTimeInMillis();
+        return Double.valueOf(precision.format((diff / (24 * 60 * 60 * 1000)) + 1));
     }
 }
