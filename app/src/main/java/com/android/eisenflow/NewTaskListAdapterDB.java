@@ -543,6 +543,7 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
     private BroadcastReceiver onProgressUpTriggered = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            lastSeenDate = null;
             saveProgressToDb(intent);
         }
     };
