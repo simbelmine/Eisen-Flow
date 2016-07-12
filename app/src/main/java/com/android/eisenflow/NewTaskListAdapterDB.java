@@ -371,6 +371,7 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
     private void showMessageAddedPercent(View view) {
         getSharedPrefs();
         if(!mainSharedPrefs.contains(PROGRESS_TIP) || !mainSharedPrefs.getBoolean(PROGRESS_TIP, false)) {
+            setBooleanToSharedPrefs(PROGRESS_TIP, true);
             showTipMessageDialog(context.getResources().getString(R.string.tip_calendar_plus_msg));
         }
         else {
@@ -541,10 +542,18 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
         }
     };
     private BroadcastReceiver onProgressUpTriggered = new BroadcastReceiver() {
+        private boolean isProgressReceived = false;
+
         @Override
         public void onReceive(Context context, Intent intent) {
-            lastSeenDate = null;
-            saveProgressToDb(intent);
+            if(!isProgressReceived) {
+                lastSeenDate = null;
+                isProgressReceived = true;
+                saveProgressToDb(intent);
+            }
+            else {
+                isProgressReceived = false;
+            }
         }
     };
 

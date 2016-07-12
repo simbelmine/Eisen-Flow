@@ -278,13 +278,14 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
                                 holder.undo_layout.setVisibility(View.INVISIBLE);
                                 holder.delete_action_layout.setVisibility(View.VISIBLE);
                                 break;
-                            case 1:
+                            case 1: {
                                 Log.v("eisen", "Action -> Up++");
                                 sendCardActionBroadcast(NewTaskListAdapterDB.PROGRESS_UP_ACTION);
                                 swipe(null, 0);
                                 holder.undo_layout.setVisibility(View.INVISIBLE);
                                 holder.delete_action_layout.setVisibility(View.VISIBLE);
                                 break;
+                            }
                             case 2:
                                 Log.v("eisen", "Action -> Share");
                                 sendCardActionBroadcast(NewTaskListAdapterDB.SHARE_ACTION);
