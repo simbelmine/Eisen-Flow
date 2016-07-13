@@ -166,7 +166,7 @@ public class EditTaskPreview extends AppCompatActivity implements View.OnClickLi
 
                 if(reminderDate != null && reminderTime != null) {
                     if("Weekly".equals(reminderOccurrence)) {
-                        repeatingReminderTxt.setText(generateReminderLbl(reminderOccurrence, reminderDate, reminderTime) + "  " + reminderWhen);
+                        repeatingReminderTxt.setText(generateReminderLbl(reminderOccurrence, reminderDate, reminderTime) + "  " + getFormattedReminderWhen(reminderWhen));
                     }
                     else {
                         repeatingReminderTxt.setText(generateReminderLbl(reminderOccurrence, reminderDate, reminderTime));
@@ -210,6 +210,16 @@ public class EditTaskPreview extends AppCompatActivity implements View.OnClickLi
                     return getResources().getString(R.string.edit_preview_none_txt);
             }
         }
+    }
+
+    private String getFormattedReminderWhen(String reminderWhen) {
+        StringBuilder strToReturn = new StringBuilder(reminderWhen);
+        char lastChar = strToReturn.charAt(strToReturn.length()-1);
+        if(lastChar  == ',') {
+            strToReturn.setCharAt(reminderWhen.length() - 1, Character.MIN_VALUE);
+        }
+
+        return strToReturn.toString();
     }
 
     private void setBgPriorityColor(int priority) {
