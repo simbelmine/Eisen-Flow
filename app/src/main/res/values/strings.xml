@@ -85,7 +85,7 @@
     <string name="notification_done">Done</string>
     <string name="notification_add_progress">Add Progress</string>
     <string name="weekly_tip_notification">Hey, some task are waiting!</string>
-    <string name="daily_evening_tip_notification">You wanna have a productive day tomorrow?\nPlan it now!</string>
+    <string name="daily_evening_tip_notification">Productive day tomorrow? Plan it now!</string>
 
     <!-- Edit Preview -->
     <string name="edit_preview_none_txt">None</string>
