@@ -9,11 +9,8 @@ import android.util.Log;
 import com.android.eisenflow.DateTimeHelper;
 import com.android.eisenflow.LocalDataBaseHelper;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 
 /**
  * Created by Sve on 6/11/16.
@@ -24,9 +21,24 @@ public class OnBootReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        ReminderManager reminderManager = new ReminderManager(context);
-
         dateTimeHelper = new DateTimeHelper(context);
+
+        setDailyTipAlarms(context);
+        setWeeklyTipAlarms(context);
+        setTaskAlarms(context);
+    }
+
+    private void setDailyTipAlarms(Context context) {
+        Calendar whenToRepeat = getWhenToRepeat(Calendar.getInstance().get(Calendar.DAY_OF_WEEK), 20);
+        new ReminderManager(context).setOldTasksReminder(whenToRepeat);
+    }
+
+    private void setWeeklyTipAlarms(Context context) {
+        Calendar whenToRepeat = getWhenToRepeat(Calendar.SUNDAY, 18);
+        new ReminderManager(context).setOldTasksReminder(whenToRepeat);
+    }
+
+    private void setTaskAlarms(Context context) {
         LocalDataBaseHelper dbHelper = new LocalDataBaseHelper(context);
         dbHelper.open();
 
@@ -112,5 +124,17 @@ public class OnBootReceiver extends BroadcastReceiver {
 
     private void setTaskRepeatingReminder(Context context, Long rowId, String reminderOccurrence, int weekDayInt, String reminderDate, String reminderTime) {
         new ReminderManager(context).setRepeatingReminder(rowId.longValue(), reminderOccurrence, weekDayInt, reminderDate, reminderTime);
+    }
+
+    private Calendar getWhenToRepeat(int dayOfWeek, int hour) {
+        Calendar whenToRepeat;
+
+        whenToRepeat = Calendar.getInstance();
+        whenToRepeat.set(Calendar.DAY_OF_WEEK, dayOfWeek);
+        whenToRepeat.set(Calendar.HOUR_OF_DAY, hour);
+        whenToRepeat.set(Calendar.MINUTE, 0);
+        whenToRepeat.set(Calendar.SECOND, 0);
+
+        return whenToRepeat;
     }
 }
