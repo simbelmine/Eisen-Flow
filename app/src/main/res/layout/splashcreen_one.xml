@@ -21,11 +21,11 @@
             android:textColor="@color/secondQuadrant"
             android:fontFamily="sans-serif-light"
             android:textSize="37sp"
-            android:text="EisenFlow"
+            android:text="@string/splash_app_name"
             />
         <ImageView
-            android:layout_width="70dp"
-            android:layout_height="70dp"
+            android:layout_width="@dimen/splash_1_icon_size"
+            android:layout_height="@dimen/splash_1_icon_size"
             android:layout_below="@+id/splash1_title"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="@dimen/task_standard_margin"
@@ -46,7 +46,7 @@
             android:textColor="@color/white"
             android:fontFamily="sans-serif-thin"
             android:textStyle="italic"
-            android:text="“What is important is seldom urgent \nand  what is urgent is seldom important.”"
+            android:text="@string/splash_quote"
             />
         <TextView
             android:layout_width="match_parent"
@@ -57,7 +57,7 @@
             android:layout_marginRight="@dimen/task_standard_margin"
             android:textColor="@color/splascreen_text1"
             android:fontFamily="sans-serif-light"
-            android:text="― Dwight D. Eisenhower"
+            android:text="@string/splash_quote_author"
             />
     </RelativeLayout>
 </LinearLayout>

@@ -90,4 +90,17 @@
     <!-- Edit Preview -->
     <string name="edit_preview_none_txt">None</string>
 
+    <!-- Splash Screens -->
+    <string name="splash_app_name">EisenFlow</string>
+    <string name="splash_quote">“What is important is seldom urgent \nand  what is urgent is seldom important.”</string>
+    <string name="splash_quote_author">― Dwight D. Eisenhower</string>
+    <string name="splash_2_title">Representing to your colors:</string>
+    <string name="splash_2_red_title">Do It Now!</string>
+    <string name="splash_2_red_content">Urgent - Important: tasks you will do immediately</string>
+    <string name="splash_2_green_title">Decide When</string>
+    <string name="splash_2_green_content">Important - Not Urgent: tasks you will schedule to \ndo later</string>
+    <string name="splash_2_yellow_title">Delegate It</string>
+    <string name="splash_2_yellow_content">Urgent - Not Important: tasks you will delegate to \nsomeone else</string>
+    <string name="splash_2_gray_title">Dump It!</string>
+    <string name="splash_2_gray_content">Not Urgent - Not Important: tasks you will dump.\nTime wasters!</string>
 </resources>

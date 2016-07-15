@@ -36,4 +36,11 @@
     <dimen name="padding_tb">2dp</dimen>
     <dimen name="txt_size">20sp</dimen>
 
+    <!-- Splash Screens -->
+    <dimen name="splash_1_icon_size">70dp</dimen>
+    <dimen name="splash_title_text_size">25sp</dimen>
+    <dimen name="splash_content_text_size_big">20sp</dimen>
+    <dimen name="splash_content_text_size_small">15sp</dimen>
+    <dimen name="splash_2_square_size">40dp</dimen>
+
 </resources>
