@@ -29,4 +29,7 @@
 
     <color name="event_color">#9C5F6E</color>
     <color name="timer_color">#6e3e39</color>
+
+    <color name="splashscreen_bg">#4A4A4A</color>
+    <color name="splascreen_text1">#9B9B9B</color>
 </resources>

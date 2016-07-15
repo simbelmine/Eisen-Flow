@@ -1,6 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:background="@color/splashscreen_bg"
+    android:weightSum="5"
+    >
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2.5"
+        android:gravity="center"
+        >
+        <TextView
+            android:id="@+id/splash1_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/secondQuadrant"
+            android:fontFamily="sans-serif-light"
+            android:textSize="37sp"
+            android:text="EisenFlow"
+            />
+        <ImageView
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_below="@+id/splash1_title"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/task_standard_margin"
+            android:src="@drawable/ic_splash"
+            />
+    </RelativeLayout>
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2.5"
+        >
+        <TextView
+            android:id="@+id/splashscreen1_text1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:fontFamily="sans-serif-thin"
+            android:textStyle="italic"
+            android:text="“What is important is seldom urgent \nand  what is urgent is seldom important.”"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/splashscreen1_text1"
+            android:gravity="right"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="@dimen/task_standard_margin"
+            android:textColor="@color/splascreen_text1"
+            android:fontFamily="sans-serif-light"
+            android:text="― Dwight D. Eisenhower"
+            />
+    </RelativeLayout>
 </LinearLayout>
