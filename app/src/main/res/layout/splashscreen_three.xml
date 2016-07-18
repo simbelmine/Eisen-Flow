@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/splashscreen_bg"
+    android:weightSum="5"
+    >
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:fontFamily="sans-serif-thin"
+        android:textColor="@color/white"
+        android:textSize="@dimen/splash_title_text_size"
+        android:text="In witch Quadrant are you?"
+        />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:src="@drawable/eisen_matrix"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_marginLeft="25dp"
+        >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-thin"
+            android:textColor="@color/white"
+            android:textSize="@dimen/splash_title_text_size"
+            android:text="Remember:"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:fontFamily="sans-serif-thin"
+            android:textColor="@color/white"
+            android:textSize="@dimen/splash_content_text_size_small"
+            android:text="* Be proactive: Plan your day in advance"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:fontFamily="sans-serif-thin"
+            android:textColor="@color/white"
+            android:textSize="@dimen/splash_content_text_size_small"
+            android:text="* Be Happy: Spend some time each day \ndoing a tasks from the Green Zone"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:fontFamily="sans-serif-thin"
+            android:textColor="@color/white"
+            android:textSize="@dimen/splash_content_text_size_small"
+            android:text="* Stay away from the Gray Zone"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:fontFamily="sans-serif-thin"
+            android:textColor="@color/white"
+            android:textSize="@dimen/splash_content_text_size_small"
+            android:text="* Keep your list small"
+            />
+
+    </LinearLayout>
+
+</LinearLayout>
