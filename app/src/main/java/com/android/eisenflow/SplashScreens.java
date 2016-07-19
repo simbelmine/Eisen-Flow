@@ -1,6 +1,8 @@
 package com.android.eisenflow;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
@@ -15,6 +17,9 @@ import android.widget.TextView;
  * Created by Sve on 7/19/16.
  */
 public class SplashScreens extends AppCompatActivity implements View.OnClickListener {
+    public static final String MAIN_PREFS = "MainSharedPreferences";
+    private static final String TUTORIAL_ACTIVATED = "isTutorialActivated";
+    private SharedPreferences tutorialSharedPrefs;
     private ViewPager viewPager;
     private LinearLayout dotsLayout;
     private Button btnSkip;
@@ -25,6 +30,8 @@ public class SplashScreens extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        tutorialSharedPrefs = getSharedPreferences(MAIN_PREFS, Context.MODE_PRIVATE);
+        checkTutorial();
         setContentView(R.layout.splashscreen_main);
         adapter = new SplashScreensAdapter(this);
 
@@ -33,6 +40,12 @@ public class SplashScreens extends AppCompatActivity implements View.OnClickList
         addBottomDots(0);
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(pageChangeListener);
+    }
+
+    private void checkTutorial() {
+        if(tutorialSharedPrefs.contains(TUTORIAL_ACTIVATED) && tutorialSharedPrefs.getBoolean(TUTORIAL_ACTIVATED, false)) {
+            launchMainActivity();
+        }
     }
 
     private void initLayout() {
@@ -71,6 +84,8 @@ public class SplashScreens extends AppCompatActivity implements View.OnClickList
     }
 
     private void launchMainActivity() {
+        tutorialSharedPrefs.edit().putBoolean(TUTORIAL_ACTIVATED, true).apply();
+
         Intent intent = new Intent(this, MainActivityDB.class);
         startActivity(intent);
     }
