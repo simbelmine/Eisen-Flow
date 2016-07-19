@@ -634,6 +634,10 @@ public class MainActivityDB extends AppCompatActivity
                 startListFeedingTask();
                 closeDrawer();
                 return true;
+            case R.id.nav_open_tutorial:
+                mainSharedPrefs.edit().putBoolean(SplashScreens.TUTORIAL_ACTIVATED, false).apply();
+                startActivity(new Intent(this, SplashScreens.class));
+                return true;
         }
 
         return true;

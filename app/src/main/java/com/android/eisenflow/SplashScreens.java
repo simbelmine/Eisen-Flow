@@ -18,7 +18,7 @@ import android.widget.TextView;
  */
 public class SplashScreens extends AppCompatActivity implements View.OnClickListener {
     public static final String MAIN_PREFS = "MainSharedPreferences";
-    private static final String TUTORIAL_ACTIVATED = "isTutorialActivated";
+    public static final String TUTORIAL_ACTIVATED = "isTutorialActivated";
     private SharedPreferences tutorialSharedPrefs;
     private ViewPager viewPager;
     private LinearLayout dotsLayout;
