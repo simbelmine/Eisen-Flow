@@ -9,10 +9,10 @@ import android.view.ViewGroup;
 /**
  * Created by Sve on 7/19/16.
  */
-public class SpashScreensAdapter extends PagerAdapter {
+public class SplashScreensAdapter extends PagerAdapter {
     private Context context;
 
-    public SpashScreensAdapter(Context context) {
+    public SplashScreensAdapter(Context context) {
         this.context = context;
     }
 

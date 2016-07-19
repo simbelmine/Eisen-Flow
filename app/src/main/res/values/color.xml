@@ -32,4 +32,10 @@
 
     <color name="splashscreen_bg">#4A4A4A</color>
     <color name="splascreen_text1">#9B9B9B</color>
+
+
+    <!-- dots inactive colors -->
+    <color name="dot_inactive">#808080</color>
+    <!-- dots active colors -->
+    <color name="dot_active">#F0F0F0</color>
 </resources>

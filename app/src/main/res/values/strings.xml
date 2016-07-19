@@ -103,4 +103,7 @@
     <string name="splash_2_yellow_content">Urgent - Not Important: tasks you will delegate to \nsomeone else</string>
     <string name="splash_2_gray_title">Dump It!</string>
     <string name="splash_2_gray_content">Not Urgent - Not Important: tasks you will dump.\nTime wasters!</string>
+    <string name="next">Next</string>
+    <string name="skip">Skip</string>
+    <string name="got_it">Got It</string>
 </resources>
