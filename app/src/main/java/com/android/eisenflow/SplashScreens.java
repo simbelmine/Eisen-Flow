@@ -11,8 +11,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.android.eisenflow.oldClasses.MainActivity;
-
 /**
  * Created by Sve on 7/19/16.
  */
@@ -73,7 +71,7 @@ public class SplashScreens extends AppCompatActivity implements View.OnClickList
     }
 
     private void launchMainActivity() {
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, MainActivityDB.class);
         startActivity(intent);
     }
 
