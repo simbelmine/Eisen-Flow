@@ -33,7 +33,7 @@
         <menu>
             <item
                 android:id="@+id/nav_open_tutorial"
-                android:icon="@drawable/owl"
+                android:icon="@drawable/book_open"
                 android:title="Tutorial" />
             <item
                 android:id="@+id/nav_info"
