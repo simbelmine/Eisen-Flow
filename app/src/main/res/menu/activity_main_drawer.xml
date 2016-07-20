@@ -35,6 +35,12 @@
                 android:id="@+id/nav_open_tutorial"
                 android:icon="@drawable/book_open"
                 android:title="Tutorial" />
+            <item android:id="@+id/nav_rate_app"
+                android:icon="@drawable/heart"
+                android:title="Rate Eisen Flow" />
+            <item android:id="@+id/nav_send_feedback"
+                android:icon="@drawable/telegram"
+                android:title="Send feedback" />
             <item
                 android:id="@+id/nav_info"
                 android:icon="@drawable/info"
