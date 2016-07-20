@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">EisenFlow</string>
+    <string name="app_name">Eisen Flow</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -110,4 +110,11 @@
     <!-- Send Report E-Mail -->
     <string name="chooserTitle">Send report to developer</string>
     <string name="report_body">Kind Regards!\nTell me about your experience with the app. What went wrong?</string>
+
+    <!-- Rate App -->
+    <string name="rate_body">If you enjoy using <b>Eisen Flow</b>, please take a moment to rate it.\nThanks for your support!</string>
+    <string name="rate_btn">Rate Eisen Flow</string>
+    <string name="remind_me_btn">Remind me later</string>
+    <string name="no_thanks_btn">No, Thanks</string>
+    <string name="rate_alert">Something went wrong. \nPlease try again later!</string>
 </resources>

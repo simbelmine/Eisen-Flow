@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/splashscreen_bg"
+    >
+    <LinearLayout
+        android:id="@+id/logo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginTop="@dimen/task_standard_margin"
+        >
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_launcher_app"
+            android:layout_marginLeft="@dimen/task_standard_margin"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="30sp"
+            android:text="@string/app_name"
+            android:layout_marginLeft="@dimen/task_standard_margin"
+            android:fontFamily="sans-serif-thin"
+            />
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/logo"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="5dp"
+        android:text="@string/rate_body"
+        android:textColor="@color/white"
+        android:textSize="@dimen/splash_content_text_size_small"
+        android:fontFamily="sans-serif-light"
+        />
+
+    <Button
+        android:id="@+id/rate_btn"
+        android:layout_width="240dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="50dp"
+        android:textColor="@color/white"
+        android:text="@string/rate_btn"
+        android:fontFamily="sans-serif-light"
+        android:layout_below="@+id/info"
+        android:layout_centerHorizontal="true"
+        android:background="@color/splashscreen_bg"
+        android:elevation="4dp"
+        />
+
+    <Button
+        android:id="@+id/no_thanks_btn"
+        android:layout_width="240dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="@dimen/task_standard_margin"
+        android:textColor="@color/white"
+        android:text="@string/no_thanks_btn"
+        android:fontFamily="sans-serif-light"
+        android:layout_below="@+id/rate_btn"
+        android:layout_centerHorizontal="true"
+        android:background="@color/splashscreen_bg"
+        android:elevation="4dp"
+        android:layout_marginBottom="50dp"
+        />
+
+</RelativeLayout>

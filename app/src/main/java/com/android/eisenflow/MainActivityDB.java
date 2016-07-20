@@ -1,10 +1,9 @@
 package com.android.eisenflow;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.ActivityOptions;
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -39,6 +38,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -645,6 +646,9 @@ public class MainActivityDB extends AppCompatActivity
             case R.id.nav_send_feedback:
                 sendFeedback();
                 return true;
+            case R.id.nav_rate_app:
+                showRateDialog();
+                return true;
 
         }
 
@@ -902,5 +906,55 @@ public class MainActivityDB extends AppCompatActivity
         builder.append(System.getProperty("line.separator"));
         builder.append(getString(R.string.report_body));
         return builder.toString();
+    }
+
+
+    public void showRateDialog() {
+        String app_title = getString(R.string.app_name);
+        final String app_pName = getPackageName();
+
+        final Dialog dialog = new Dialog(this);
+        dialog.setTitle("Rate " + app_title);
+        dialog.setContentView(R.layout.rate_dialog);
+
+        final Button rate = (Button) dialog.findViewById(R.id.rate_btn);
+        rate.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                rate.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        // Verify that the intent will resolve to an activity
+                        Intent storeIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + app_pName));
+                        ComponentName storeApp = storeIntent.resolveActivity(getPackageManager());
+                        ComponentName unsupportedAction = ComponentName.unflattenFromString("com.android.fallback/.Fallback");
+                        boolean hasStoreApp = storeApp != null && !storeApp.equals(unsupportedAction);
+
+                        if (hasStoreApp) {
+                            startActivity(storeIntent);
+                            dialog.dismiss();
+                        }
+                        else {
+                            showAlertDialog(getString(R.string.rate_alert), getApplicationContext().getResources().getColor(R.color.firstQuadrant));
+                        }
+                    }
+                });
+            }
+        });
+
+        final Button no_thanks = (Button) dialog.findViewById(R.id.no_thanks_btn);
+        no_thanks.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                no_thanks.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                    }
+                });
+            }
+        });
+
+        dialog.show();
     }
 }
