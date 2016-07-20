@@ -1,16 +1,21 @@
 package com.android.eisenflow;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.ActivityOptions;
-import android.app.Dialog;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -25,19 +30,17 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
-import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.eisenflow.decorators.EventDecorator;
@@ -61,8 +64,7 @@ import java.util.Locale;
  */
 public class MainActivityDB extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener,
-        OnDateSelectedListener, OnMonthChangedListener, SwipeRefreshLayout.OnRefreshListener
-{
+        OnDateSelectedListener, OnMonthChangedListener, SwipeRefreshLayout.OnRefreshListener {
     public static final int NEEDED_API_LEVEL = 22;
     public static final String MAIN_PREFS = "MainSharedPreferences";
     private static final String PRIORITY_PREFS_STR = "priority";
@@ -71,6 +73,7 @@ public class MainActivityDB extends AppCompatActivity
     private static final int ACTIVITY_CREATE = 0;
     public static final int ACTIVITY_EDIT = 1;
     private static final String DATE_FORMAT = "EEE, MMM dd, yyyy";
+    private static final String APP_EMAIL = "simbelmine.sve@gmail.com";
 
     private Toolbar toolbar;
     private FloatingActionButton fab;
@@ -142,7 +145,7 @@ public class MainActivityDB extends AppCompatActivity
         public void onReceive(Context context, Intent intent) {
             int rowId = intent.getIntExtra(LocalDataBaseHelper.KEY_ROW_ID, -1);
             int position = intent.getIntExtra("position", -1);
-            adapterDB.deleteItem(dbHelper, rowId, position) ;
+            adapterDB.deleteItem(dbHelper, rowId, position);
             justRefreshDecorators = true;
             startListFeedingTask();
         }
@@ -153,10 +156,10 @@ public class MainActivityDB extends AppCompatActivity
         public void onReceive(Context context, Intent intent) {
 //            startListFeedingTask();
             long rowId = intent.getLongExtra(LocalDataBaseHelper.KEY_ROW_ID, -1);
-            if(rowId != -1) {
+            if (rowId != -1) {
                 Task task = adapterDB.getTaskById(rowId);
                 int pos = adapterDB.getPositionById(rowId);
-                if(pos != -1) {
+                if (pos != -1) {
                     task.setIsDone(1);
                     adapterDB.notifyItemChanged(pos);
                 }
@@ -180,7 +183,7 @@ public class MainActivityDB extends AppCompatActivity
         LocalBroadcastManager.getInstance(this).unregisterReceiver(onTaskDoneNotification);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(onTaskAddProgress);
 
-        if(adapterDB != null) adapterDB.unregisterAdapterBroadcastReceivers();
+        if (adapterDB != null) adapterDB.unregisterAdapterBroadcastReceivers();
     }
 
     private void initLayout() {
@@ -194,7 +197,7 @@ public class MainActivityDB extends AppCompatActivity
         // Toolbar Month Name
         toolbarActionLayout = (LinearLayout) findViewById(R.id.main_toolbar_layout);
         toolbarActionLayout.setOnClickListener(this);
-        monthToolbar = (TextView)findViewById(R.id.toolbar_month);
+        monthToolbar = (TextView) findViewById(R.id.toolbar_month);
         monthToolbar.setText(dateTimeHelper.getMonthName(Calendar.getInstance()));
         arrowToolbar = (ImageView) findViewById(R.id.toolbar_arrow);
         setArrowAnimation(arrowToolbar, true);
@@ -224,10 +227,9 @@ public class MainActivityDB extends AppCompatActivity
             @Override
             public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
 
-                if(newState == SlidingUpPanelLayout.PanelState.COLLAPSED) {
+                if (newState == SlidingUpPanelLayout.PanelState.COLLAPSED) {
                     setArrowAnimation(arrowToolbar, true);
-                }
-                else if(newState == SlidingUpPanelLayout.PanelState.ANCHORED || newState == SlidingUpPanelLayout.PanelState.EXPANDED) {
+                } else if (newState == SlidingUpPanelLayout.PanelState.ANCHORED || newState == SlidingUpPanelLayout.PanelState.EXPANDED) {
                     setArrowAnimation(arrowToolbar, false);
                 }
             }
@@ -267,7 +269,7 @@ public class MainActivityDB extends AppCompatActivity
         CalendarDay day;
         Calendar calendar = Calendar.getInstance();
 
-        if(tasksList != null) {
+        if (tasksList != null) {
             for (Task task : tasksList) {
                 calendar.setTime(dateTimeHelper.getDate(task.getDate()));
 
@@ -309,7 +311,7 @@ public class MainActivityDB extends AppCompatActivity
     }
 
     private void initTasksAdapter() {
-        if(adapterDB == null) {
+        if (adapterDB == null) {
             adapterDB = new NewTaskListAdapterDB(this, getApplicationContext(), dbHelper);
         }
         adapterDB.registerBroadcastReceivers();
@@ -340,7 +342,7 @@ public class MainActivityDB extends AppCompatActivity
         protected void onPostExecute(Cursor cursor) {
             super.onPostExecute(cursor);
 
-            if(cursor != null) {
+            if (cursor != null) {
                 tasks = new ArrayList<>();
                 Task currentTask;
 
@@ -385,10 +387,9 @@ public class MainActivityDB extends AppCompatActivity
                     removeCalendarDecorators();
                     refreshCalendarDecorators();
 
-                    if(justRefreshDecorators) {
+                    if (justRefreshDecorators) {
                         justRefreshDecorators = false;
-                    }
-                    else {
+                    } else {
                         int priority = getPriorityFromSharedPrefs();
                         showCurrentTaskPriorityDB(priority);
                         setPriorityTipTxt(priority);
@@ -403,31 +404,30 @@ public class MainActivityDB extends AppCompatActivity
 
     private int getPriorityFromSharedPrefs() {
         int priority;
-        if(mainSharedPrefs.contains(PRIORITY_PREFS_STR)) {
+        if (mainSharedPrefs.contains(PRIORITY_PREFS_STR)) {
             priority = mainSharedPrefs.getInt(PRIORITY_PREFS_STR, -1);
-        }
-        else {
+        } else {
             priority = -1;
         }
 
         return priority;
     }
 
-    private void showCurrentTaskPriorityDB (int priority) {
+    private void showCurrentTaskPriorityDB(int priority) {
         ArrayList<Task> currentPriorityList = new ArrayList<>();
 
-        for(Task task : tasks) {
-            if(priority != -1 && priority == task.getPriority()) {
+        for (Task task : tasks) {
+            if (priority != -1 && priority == task.getPriority()) {
                 currentPriorityList.add(task);
             }
         }
 
-        if(priority == -1) {
+        if (priority == -1) {
             currentPriorityList = tasks;
         }
 
-        if(currentPriorityList != null) {
-            if(currentPriorityList.size() == 0) noTasksTipLayout.setVisibility(View.VISIBLE);
+        if (currentPriorityList != null) {
+            if (currentPriorityList.size() == 0) noTasksTipLayout.setVisibility(View.VISIBLE);
             else noTasksTipLayout.setVisibility(View.GONE);
 
             adapterDB.setList(currentPriorityList);
@@ -435,8 +435,7 @@ public class MainActivityDB extends AppCompatActivity
             setTaskAdapters();
             setPriorityTipTxt(priority);
             adapterDB.notifyDataSetChanged();
-        }
-        else {
+        } else {
             noTasksTipLayout.setVisibility(View.VISIBLE);
         }
     }
@@ -511,11 +510,10 @@ public class MainActivityDB extends AppCompatActivity
                 setCalendarCurrentDate();
                 monthToolbar.setText(dateTimeHelper.getMonthName(Calendar.getInstance()));
 
-                if(slidingLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) {
+                if (slidingLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) {
                     setArrowAnimation(arrowToolbar, false);
                     slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.ANCHORED);
-                }
-                else {
+                } else {
                     setArrowAnimation(arrowToolbar, true);
                     slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                 }
@@ -532,9 +530,7 @@ public class MainActivityDB extends AppCompatActivity
         if (!pressedCalendarDate.equals(currentDate)) {
             updateCalendarSelectedDateTxtColor(pressedCalendarDate.getDate(), R.color.gray);
             monthToolbar.setText(getString(R.string.today_txt));
-        }
-        else
-        {
+        } else {
             updateCalendarSelectedDateTxtColor(currentDate.getDate(), R.color.colorAccent);
             monthToolbar.setText(dateTimeHelper.getMonthName(Calendar.getInstance()));
         }
@@ -542,11 +538,10 @@ public class MainActivityDB extends AppCompatActivity
         hidePriorityTipMessage();
         showCurrentTasksFromEvent(pressedCalendarDate);
 
-        if(isEventDate(pressedCalendarDate)) {
+        if (isEventDate(pressedCalendarDate)) {
             noTasksTipLayout.setVisibility(View.GONE);
             slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-        }
-        else {
+        } else {
             noTasksTipLayout.setVisibility(View.VISIBLE);
         }
     }
@@ -557,10 +552,10 @@ public class MainActivityDB extends AppCompatActivity
 
     @Override
     public void onRefresh() {
-        if(tasksList != null) {
+        if (tasksList != null) {
             tasksList.clear();
             adapterDB.notifyDataSetChanged();
-            if(adapterDB != null) adapterDB.registerBroadcastReceivers();
+            if (adapterDB != null) adapterDB.registerBroadcastReceivers();
         }
 
         startListFeedingTask();
@@ -644,14 +639,13 @@ public class MainActivityDB extends AppCompatActivity
                 startActivity(new Intent(this, SplashScreens.class));
                 return true;
             case R.id.nav_info:
-                drawer.closeDrawers();
-//                final Dialog d = new Dialog(this,R.style.MyTipDialogStyle);
-//                d.setContentView(R.layout.splashscreen_main);
-//                d.setCanceledOnTouchOutside(true);
-//                d.show();
-
+                closeDrawer();
                 startActivity(new Intent(this, AboutDialog.class));
                 return true;
+            case R.id.nav_send_feedback:
+                sendFeedback();
+                return true;
+
         }
 
         return true;
@@ -659,12 +653,11 @@ public class MainActivityDB extends AppCompatActivity
 
     private void deleteDoneTasks() {
         ArrayList<Task> tasksToKeep = new ArrayList<>();
-        for(int i = 0; i < tasksList.size(); i++) {
+        for (int i = 0; i < tasksList.size(); i++) {
             Task currentTask = tasksList.get(i);
-            if(currentTask.isDone == 1) {
+            if (currentTask.isDone == 1) {
                 dbHelper.deleteTask(currentTask.getId());
-            }
-            else {
+            } else {
                 tasksToKeep.add(currentTask);
             }
         }
@@ -693,11 +686,10 @@ public class MainActivityDB extends AppCompatActivity
         Intent intent = new Intent(MainActivityDB.this, AddTaskDB.class);
 
         Bundle b = null;
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             b = ActivityOptions.makeScaleUpAnimation(view, 0, 0, view.getWidth(), view.getHeight()).toBundle();
             startActivityForResult(intent, ACTIVITY_CREATE, b);
-        }
-        else {
+        } else {
             startAddTaskActivity();
         }
 
@@ -706,7 +698,7 @@ public class MainActivityDB extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1) {
-            if(resultCode == Activity.RESULT_OK){
+            if (resultCode == Activity.RESULT_OK) {
                 boolean result = data.getBooleanExtra("result", false);
 
             }
@@ -716,7 +708,7 @@ public class MainActivityDB extends AppCompatActivity
         }
     }
 
-    private void showAlertSnackbar (String messageToShow) {
+    private void showAlertSnackbar(String messageToShow) {
         CoordinatorLayout layout = (CoordinatorLayout) findViewById(R.id.main_layout);
         Snackbar snackbar = Snackbar.make(layout, messageToShow, Snackbar.LENGTH_LONG)
                 .setActionTextColor(Color.WHITE)
@@ -728,6 +720,23 @@ public class MainActivityDB extends AppCompatActivity
         snackbar.show();
     }
 
+    private void showAlertDialog(String messageToShow, int colorMsg) {
+        int theme;
+        if(colorMsg == R.color.date) {
+            theme = R.style.MyTipDialogStyle;
+        }
+        else {
+            theme =  R.style.MyAlertDialogStyle;
+        }
+
+        AlertDialog.Builder builder =
+                new AlertDialog.Builder(MainActivityDB.this, theme);
+        builder.setTitle(getResources().getString(R.string.add_task_alert_title));
+        builder.setMessage(messageToShow);
+        builder.setPositiveButton(getResources().getString(R.string.ok_btn), null);
+        builder.show();
+    }
+
     private void hidePriorityTipMessage() {
         priorityTipTxt.setVisibility(View.GONE);
     }
@@ -735,8 +744,8 @@ public class MainActivityDB extends AppCompatActivity
     private void showCurrentTasksFromEvent(CalendarDay pressedCalendarDate) {
         ArrayList<Task> currEventTasks = new ArrayList<>();
         eventsTaskList = getListOfEvents();
-        for(CalendarObject co : eventsTaskList) {
-            if(pressedCalendarDate.equals(co.getCalendarDay())) {
+        for (CalendarObject co : eventsTaskList) {
+            if (pressedCalendarDate.equals(co.getCalendarDay())) {
                 currEventTasks.add(co.getTask());
             }
         }
@@ -750,7 +759,7 @@ public class MainActivityDB extends AppCompatActivity
         CalendarDay day;
         Calendar calendar = Calendar.getInstance();
 
-        for(Task task : tasksList) {
+        for (Task task : tasksList) {
             calendar.setTime(dateTimeHelper.getDate(task.getDate()));
 
             day = CalendarDay.from(calendar);
@@ -761,8 +770,8 @@ public class MainActivityDB extends AppCompatActivity
     }
 
     private boolean isEventDate(CalendarDay pressedCalendarDate) {
-        for(CalendarObject co : getListOfEvents()) {
-            if(pressedCalendarDate.equals(co.getCalendarDay())) {
+        for (CalendarObject co : getListOfEvents()) {
+            if (pressedCalendarDate.equals(co.getCalendarDay())) {
                 return true;
             }
         }
@@ -771,7 +780,7 @@ public class MainActivityDB extends AppCompatActivity
     }
 
 
-    private void setOnTouchSwipeListener () {
+    private void setOnTouchSwipeListener() {
         toolbar.setOnTouchListener(new SwipeDetector() {
             @Override
             public void onSwipeDown() {
@@ -782,7 +791,7 @@ public class MainActivityDB extends AppCompatActivity
     }
 
     private void createDailyEveningTip() {
-        if(!mainSharedPrefs.contains(DAILY_EVENING_TIP) || !mainSharedPrefs.getBoolean(DAILY_EVENING_TIP, false)) {
+        if (!mainSharedPrefs.contains(DAILY_EVENING_TIP) || !mainSharedPrefs.getBoolean(DAILY_EVENING_TIP, false)) {
             mainSharedPrefs.edit().putBoolean(DAILY_EVENING_TIP, true).apply();
 
             Calendar whenToRepeat = getWhenToRepeat(Calendar.getInstance().get(Calendar.DAY_OF_WEEK), 20);
@@ -791,7 +800,7 @@ public class MainActivityDB extends AppCompatActivity
     }
 
     private void createWeeklyOldTasksTip() {
-        if(!mainSharedPrefs.contains(WEEKLY_OLD_TASKS_TIP) || !mainSharedPrefs.getBoolean(WEEKLY_OLD_TASKS_TIP, false)) {
+        if (!mainSharedPrefs.contains(WEEKLY_OLD_TASKS_TIP) || !mainSharedPrefs.getBoolean(WEEKLY_OLD_TASKS_TIP, false)) {
             mainSharedPrefs.edit().putBoolean(WEEKLY_OLD_TASKS_TIP, true).apply();
 
             Calendar whenToRepeat = getWhenToRepeat(Calendar.SUNDAY, 18);
@@ -817,11 +826,81 @@ public class MainActivityDB extends AppCompatActivity
 
     private void setArrowAnimation(View v, boolean pflipDown) {
         int rotationAngle = 0;
-        if(pflipDown) {
+        if (pflipDown) {
             rotationAngle = rotationAngle + 180;
         }
-        ObjectAnimator anim = ObjectAnimator.ofFloat(v, "rotation",rotationAngle, rotationAngle);
+        ObjectAnimator anim = ObjectAnimator.ofFloat(v, "rotation", rotationAngle, rotationAngle);
         anim.setDuration(500);
         anim.start();
+    }
+
+    private void sendFeedback() {
+        String address = APP_EMAIL;
+        String subject = getEmailSubjectReport();
+        String body = getEmailBodyReport();
+        String chooserTitle = getString(R.string.chooserTitle);
+
+        Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:" + address));
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{address});
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
+        emailIntent.putExtra(Intent.EXTRA_TEXT, body);
+
+        // Verify that the intent will resolve to an activity
+        ComponentName emailApp = emailIntent.resolveActivity(getPackageManager());
+        ComponentName unsupportedAction = ComponentName.unflattenFromString("com.android.fallback/.Fallback");
+        boolean hasEmailApp = emailApp != null && !emailApp.equals(unsupportedAction);
+
+        if (hasEmailApp) {
+            startActivity(Intent.createChooser(emailIntent, chooserTitle));
+        }
+        else {
+            showAlertDialog("Email account not set up.", getColor(R.color.firstQuadrant));
+        }
+    }
+
+    private String getEmailSubjectReport() {
+        StringBuilder builder = new StringBuilder();
+        builder.append(getString(R.string.app_name) + " ");
+        builder.append(getAppVersionString() + " ");
+        builder.append(getPhoneName() + " ");
+        builder.append(getDeviceOS());
+        return builder.toString();
+    }
+
+    private String getAppVersionString() {
+        StringBuilder builder = new StringBuilder();
+        try {
+            PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+            String version = pInfo.versionName;
+            int verCode = pInfo.versionCode;
+
+            builder.append(version + " ");
+            builder.append(verCode);
+        } catch (PackageManager.NameNotFoundException ex) {
+            Log.e("eisen", "AboutDialogException: " + ex.getMessage());
+        }
+        return builder.toString();
+    }
+
+    private String getPhoneName() {
+        StringBuilder builder = new StringBuilder();
+        builder.append(Build.MANUFACTURER);
+        builder.append(Build.MODEL);
+        return builder.toString();
+    }
+
+    private String getDeviceOS() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("releaseV: " + android.os.Build.VERSION.RELEASE + " ");
+        builder.append("sdkV: " + android.os.Build.VERSION.SDK_INT);
+        return builder.toString();
+    }
+
+    private String getEmailBodyReport() {
+        StringBuilder builder = new StringBuilder();
+        builder.append(getString(R.string.app_name));
+        builder.append(System.getProperty("line.separator"));
+        builder.append(getString(R.string.report_body));
+        return builder.toString();
     }
 }

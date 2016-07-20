@@ -106,4 +106,8 @@
     <string name="next">Next</string>
     <string name="skip">Skip</string>
     <string name="got_it">Got It</string>
+    
+    <!-- Send Report E-Mail -->
+    <string name="chooserTitle">Send report to developer</string>
+    <string name="report_body">Kind Regards!\nTell me about your experience with the app. What went wrong?</string>
 </resources>
