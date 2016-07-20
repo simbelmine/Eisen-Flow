@@ -26,6 +26,7 @@
             android:textSize="30sp"
             android:text="@string/app_name"
             android:layout_marginLeft="@dimen/task_standard_margin"
+            android:fontFamily="sans-serif-thin"
             />
     </LinearLayout>
 
@@ -39,6 +40,7 @@
         android:layout_marginTop="30dp"
         android:textColor="@color/date"
         android:textSize="@dimen/splash_content_text_size_big"
+        android:fontFamily="sans-serif-thin"
         />
 
     <TextView
@@ -46,24 +48,28 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/version"
-        android:gravity="left"
         android:layout_marginTop="30dp"
-        android:layout_marginLeft="@dimen/task_standard_margin"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="5dp"
         android:text="Eisen Flow is an productivity application based on Eisenhower's productivity matrix."
         android:textColor="@color/white"
         android:textSize="@dimen/splash_content_text_size_small"
+        android:fontFamily="sans-serif-light"
         />
 
     <Button
         android:id="@+id/about_ok"
         android:layout_width="100dp"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:layout_marginTop="50dp"
         android:textColor="@color/white"
         android:text="@string/ok_btn"
+        android:fontFamily="sans-serif-light"
         android:layout_below="@+id/info"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="@dimen/task_standard_margin"
+        android:background="@color/splashscreen_bg"
+        android:elevation="4dp"
         />
 
 </RelativeLayout>

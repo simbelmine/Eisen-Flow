@@ -43,7 +43,7 @@
         <activity android:name=".AddTaskDB"/>
         <activity android:name=".TimerActivity"/>
         <activity android:name=".EditTaskPreview"/>
-        <activity android:name=".AboutDialog"  android:theme="@android:style/Theme.Dialog"/>
+        <activity android:name=".AboutDialog"  android:theme="@android:style/Theme.Holo.Light.Dialog.NoActionBar"/>
 
         <activity android:name=".oldClasses.MainActivity"/>
 
