@@ -3,6 +3,7 @@ package com.android.eisenflow;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.ActivityOptions;
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -28,11 +29,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.eisenflow.decorators.EventDecorator;
@@ -637,6 +642,15 @@ public class MainActivityDB extends AppCompatActivity
             case R.id.nav_open_tutorial:
                 mainSharedPrefs.edit().putBoolean(SplashScreens.TUTORIAL_ACTIVATED, false).apply();
                 startActivity(new Intent(this, SplashScreens.class));
+                return true;
+            case R.id.nav_info:
+                drawer.closeDrawers();
+//                final Dialog d = new Dialog(this,R.style.MyTipDialogStyle);
+//                d.setContentView(R.layout.splashscreen_main);
+//                d.setCanceledOnTouchOutside(true);
+//                d.show();
+
+                startActivity(new Intent(this, AboutDialog.class));
                 return true;
         }
 
