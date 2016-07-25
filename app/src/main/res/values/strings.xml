@@ -115,6 +115,6 @@
     <string name="rate_body">If you enjoy using <b>Eisen Flow</b>, please take a moment to rate it.\nThanks for your support!</string>
     <string name="rate_btn">Rate Eisen Flow</string>
     <string name="remind_me_btn">Remind me later</string>
-    <string name="no_thanks_btn">No, Thanks</string>
+    <string name="not_now_btn">Not now</string>
     <string name="rate_alert">Something went wrong. \nPlease try again later!</string>
 </resources>

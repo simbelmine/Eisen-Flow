@@ -60,12 +60,12 @@
         />
 
     <Button
-        android:id="@+id/no_thanks_btn"
+        android:id="@+id/not_now_btn"
         android:layout_width="240dp"
         android:layout_height="40dp"
         android:layout_marginTop="@dimen/task_standard_margin"
         android:textColor="@color/white"
-        android:text="@string/no_thanks_btn"
+        android:text="@string/not_now_btn"
         android:fontFamily="sans-serif-light"
         android:layout_below="@+id/rate_btn"
         android:layout_centerHorizontal="true"

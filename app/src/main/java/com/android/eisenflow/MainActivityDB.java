@@ -942,11 +942,11 @@ public class MainActivityDB extends AppCompatActivity
             }
         });
 
-        final Button no_thanks = (Button) dialog.findViewById(R.id.no_thanks_btn);
-        no_thanks.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+        final Button not_now = (Button) dialog.findViewById(R.id.not_now_btn);
+        not_now.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                no_thanks.setOnClickListener(new View.OnClickListener() {
+                not_now.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         dialog.dismiss();
