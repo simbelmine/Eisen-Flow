@@ -46,6 +46,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:textColor="@color/gray_light"
+            android:layout_toRightOf="@id/arrow_reminder"
             />
     </RelativeLayout>
 
