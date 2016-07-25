@@ -1,169 +1,163 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
+    android:background="@color/splashscreen_bg"
+    android:weightSum="5"
     >
 
-    <LinearLayout
-        android:orientation="vertical"
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/splashscreen_bg"
-        android:weightSum="5"
-        >
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:fontFamily="sans-serif-thin"
+        android:textColor="@color/white"
+        android:textSize="@dimen/splash_title_text_size"
+        android:text="@string/splash_2_title"
+        />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="4"
+        android:orientation="vertical"
+        android:layout_marginLeft="40sp"
+        >
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+            <ImageView
+                android:id="@+id/red_square"
+                android:layout_width="@dimen/splash_2_square_size"
+                android:layout_height="@dimen/splash_2_square_size"
+                android:background="@drawable/rounded_corners_red"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/red_square"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/task_standard_margin"
+                android:fontFamily="sans-serif-thin"
+                android:textColor="@color/white"
+                android:textSize="@dimen/splash_content_text_size_big"
+                android:text="@string/splash_2_red_title"
+                />
+        </RelativeLayout>
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/task_standard_margin"
             android:fontFamily="sans-serif-thin"
             android:textColor="@color/white"
-            android:textSize="@dimen/splash_title_text_size"
-            android:text="@string/splash_2_title"
+            android:textSize="@dimen/splash_content_text_size_small"
+            android:text="@string/splash_2_red_content"
             />
 
-        <LinearLayout
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="4"
-            android:orientation="vertical"
-            android:layout_marginLeft="40sp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/task_standard_margin"
             >
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                >
-                <ImageView
-                    android:id="@+id/red_square"
-                    android:layout_width="@dimen/splash_2_square_size"
-                    android:layout_height="@dimen/splash_2_square_size"
-                    android:background="@drawable/rounded_corners_red"
-                    />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_toRightOf="@id/red_square"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/task_standard_margin"
-                    android:fontFamily="sans-serif-thin"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/splash_content_text_size_big"
-                    android:text="@string/splash_2_red_title"
-                    />
-            </RelativeLayout>
+            <ImageView
+                android:id="@+id/green_square"
+                android:layout_width="@dimen/splash_2_square_size"
+                android:layout_height="@dimen/splash_2_square_size"
+                android:background="@drawable/rounded_corners_green"
+                />
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/task_standard_margin"
+                android:layout_toRightOf="@id/green_square"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/task_standard_margin"
                 android:fontFamily="sans-serif-thin"
                 android:textColor="@color/white"
-                android:textSize="@dimen/splash_content_text_size_small"
-                android:text="@string/splash_2_red_content"
+                android:textSize="@dimen/splash_content_text_size_big"
+                android:text="@string/splash_2_green_title"
                 />
+        </RelativeLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/task_standard_margin"
+            android:fontFamily="sans-serif-thin"
+            android:textColor="@color/white"
+            android:textSize="@dimen/splash_content_text_size_small"
+            android:text="@string/splash_2_green_content"
+            />
 
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/task_standard_margin"
-                >
-                <ImageView
-                    android:id="@+id/green_square"
-                    android:layout_width="@dimen/splash_2_square_size"
-                    android:layout_height="@dimen/splash_2_square_size"
-                    android:background="@drawable/rounded_corners_green"
-                    />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_toRightOf="@id/green_square"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/task_standard_margin"
-                    android:fontFamily="sans-serif-thin"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/splash_content_text_size_big"
-                    android:text="@string/splash_2_green_title"
-                    />
-            </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/task_standard_margin"
+            >
+            <ImageView
+                android:id="@+id/yellow_square"
+                android:layout_width="@dimen/splash_2_square_size"
+                android:layout_height="@dimen/splash_2_square_size"
+                android:background="@drawable/rounded_corners_yellow"
+                />
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/task_standard_margin"
+                android:layout_toRightOf="@id/yellow_square"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/task_standard_margin"
                 android:fontFamily="sans-serif-thin"
                 android:textColor="@color/white"
-                android:textSize="@dimen/splash_content_text_size_small"
-                android:text="@string/splash_2_green_content"
+                android:textSize="@dimen/splash_content_text_size_big"
+                android:text="@string/splash_2_yellow_title"
                 />
+        </RelativeLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/task_standard_margin"
+            android:fontFamily="sans-serif-thin"
+            android:textColor="@color/white"
+            android:textSize="@dimen/splash_content_text_size_small"
+            android:text="@string/splash_2_yellow_content"
+            />
 
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/task_standard_margin"
-                >
-                <ImageView
-                    android:id="@+id/yellow_square"
-                    android:layout_width="@dimen/splash_2_square_size"
-                    android:layout_height="@dimen/splash_2_square_size"
-                    android:background="@drawable/rounded_corners_yellow"
-                    />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_toRightOf="@id/yellow_square"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/task_standard_margin"
-                    android:fontFamily="sans-serif-thin"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/splash_content_text_size_big"
-                    android:text="@string/splash_2_yellow_title"
-                    />
-            </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/task_standard_margin"
+            >
+            <ImageView
+                android:id="@+id/gray_square"
+                android:layout_width="@dimen/splash_2_square_size"
+                android:layout_height="@dimen/splash_2_square_size"
+                android:background="@drawable/rounded_corners_gray"
+                />
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/task_standard_margin"
+                android:layout_toRightOf="@id/gray_square"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/task_standard_margin"
                 android:fontFamily="sans-serif-thin"
                 android:textColor="@color/white"
-                android:textSize="@dimen/splash_content_text_size_small"
-                android:text="@string/splash_2_yellow_content"
+                android:textSize="@dimen/splash_content_text_size_big"
+                android:text="@string/splash_2_gray_title"
                 />
-
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/task_standard_margin"
-                >
-                <ImageView
-                    android:id="@+id/gray_square"
-                    android:layout_width="@dimen/splash_2_square_size"
-                    android:layout_height="@dimen/splash_2_square_size"
-                    android:background="@drawable/rounded_corners_gray"
-                    />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_toRightOf="@id/gray_square"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/task_standard_margin"
-                    android:fontFamily="sans-serif-thin"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/splash_content_text_size_big"
-                    android:text="@string/splash_2_gray_title"
-                    />
-            </RelativeLayout>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/task_standard_margin"
-                android:fontFamily="sans-serif-thin"
-                android:textColor="@color/white"
-                android:textSize="@dimen/splash_content_text_size_small"
-                android:text="@string/splash_2_gray_content"
-                />
-        </LinearLayout>
+        </RelativeLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/task_standard_margin"
+            android:fontFamily="sans-serif-thin"
+            android:textColor="@color/white"
+            android:textSize="@dimen/splash_content_text_size_small"
+            android:text="@string/splash_2_gray_content"
+            />
     </LinearLayout>
-</ScrollView>
+</LinearLayout>
