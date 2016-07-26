@@ -15,7 +15,7 @@
         android:fontFamily="sans-serif-thin"
         android:textColor="@color/white"
         android:textSize="@dimen/splash_title_text_size"
-        android:text="In witch Quadrant are you?"
+        android:text="In which Quadrant are you?"
         />
 
     <ImageView

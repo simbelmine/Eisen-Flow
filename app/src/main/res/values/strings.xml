@@ -92,9 +92,9 @@
 
     <!-- Splash Screens -->
     <string name="splash_app_name">EisenFlow</string>
-    <string name="splash_quote">“What is important is seldom urgent \nand  what is urgent is seldom important.”</string>
+    <string name="splash_quote">“What is important is seldom urgent \nand what is urgent is seldom important.”</string>
     <string name="splash_quote_author">― Dwight D. Eisenhower</string>
-    <string name="splash_2_title">Representing to your colors:</string>
+    <string name="splash_2_title">Meaning of your colors:</string>
     <string name="splash_2_red_title">Do It Now!</string>
     <string name="splash_2_red_content">Urgent - Important: tasks you will do immediately</string>
     <string name="splash_2_green_title">Decide When</string>
