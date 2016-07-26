@@ -98,12 +98,12 @@ public class SplashScreens extends AppCompatActivity implements View.OnClickList
             dots[i] = new TextView(this);
             dots[i].setText(Html.fromHtml("&#8226;"));
             dots[i].setTextSize(35);
-            dots[i].setTextColor(getColor(R.color.dot_inactive));
+            dots[i].setTextColor(getResources().getColor(R.color.dot_inactive));
             dotsLayout.addView(dots[i]);
         }
 
         if (dots.length > 0)
-            dots[currentPage].setTextColor(getColor(R.color.dot_active));
+            dots[currentPage].setTextColor(getResources().getColor(R.color.dot_active));
     }
 
     ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {

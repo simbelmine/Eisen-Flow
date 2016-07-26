@@ -24,7 +24,7 @@
         android:layout_height="0dp"
         android:layout_weight="4"
         android:orientation="vertical"
-        android:layout_marginLeft="40sp"
+        android:layout_marginLeft="@dimen/splash_2_margin_left"
         >
         <RelativeLayout
             android:layout_width="match_parent"

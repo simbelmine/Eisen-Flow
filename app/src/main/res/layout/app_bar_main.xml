@@ -81,22 +81,22 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1.15"
+                android:layout_weight="@integer/weight_top_img"
                 android:background="@drawable/tile_bg"
                 />
             <FrameLayout
                 android:id="@+id/calendar_frame_layout"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginTop="2.5dp"
-                android:layout_weight="1.85">
+                android:layout_marginTop="@dimen/calendar_margin_top"
+                android:layout_weight="@integer/weight_cal">
                 <com.prolificinteractive.materialcalendarview.MaterialCalendarView
                     android:id="@+id/materialCalendarView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:mcv_selectionColor="@color/colorAccent"
                     app:mcv_arrowColor="@color/colorPrimaryDark"
-                    sothree:mcv_tileSize="43dp"
+                    sothree:mcv_tileSize="@dimen/calendar_tile_size"
                     />
             </FrameLayout>
             <RelativeLayout

@@ -15,8 +15,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
 
-        <activity android:name=".SplashScreens"
-            android:theme="@style/NoActionBarTheme">
+        <activity
+            android:name=".SplashScreens"
+            android:theme="@style/NoActionBarTheme"
+            android:screenOrientation="portrait"
+            >
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,23 +35,29 @@
         <activity
             android:name=".MainActivityDB"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="text/plain"/>
             </intent-filter>
         </activity>
-        <activity android:name=".oldClasses.AddTask"/>
-        <activity android:name=".AddTaskDB"/>
-        <activity android:name=".TimerActivity"/>
-        <activity android:name=".EditTaskPreview"/>
-        <activity android:name=".AboutDialog"  android:theme="@android:style/Theme.Holo.Light.Dialog.NoActionBar"/>
+        <activity android:name=".oldClasses.AddTask" android:screenOrientation="portrait"/>
+        <activity android:name=".AddTaskDB" android:screenOrientation="portrait"/>
+        <activity android:name=".TimerActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".EditTaskPreview" android:screenOrientation="portrait"/>
+        <activity
+            android:name=".AboutDialog"
+            android:theme="@android:style/Theme.Holo.Light.Dialog.NoActionBar"
+            android:screenOrientation="portrait"
+            />
 
-        <activity android:name=".oldClasses.MainActivity"/>
+        <activity android:name=".oldClasses.MainActivity" android:screenOrientation="portrait"/>
 
 
-        <receiver android:name=".reminders.OnAlarmReceiver" />
+        <receiver android:name=".reminders.OnAlarmReceiver"/>
         <receiver android:name=".reminders.OnBootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />

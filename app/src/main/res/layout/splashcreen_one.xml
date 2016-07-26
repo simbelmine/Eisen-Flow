@@ -46,6 +46,7 @@
             android:textColor="@color/white"
             android:fontFamily="sans-serif-thin"
             android:textStyle="italic"
+            android:textSize="@dimen/splash_content_text_size_small"
             android:text="@string/splash_quote"
             />
         <TextView
@@ -54,9 +55,10 @@
             android:layout_below="@+id/splashscreen1_text1"
             android:gravity="center"
             android:layout_marginTop="10dp"
-            android:layout_marginLeft="200dp"
+            android:layout_marginLeft="100dp"
             android:textColor="@color/splascreen_text1"
             android:fontFamily="sans-serif-light"
+            android:textSize="@dimen/splash_content_text_size_small"
             android:text="@string/splash_quote_author"
             />
     </RelativeLayout>
