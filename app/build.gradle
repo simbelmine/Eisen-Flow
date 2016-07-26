@@ -5,7 +5,7 @@ android {
     buildToolsVersion "23.0.1"
 
     defaultConfig {
-        applicationId "com.android.eisenflow"
+        applicationId "com.app.eisenflow"
         minSdkVersion 17
         targetSdkVersion 23
         versionCode 1

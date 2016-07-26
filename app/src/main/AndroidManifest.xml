@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.android.eisenflow">
+    package="com.app.eisenflow">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -8,7 +8,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
-        android:name=".ApplicationEisenFlow"
+        android:name="com.app.eisenflow.ApplicationEisenFlow"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher_app"
         android:label="@string/app_name"
@@ -16,7 +16,7 @@
         android:theme="@style/AppTheme.NoActionBar">
 
         <activity
-            android:name=".SplashScreens"
+            android:name="com.app.eisenflow.SplashScreens"
             android:theme="@style/NoActionBarTheme"
             android:screenOrientation="portrait"
             >
@@ -33,7 +33,7 @@
         </activity>
 
         <activity
-            android:name=".MainActivityDB"
+            android:name="com.app.eisenflow.MainActivityDB"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"
@@ -44,29 +44,26 @@
                 <data android:mimeType="text/plain"/>
             </intent-filter>
         </activity>
-        <activity android:name=".oldClasses.AddTask" android:screenOrientation="portrait"/>
-        <activity android:name=".AddTaskDB" android:screenOrientation="portrait"/>
-        <activity android:name=".TimerActivity" android:screenOrientation="portrait"/>
-        <activity android:name=".EditTaskPreview" android:screenOrientation="portrait"/>
+        <activity android:name="com.app.eisenflow.AddTaskDB" android:screenOrientation="portrait"/>
+        <activity android:name="com.app.eisenflow.TimerActivity" android:screenOrientation="portrait"/>
+        <activity android:name="com.app.eisenflow.EditTaskPreview" android:screenOrientation="portrait"/>
         <activity
-            android:name=".AboutDialog"
+            android:name="com.app.eisenflow.AboutDialog"
             android:theme="@android:style/Theme.Holo.Light.Dialog.NoActionBar"
             android:screenOrientation="portrait"
             />
 
-        <activity android:name=".oldClasses.MainActivity" android:screenOrientation="portrait"/>
 
-
-        <receiver android:name=".reminders.OnAlarmReceiver"/>
-        <receiver android:name=".reminders.OnBootReceiver">
+        <receiver android:name="com.app.eisenflow.reminders.OnAlarmReceiver"/>
+        <receiver android:name="com.app.eisenflow.reminders.OnBootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".reminders.ReminderDoneReceiver"/>
-        <receiver android:name=".reminders.AddProgressReceiver"/>
+        <receiver android:name="com.app.eisenflow.reminders.ReminderDoneReceiver"/>
+        <receiver android:name="com.app.eisenflow.reminders.AddProgressReceiver"/>
 
-        <service android:name=".reminders.ReminderService" />
+        <service android:name="com.app.eisenflow.reminders.ReminderService" />
     </application>
 
 </manifest>
