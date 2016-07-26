@@ -9,7 +9,7 @@ import android.os.PowerManager;
  * Created by Sve on 6/11/16.
  */
 public abstract class WakeReminderIntentService extends IntentService {
-    public static final String LOCK_NAME_STATIC = "com.android.eisenflow.taskreminder.Static";
+    public static final String LOCK_NAME_STATIC = "com.app.eisenflow.taskreminder.Static";
     private static PowerManager.WakeLock lockStatic = null;
 
     public WakeReminderIntentService(String name) {
