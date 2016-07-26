@@ -31,7 +31,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.eisenflow.oldClasses.MainActivity;
 import com.android.eisenflow.reminders.OnAlarmReceiver;
 
 import net.danlew.android.joda.DateUtils;
@@ -393,7 +392,7 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
     }
 
     private void showTipMessage(View view, String messageToShow) {
-        if(Build.VERSION.SDK_INT >= MainActivity.NEEDED_API_LEVEL) {
+        if(Build.VERSION.SDK_INT >= MainActivityDB.NEEDED_API_LEVEL) {
             showTipMessageSnakcbar(view, messageToShow);
         }
         else {
