@@ -47,11 +47,11 @@
     <string name="dump">Dump it</string>
 
     <!-- SnackBar Messages -->
-    <string name="add_task_priority_alert">Choose task priority</string>
-    <string name="add_task_name_alert">Write some name to the task</string>
-    <string name="add_task_date_alert">Your date is in the past</string>
-    <string name="add_task_time_alert">Your time is in the past</string>
-    <string name="add_task_reminder_alert">Weekly Reminder: Check at least one day</string>
+    <string name="add_task_priority_alert">Choose task priority.</string>
+    <string name="add_task_name_alert">Missing task name.</string>
+    <string name="add_task_date_alert">Your date is in the past.</string>
+    <string name="add_task_time_alert">Your time is in the past.</string>
+    <string name="add_task_reminder_alert">Weekly Reminder: Check at least one day.</string>
     <string name="ok_btn">OK</string>
     <string name="cancel_btn">Cancel</string>
     <string name="progress_added">Good job! You added progress to your task!</string>

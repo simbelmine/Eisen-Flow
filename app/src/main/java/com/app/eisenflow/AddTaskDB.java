@@ -924,11 +924,11 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
     }
 
     private void setTimeToTimePicker(String timeStr, boolean isReminder) {
-        if(Build.VERSION.SDK_INT >= MainActivityDB.NEEDED_API_LEVEL) {
-            Date date = dateTimeHelper.getTime(timeStr);
-            Calendar c = Calendar.getInstance();
-            c.setTime(date);
+        Date date = dateTimeHelper.getTime(timeStr);
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
 
+        if(Build.VERSION.SDK_INT > MainActivityDB.NEEDED_API_LEVEL) {
             if(isReminder) {
                 reminderTimePickerView.setHour(c.get(Calendar.HOUR_OF_DAY));
                 reminderTimePickerView.setMinute(c.get(Calendar.MINUTE));
@@ -937,8 +937,16 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
                 timePickerView.setHour(c.get(Calendar.HOUR_OF_DAY));
                 timePickerView.setMinute(c.get(Calendar.MINUTE));
             }
-
-
+        }
+        else {
+            if(isReminder) {
+                reminderTimePickerView.setCurrentHour(c.get(Calendar.HOUR_OF_DAY));
+                reminderTimePickerView.setCurrentMinute(c.get(Calendar.MINUTE));
+            }
+            else {
+                timePickerView.setCurrentHour(c.get(Calendar.HOUR_OF_DAY));
+                timePickerView.setCurrentMinute(c.get(Calendar.MINUTE));
+            }
         }
     }
 

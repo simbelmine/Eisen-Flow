@@ -4,6 +4,7 @@ import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.app.Dialog;
+import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -39,6 +40,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -858,7 +860,7 @@ public class MainActivityDB extends AppCompatActivity
             startActivity(Intent.createChooser(emailIntent, chooserTitle));
         }
         else {
-            showAlertDialog("Email account not set up.", getColor(R.color.firstQuadrant));
+            showAlertDialog("Email account not set up.", getResources().getColor(R.color.firstQuadrant));
         }
     }
 
@@ -910,13 +912,11 @@ public class MainActivityDB extends AppCompatActivity
 
 
     public void showRateDialog() {
-        String app_title = getString(R.string.app_name);
         final String app_pName = getPackageName();
 
         final Dialog dialog = new Dialog(this);
-        dialog.setTitle("Rate " + app_title);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.rate_dialog);
-
         final Button rate = (Button) dialog.findViewById(R.id.rate_btn);
         rate.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -924,18 +924,16 @@ public class MainActivityDB extends AppCompatActivity
                 rate.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        // Verify that the intent will resolve to an activity
-                        Intent storeIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + app_pName));
-                        ComponentName storeApp = storeIntent.resolveActivity(getPackageManager());
-                        ComponentName unsupportedAction = ComponentName.unflattenFromString("com.android.fallback/.Fallback");
-                        boolean hasStoreApp = storeApp != null && !storeApp.equals(unsupportedAction);
+                        Uri uri = Uri.parse("market://details?id=" + getPackageName());
+                        Intent myAppLinkToMarket = new Intent(Intent.ACTION_VIEW, uri);
 
-                        if (hasStoreApp) {
-                            startActivity(storeIntent);
-                            dialog.dismiss();
-                        }
-                        else {
-                            showAlertDialog(getString(R.string.rate_alert), getApplicationContext().getResources().getColor(R.color.firstQuadrant));
+                        try {
+                            startActivity(myAppLinkToMarket);
+                        } catch (ActivityNotFoundException e) {
+                            Log.e("eisen", "Rate App Exception: " + e.getMessage());
+                            Intent intent = new Intent(Intent.ACTION_VIEW);
+                            intent.setData(Uri.parse("https://play.google.com/store/apps/details?id=" + getPackageName()));
+                            startActivity(intent);
                         }
                     }
                 });
