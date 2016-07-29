@@ -5,7 +5,6 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:layout_below="@+id/time_divider"
-    android:layout_marginTop="@dimen/task_standard_margin"
     android:layout_marginLeft="@dimen/task_standard_margin"
     android:layout_marginRight="@dimen/task_standard_margin"
     android:gravity="center_vertical"
@@ -32,22 +31,6 @@
             android:layout_marginLeft="@dimen/task_standard_margin"
             android:background="?attr/selectableItemBackgroundBorderless"
             />
-        <ImageView
-            android:id="@+id/arrow_reminder"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:src="@mipmap/ic_arrow_up"
-            android:layout_gravity="bottom"
-            android:layout_toRightOf="@+id/reminder_label"
-            />
-        <TextView
-            android:id="@+id/reminder_day_time_lbl"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:textColor="@color/gray_light"
-            android:layout_toRightOf="@id/arrow_reminder"
-            />
     </RelativeLayout>
 
     <RelativeLayout
@@ -64,6 +47,7 @@
             android:orientation="horizontal"
             android:gravity="center"
             android:layout_marginTop="@dimen/task_standard_margin"
+            android:layout_marginBottom="10dp"
             >
             <RadioButton
                 android:id="@+id/daily_btn"
@@ -112,40 +96,41 @@
                 android:orientation="horizontal"
                 android:gravity="center"
                 >
-            <CheckBox
-                android:id="@+id/mon_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/date"
-                android:text="@string/mon_txt"
-                />
-            <CheckBox
-                android:id="@+id/tue_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/date"
-                android:text="@string/tue_txt"
-                />
-            <CheckBox
-                android:id="@+id/wed_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/date"
-                android:text="@string/wed_txt"
-                />
-            <CheckBox
-                android:id="@+id/thur_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/date"
-                android:text="@string/thu_txt"
-                />
+                <CheckBox
+                    android:id="@+id/mon_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/date"
+                    android:text="@string/mon_txt"
+                    />
+                <CheckBox
+                    android:id="@+id/tue_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/date"
+                    android:text="@string/tue_txt"
+                    />
+                <CheckBox
+                    android:id="@+id/wed_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/date"
+                    android:text="@string/wed_txt"
+                    />
+                <CheckBox
+                    android:id="@+id/thur_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/date"
+                    android:text="@string/thu_txt"
+                    />
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="horizontal"
+                android:layout_marginBottom="@dimen/task_standard_margin"
                 >
                 <CheckBox
                     android:id="@+id/fri_btn"
@@ -172,23 +157,26 @@
         </LinearLayout>
 
         <!-- Cal-Time Txt Layout START -->
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/main_reminder_txt_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="bottom|center_horizontal"
+            android:gravity="bottom"
             android:layout_below="@+id/check_group_reminder"
-            android:orientation="horizontal"
-            android:layout_marginTop="@dimen/task_standard_margin"
+            android:layout_marginRight="@dimen/task_standard_margin"
+            android:paddingBottom="10dp"
             >
             <LinearLayout
                 android:id="@+id/reminder_cal_txt_layout"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_marginRight="10dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:padding="10dp"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="32dp"
+                android:visibility="gone"
                 >
                 <TextView
                     android:id="@+id/reminder_date_txt"
@@ -199,87 +187,29 @@
                     android:textColor="@color/colorAccent"
                     android:text="Fri, May 27, 2016"
                     />
-                <ImageView
-                    android:id="@+id/arrow_cal_reminder"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:src="@mipmap/ic_arrow_up_light"
-                    />
             </LinearLayout>
             <LinearLayout
                 android:id="@+id/reminder_time_txt_layout"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:padding="10dp"
+                android:layout_alignParentRight="true"
+                android:visibility="gone"
                 >
                 <TextView
                     android:id="@+id/reminder_time_txt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="07:41"
-                    android:layout_toLeftOf="@+id/arrow_time"
                     android:textSize="@dimen/task_font_size"
                     android:textColor="@color/colorAccent"
                     />
-                <ImageView
-                    android:id="@+id/arrow_time_reminder"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:src="@mipmap/ic_arrow_up_light"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="@dimen/task_standard_margin"
-                    />
             </LinearLayout>
-        </LinearLayout>
+        </RelativeLayout>
         <!-- Cal-Time Txt Layout END -->
 
-        <RelativeLayout
-            android:id="@+id/reminder_calendar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:visibility="gone"
-            android:clickable="true"
-            android:layout_below="@+id/main_reminder_txt_layout"
-            >
-            <com.app.eisenflow.CustomCalendarView
-                android:id="@+id/reminder_calendar_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:clickable="true"
-                />
-            <TextView
-                android:id="@+id/reminder_curr_date_txt"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/task_name_buttons_height"
-                android:textColor="@color/colorAccent"
-                android:clickable="true"
-                android:visibility="gone"
-                android:textSize="18sp"
-                android:text="@string/today_txt"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="@dimen/task_standard_margin"
-                android:layout_below="@id/reminder_calendar_view"
-                />
-        </RelativeLayout>
-        <LinearLayout
-            android:id="@+id/reminder_time_picker"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:clickable="true"
-            android:layout_below="@+id/main_reminder_txt_layout"
-            android:visibility="visible"
-            >
-            <TimePicker
-                android:id="@+id/reminder_time_picker_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="10dp"
-                />
-        </LinearLayout>
     </RelativeLayout>
 
 </LinearLayout>

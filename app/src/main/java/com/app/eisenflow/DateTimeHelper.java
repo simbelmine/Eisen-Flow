@@ -11,6 +11,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by Sve on 6/13/16.
@@ -103,6 +105,31 @@ public class DateTimeHelper {
         return postFormatter.format(cal.getTime());
     }
 
+    public String getTimeString24Only(Calendar cal) {
+        SimpleDateFormat postFormatter;
+        postFormatter = new SimpleDateFormat(TIME_FORMAT_24);
+
+        Log.v("eisen"," ----  " + cal.getTime());
+        return postFormatter.format(cal.getTime());
+    }
+
+    public String getAMPMTimeString(String time) {
+//        SimpleDateFormat _24HourSDF = new SimpleDateFormat("HH:mm");
+//        SimpleDateFormat _12HourSDF = new SimpleDateFormat("hh:mm a");
+        SimpleDateFormat _24HourSDF = new SimpleDateFormat(TIME_FORMAT_24);
+        SimpleDateFormat _12HourSDF = new SimpleDateFormat(TIME_FORMAT_AP_PM);
+
+        try {
+            Date _24HourDt = _24HourSDF.parse(time);
+            return _12HourSDF.format(_24HourDt);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
     public Date getTime(String timeStr) {
         SimpleDateFormat postFormatter;
         if(isSystem24hFormat()) {
@@ -117,6 +144,34 @@ public class DateTimeHelper {
         }
         catch (ParseException ex) {
             Log.e("eisen", "String to Time Formatting Exception : " + ex.getMessage());
+        }
+
+        return null;
+    }
+
+    public Date getTime24(String timeStr) {
+        SimpleDateFormat postFormatter;
+        postFormatter = new SimpleDateFormat(TIME_FORMAT_24);
+
+        try {
+            return postFormatter.parse(timeStr);
+        }
+        catch (ParseException ex) {
+            Log.e("eisen", "String to Time Formatting Exception 24 : " + ex.getMessage());
+        }
+
+        return null;
+    }
+
+    public Date getTime12(String timeStr) {
+        SimpleDateFormat postFormatter;
+        postFormatter = new SimpleDateFormat(TIME_FORMAT_AP_PM);
+
+        try {
+            return postFormatter.parse(timeStr);
+        }
+        catch (ParseException ex) {
+            Log.e("eisen", "String to Time Formatting Exception 24 : " + ex.getMessage());
         }
 
         return null;
@@ -306,6 +361,39 @@ public class DateTimeHelper {
             default:
                 return "th";
         }
+    }
+
+
+    private static final String TIME24HOURS_PATTERN =
+            "([01]?[0-9]|2[0-3]):[0-5][0-9]";
+
+    public String getActualTime(String time) {
+        if(time != null && time.length() != 0) {
+            Pattern pattern = Pattern.compile(TIME24HOURS_PATTERN);
+            Matcher matcher = pattern.matcher(time);
+
+            Log.v("eisen", "TIME == *" + time + "*      " + time.length());
+
+            if (isSystem24hFormat()) {
+                if (!matcher.matches()) {
+                    // 12 to 24
+                    Date d = getTime12(time);
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(d);
+                    return getTimeString(cal);
+                }
+            } else {
+                if (matcher.matches()) {
+                    // 24 to 12
+                    Date d = getTime24(time);
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(d);
+                    return getTimeString(cal);
+                }
+            }
+        }
+
+        return time;
     }
 
 }

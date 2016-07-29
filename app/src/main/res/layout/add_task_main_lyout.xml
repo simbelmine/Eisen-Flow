@@ -42,7 +42,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0.9dp"
                     android:layout_below="@+id/pick_date_time_layout"
-                    android:background="@color/divider_border"
+                    android:background="@color/transparent"
                     android:layout_marginTop="@dimen/task_standard_margin"
                     />
 
@@ -52,7 +52,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0.9dp"
                     android:layout_below="@+id/reminder_layout"
-                    android:background="@color/divider_border"
+                    android:background="@color/transparent"
                     android:layout_marginTop="@dimen/task_standard_margin"
                     />
 

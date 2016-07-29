@@ -41,9 +41,12 @@ import org.joda.time.format.PeriodFormatterBuilder;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by Sve on 6/28/16.
@@ -174,7 +177,7 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
 
     private void setValueToField(TasksListHolder holder, Task taskRow) {
         holder.text.setText(taskRow.getTitle());
-        holder.task_time_txt.setText(getTimeLeft(taskRow.getDate(), taskRow.getTime()));
+        holder.task_time_txt.setText(getTimeLeft(taskRow.getDate(), dateTimeHelper.getActualTime(taskRow.getTime())));
 
         setVerticalCalendarDate(holder, taskRow);
 
@@ -234,7 +237,7 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
 
     private void setVerticalCalendarDate(TasksListHolder holder, Task taskRow) {
         String taskDate = taskRow.getDate();
-        String taskTime = taskRow.getTime();
+        String taskTime = dateTimeHelper.getActualTime(taskRow.getTime());
         if(lastSeenDate == null || !lastSeenDate.equals(taskDate) || taskRow.getIsDone() == 1) {
             Calendar cal = dateTimeHelper.getCalendar(taskDate, taskTime);
             holder.cal_day_of_month.setText(String.valueOf(cal.get(Calendar.DAY_OF_MONTH)));
@@ -316,7 +319,7 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
     private String getMessageToShare(Task task) {
         String name = task.getTitle();
         String date = task.getDate();
-        String time = task.getTime();
+        String time = dateTimeHelper.getActualTime(task.getTime());
         String note = task.getNote();
 
         return "To Do: " + name + "\n" + "When: " + date + "@" + time + "\n" + "Note: " + note;
@@ -350,7 +353,7 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
     }
 
     private void setOldTaskTextColor(TasksListHolder holder, int position) {
-        Calendar calDate = dateTimeHelper.getCalendarDateWithTime(tasksList.get(position).getDate(), tasksList.get(position).getTime());
+        Calendar calDate = dateTimeHelper.getCalendarDateWithTime(tasksList.get(position).getDate(), dateTimeHelper.getActualTime(tasksList.get(position).getTime()));
 
         if(dateTimeHelper.isPastDate(calDate) && tasksList.get(position).getIsDone() == 0) {
             holder.cal_day_of_month.setTextColor(context.getResources().getColor(R.color.firstQuadrant));
@@ -401,7 +404,7 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
     }
 
     private void showTipMessageToast(String messageToShow) {
-        Toast.makeText(context, messageToShow, Toast.LENGTH_LONG).show();
+        Toast.makeText(context, messageToShow, Toast.LENGTH_SHORT).show();
     }
 
     private void showTipMessageDialog(String message) {
@@ -658,7 +661,10 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
         int lastSeenMonth = -1;
 
         for(Task t : tasks) {
-            cal = dateTimeHelper.getCalendar(t.getDate(), t.getTime());
+            Log.v("eisen", "task date = " + t.getDate());
+            Log.v("eisen", "task time = " + dateTimeHelper.getActualTime(t.getTime()));
+
+            cal = dateTimeHelper.getCalendar(t.getDate(), dateTimeHelper.getActualTime(t.getTime()));
 
             if(lastSeenMonth == -1 || cal.get(Calendar.MONTH) != lastSeenMonth) {
                 lastSeenMonth = cal.get(Calendar.MONTH);

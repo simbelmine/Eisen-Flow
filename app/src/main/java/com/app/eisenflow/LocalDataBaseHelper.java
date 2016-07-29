@@ -7,6 +7,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import java.text.DecimalFormat;
 import java.util.Calendar;
@@ -141,6 +142,19 @@ public class LocalDataBaseHelper {
                            String taskReminderOccurrence, String taskReminderWhen, String taskReminderDate, String taskReminderTime,
                            String note, int progress) {
 //        Log.d(TAG, "---Creating Task.");
+
+//        Log.v("eisen", "" +priority );
+//        Log.v("eisen", "" +title );
+//        Log.v("eisen", "" +taskDate );
+//        Log.v("eisen", "" +taskTime );
+//        Log.v("eisen", "" +taskDateMillis );
+//        Log.v("eisen", "" +taskReminderOccurrence );
+//        Log.v("eisen", "" +taskReminderWhen );
+//        Log.v("eisen", "" +taskReminderDate );
+//        Log.v("eisen", "" +taskReminderTime );
+//        Log.v("eisen", "" +note );
+//        Log.v("eisen", "" +progress );
+
 
         ContentValues initialValues = new ContentValues();
         initialValues.put(KEY_PRIORITY, priority);

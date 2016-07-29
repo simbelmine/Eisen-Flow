@@ -36,142 +36,58 @@
             android:textSize="@dimen/task_font_size"
             android:text="@string/due_date_txt"
             />
-        <ImageView
-            android:id="@+id/arrow_due_date"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:src="@mipmap/ic_arrow_up"
-            android:layout_gravity="bottom"
-            android:layout_toRightOf="@+id/due_date_txt"
-            />
-        <TextView
-            android:id="@+id/due_date_day_time_lbl"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_alignParentRight="true"
-            android:textColor="@color/gray_light"
-            android:layout_toRightOf="@id/arrow_due_date"
-            />
     </RelativeLayout>
 
     <!-- Cal-Time Txt Layout START -->
     <RelativeLayout
-        android:id="@+id/main_due_date_txt_layout"
+        android:id="@+id/cal_txt_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/task_standard_margin"
+        android:layout_marginRight="@dimen/task_standard_margin"
+        android:paddingBottom="10dp"
         >
         <LinearLayout
-            android:id="@+id/date_time_container"
-            android:layout_width="match_parent"
+            android:id="@+id/cal_txt_layout"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="center"
+            android:layout_marginRight="@dimen/task_standard_margin"
+            android:padding="10dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="32dp"
             >
-            <LinearLayout
-                android:id="@+id/cal_txt_layout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginRight="@dimen/task_standard_margin"
-                android:padding="10dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                >
-                <TextView
-                    android:id="@+id/add_task_date_txt"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:layout_marginLeft="@dimen/task_standard_margin"
-                    android:textSize="@dimen/task_font_size"
-                    android:textColor="@color/colorAccent"
-                    android:text="Fri, May 27, 2016"
-                    />
-                <ImageView
-                    android:id="@+id/arrow_cal"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:src="@mipmap/ic_arrow_up_light"
-                    android:layout_toRightOf="@+id/add_task_date_txt"
-                    />
-            </LinearLayout>
-            <LinearLayout
-                android:id="@+id/time_txt_layout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/cal_txt_layout"
-                android:layout_marginLeft="@dimen/task_standard_margin"
-                android:padding="10dp"
-                android:orientation="horizontal"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                >
-                <TextView
-                    android:id="@+id/add_task_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="07:41"
-                    android:textSize="@dimen/task_font_size"
-                    android:textColor="@color/colorAccent"
-                    />
-                <ImageView
-                    android:id="@+id/arrow_time"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:src="@mipmap/ic_arrow_up_light"
-                    />
-            </LinearLayout>
-        </LinearLayout>
-
-        <RelativeLayout
-            android:id="@+id/add_task_calendar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone"
-            android:clickable="true"
-            android:layout_below="@+id/date_time_container"
-            >
-            <com.app.eisenflow.CustomCalendarView
-                android:id="@+id/calendar_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:clickable="true"
-                />
             <TextView
-                android:id="@+id/curr_date_txt"
+                android:id="@+id/add_task_date_txt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:textSize="@dimen/task_font_size"
                 android:textColor="@color/colorAccent"
-                android:clickable="true"
-                android:visibility="gone"
-                android:textSize="18sp"
-                android:text="@string/today_txt"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="@dimen/task_standard_margin"
-                android:layout_below="@+id/calendar_view"
+                android:text="Fri, May 27, 2016"
                 />
-        </RelativeLayout>
-
+        </LinearLayout>
         <LinearLayout
-            android:id="@+id/add_task_time_picker"
-            android:layout_width="match_parent"
+            android:id="@+id/time_txt_layout"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:clickable="true"
-            android:layout_below="@+id/date_time_container"
-            android:visibility="visible"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="@dimen/task_standard_margin"
+            android:padding="10dp"
+            android:orientation="horizontal"
+            android:background="?attr/selectableItemBackgroundBorderless"
             >
-            <TimePicker
-                android:id="@+id/time_picker_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="10dp"
+            <TextView
+                android:id="@+id/add_task_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="07:41"
+                android:textSize="@dimen/task_font_size"
+                android:textColor="@color/colorAccent"
                 />
         </LinearLayout>
     </RelativeLayout>
     <!-- Cal-Time Txt Layout END -->
-
 
 </LinearLayout>
     <!-- Cal-Time Layout END -->

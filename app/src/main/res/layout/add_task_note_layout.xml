@@ -7,7 +7,6 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:layout_below="@+id/reminder_divider"
-    android:layout_marginTop="@dimen/task_standard_margin"
     android:layout_marginLeft="@dimen/task_standard_margin"
     android:layout_marginRight="@dimen/task_standard_margin"
     android:gravity="center_vertical"
@@ -31,32 +30,17 @@
             android:layout_marginLeft="@dimen/task_standard_margin"
             android:background="?attr/selectableItemBackgroundBorderless"
             />
-        <ImageView
-            android:id="@+id/arrow_note"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:src="@mipmap/ic_arrow_up"
-            android:layout_gravity="bottom"
-            />
     </LinearLayout>
-    <LinearLayout
-        android:id="@+id/add_task_note"
+    <EditText
+        android:id="@+id/note_txt"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:visibility="gone"
-        >
-        <EditText
-            android:id="@+id/note_txt"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/task_standard_margin"
-            android:background="@drawable/edit_text_style"
-            android:lines="10"
-            android:gravity="top"
-            android:padding="10dp"
-            android:inputType="textCapSentences|textMultiLine"
-            android:textColor="@color/date"
-            />
-    </LinearLayout>
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/task_standard_margin"
+        android:background="@drawable/edit_text_style"
+        android:lines="10"
+        android:gravity="top"
+        android:padding="10dp"
+        android:inputType="textCapSentences|textMultiLine"
+        android:textColor="@color/date"
+        />
 </LinearLayout>

@@ -147,14 +147,14 @@ public class EditTaskPreview extends AppCompatActivity implements View.OnClickLi
 
                 // ***  Due Date ***
                 String date =  cursor.getString(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_DATE));
-                String time = cursor.getString(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_TIME));
+                String time = dateTimeHelper.getActualTime(cursor.getString(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_TIME)));
                 dueDateTxt.setText(date + " @" + time);
 
                 // ***  Repeating Reminder ***
                 String reminderOccurrence = cursor.getString(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_REMINDER_OCCURRENCE));
                 String reminderWhen = cursor.getString(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_REMINDER_WHEN));
                 String reminderDate = cursor.getString(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_REMINDER_DATE));
-                String reminderTime = cursor.getString(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_REMINDER_TIME));
+                String reminderTime = dateTimeHelper.getActualTime(cursor.getString(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_REMINDER_TIME)));
 
                 if(reminderDate != null && reminderTime != null) {
                     if("Weekly".equals(reminderOccurrence)) {
