@@ -172,7 +172,7 @@ public class ReminderManager {
         Intent intent = new Intent(context, OnAlarmReceiver.class);
         intent.putExtra(LocalDataBaseHelper.KEY_ROW_ID, -1L);
 
-        if(whenToRepeat.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+        if(whenToRepeat.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY && whenToRepeat.get(Calendar.HOUR_OF_DAY) == 18) {
             if (whenToRepeat.before(now)) {
                 whenToRepeat.add(Calendar.DAY_OF_YEAR, 7);
             }
