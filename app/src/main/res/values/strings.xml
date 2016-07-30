@@ -60,6 +60,8 @@
     <string name="save_alert">Something went wrong while saving your task. Please try again.</string>
     <string name="task_deleted_msg">Your task was deleted successfully!</string>
     <string name="db_alert">Something went wrong when saving data!</string>
+    <string name="monthly_reminder_tip">Tip: Pick day of month and hour.</string>
+    <string name="yearly_reminder_tip">Tip: Pick month, day of month and hour.</string>
 
     <string name="add_task_alert_title">Alert</string>
 

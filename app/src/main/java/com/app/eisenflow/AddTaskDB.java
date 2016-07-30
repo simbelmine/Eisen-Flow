@@ -3,9 +3,11 @@ package com.app.eisenflow;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Rect;
@@ -27,6 +29,7 @@ import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -48,8 +51,6 @@ import java.util.Date;
  */
 public class AddTaskDB extends AppCompatActivity implements View.OnClickListener,
         RadioGroup.OnCheckedChangeListener {
-    private static final int CALENDAR_REQUEST_CODE = 101;
-    private static final int TIME_REQUEST_CODE = 102;
     private LinearLayout closeBtn;
     private TextView saveBtn;
     private LinearLayout priorityLayout;
@@ -100,7 +101,8 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
     private String reminderCalendarStr;
     private String timeStr;
     private String reminderTimeStr;
-
+    private int TIP_MESSAGE_MAX_COUNT = 3;
+    private SharedPreferences mainSharedPrefs;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -109,6 +111,7 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
         dateTimeHelper = new DateTimeHelper(this);
         dbHelper = new LocalDataBaseHelper(this);
         setContentView(R.layout.add_task_main_lyout);
+        mainSharedPrefs = getSharedPreferences(MainActivityDB.MAIN_PREFS, Context.MODE_PRIVATE);
 
         rowId = savedInstanceState != null ? savedInstanceState.getLong(LocalDataBaseHelper.KEY_ROW_ID)
                 : null;
@@ -309,10 +312,7 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
                 break;
             case R.id.cal_txt_layout:
                 hideSoftKbd();
-
-                String calDate = calendarStr != null ? calendarStr : dateTxt.getText().toString();
-                startCalendarActivity("calendarStr", calDate, false);
-
+                openDatePickerDialog(false);
                 break;
             case R.id.time_txt_layout:
                 hideSoftKbd();
@@ -325,10 +325,7 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
 
             case R.id.reminder_cal_txt_layout:
                 hideSoftKbd();
-
-                String reminderCalDate = reminderCalendarStr != null ? reminderCalendarStr : reminderDateTxt.getText().toString();
-                startCalendarActivity("reminderCalendarStr", reminderCalDate, true);
-
+                openDatePickerDialog(true);
                 break;
             case R.id.reminder_time_txt_layout:
                 hideSoftKbd();
@@ -338,88 +335,6 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
         }
     }
 
-
-
-    private void startCalendarActivity(String extraName, String extraValue, boolean isReminder) {
-        Intent calendarIntent = new Intent(this, CalendarDialogActivity.class);
-        calendarIntent.putExtra(extraName, extraValue);
-        calendarIntent.putExtra("isReminder", isReminder);
-        startActivityForResult(calendarIntent, CALENDAR_REQUEST_CODE);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(resultCode == Activity.RESULT_OK) {
-            switch (requestCode) {
-                case CALENDAR_REQUEST_CODE:
-                    int day_of_month =  data.getIntExtra("day", -1);
-                    int month = data.getIntExtra("month", -1);
-                    int year = data.getIntExtra("year", -1);
-
-                    if(day_of_month != -1 && month != -1 && year != -1) {
-                        Calendar cal = Calendar.getInstance();
-                        cal.set(year, month, day_of_month);
-
-                        if(!data.getBooleanExtra("isReminder", false)) {
-                            calendarStr = dateTimeHelper.getDateString(cal);
-                            dateTxt.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    dateTxt.setText(calendarStr);
-                                }
-                            });
-                        }
-                        else {
-                            reminderCalendarStr = dateTimeHelper.getDateString(cal);
-                            reminderDateTxt.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    reminderDateTxt.setText(reminderCalendarStr);
-                                }
-                            });
-                        }
-                    }
-
-                    break;
-                case TIME_REQUEST_CODE:
-                    int hour = data.getIntExtra("hour", -1);
-                    int minute = data.getIntExtra("minute", -1);
-
-                    if(hour != -1 && minute != -1) {
-                        Calendar calDate = Calendar.getInstance();
-                        calDate.setTime(dateTimeHelper.getDate(dateTxt.getText().toString()));
-
-                        final Calendar cal = Calendar.getInstance();
-                        cal.set(calDate.get(Calendar.YEAR), calDate.get(Calendar.MONTH), calDate.get(Calendar.DAY_OF_MONTH), hour, minute);
-
-                        if(!data.getBooleanExtra("isReminder", false)) {
-                            timeStr = dateTimeHelper.getTimeString(cal);
-
-                            Log.v("eisen", " onActivity result " + timeStr);
-
-                            timeTxt.post(new Runnable() {
-                                @Override
-                                public void run() {
-//                                    timeTxt.setText(dateTimeHelper.getTimeString24Only(cal));
-                                    timeTxt.setText(timeStr);
-                                }
-                            });
-                        }
-                        else {
-                            reminderTimeStr = dateTimeHelper.getTimeString(cal);
-                            reminderTimeTxt.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    reminderTimeTxt.setText(dateTimeHelper.getTimeString24Only(cal));
-                                }
-                            });
-                        }
-                    }
-                    break;
-            }
-
-        }
-    }
 
     @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
@@ -444,36 +359,47 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
                 reminderCheckGroup.setVisibility(View.GONE);
                 reminderCalendarTextLayout.setVisibility(View.GONE);
 
-
-//                reminderDateTimeLbl.setText(
-//                        generateReminderLbl(
-//                                getString(R.string.daily_txt),
-//                                null,
-//                                dateTimeHelper.getTimeString(Calendar.getInstance())));
                 break;
             case R.id.weekly_btn:
                 reminderCheckGroup.setVisibility(View.VISIBLE);
                 reminderCalendarTextLayout.setVisibility(View.GONE);
 
-
-//                reminderDateTimeLbl.setText(
-//                        generateReminderLbl(
-//                                getString(R.string.weekly_txt),
-//                                null,
-//                                dateTimeHelper.getTimeString(Calendar.getInstance())));
                 break;
             case R.id.monthly_btn:
                 reminderCheckGroup.setVisibility(View.GONE);
                 reminderCalendarTextLayout.setVisibility(View.VISIBLE);
-
+                showMonthlyTipMessage();
 
                 break;
             case R.id.yearly_btn:
                 reminderCheckGroup.setVisibility(View.GONE);
                 reminderCalendarTextLayout.setVisibility(View.VISIBLE);
+                showYearlyTipMessage();
 
                 break;
         }
+    }
+
+    private void showMonthlyTipMessage() {
+        if(!mainSharedPrefs.contains("monthly_reminder_tip_counter")
+                || mainSharedPrefs.getInt("monthly_reminder_tip_counter", 0) < TIP_MESSAGE_MAX_COUNT) {
+            showAlertMessage(getResources().getString(R.string.monthly_reminder_tip), R.color.white);
+            updateTipMessageCounter("monthly_reminder_tip_counter");
+        }
+    }
+
+    private void showYearlyTipMessage() {
+        if(!mainSharedPrefs.contains("yearly_reminder_tip_counter")
+                || mainSharedPrefs.getInt("yearly_reminder_tip_counter", 0) < TIP_MESSAGE_MAX_COUNT) {
+            showAlertMessage(getResources().getString(R.string.yearly_reminder_tip), R.color.white);
+            updateTipMessageCounter("yearly_reminder_tip_counter");
+        }
+    }
+
+    private void updateTipMessageCounter(String tip_counter_name) {
+        int counter = mainSharedPrefs.getInt(tip_counter_name, 0);
+        counter++;
+        mainSharedPrefs.edit().putInt(tip_counter_name, counter).apply();
     }
 
     private void saveNewTask() {
@@ -1123,6 +1049,20 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
         });
     }
 
+    private void openDatePickerDialog(final boolean isReminder) {
+        Calendar dateToSet = getPickerCalendarDate(isReminder);
+
+        DatePickerDialog mDatePickerDialog;
+        mDatePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day_of_month) {
+                Log.v("eisen", "DATE IS SET " + year + "/" + month + "/" + day_of_month);
+                setDate(year, month, day_of_month, isReminder);
+            }
+        }, dateToSet.get(Calendar.YEAR), dateToSet.get(Calendar.MONTH), dateToSet.get(Calendar.DAY_OF_MONTH));
+        mDatePickerDialog.show();
+    }
+
     private void openTimePickerDialog(final boolean isReminder) {
         Calendar timeToSet = getPickerCalendarTime(isReminder);
 
@@ -1152,18 +1092,51 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
         return cal;
     }
 
+    private Calendar getPickerCalendarDate(boolean isReminder) {
+        Calendar cal = Calendar.getInstance();
+        String date;
+        if(!isReminder) {
+            date = calendarStr != null ? calendarStr : dateTxt.getText().toString();
+        }
+        else {
+            date = reminderCalendarStr != null ? reminderCalendarStr : reminderDateTxt.getText().toString();
+        }
+        Date d = dateTimeHelper.getDate(date);
+        cal.setTime(d);
+
+        return cal;
+    }
+
     private void setTime(int selectedHour, int selectedMinute, boolean isReminder) {
         Calendar c = Calendar.getInstance();
         c.set(Calendar.HOUR_OF_DAY, selectedHour);
         c.set(Calendar.MINUTE, selectedMinute);
+        String time = dateTimeHelper.getTimeString(c);
 
         if(!isReminder) {
-            timeStr = dateTimeHelper.getTimeString(c);
-            timeTxt.setText(dateTimeHelper.getTimeString(c));
+            timeStr = time;
+            timeTxt.setText(time);
         }
         else {
-            reminderTimeStr = dateTimeHelper.getTimeString(c);
-            reminderTimeTxt.setText(dateTimeHelper.getTimeString(c));
+            reminderTimeStr = time;
+            reminderTimeTxt.setText(time);
+        }
+    }
+
+    private void setDate(int selectedYear, int selectedMonth, int selectedDayOfMonth, boolean isReminder) {
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.YEAR, selectedYear);
+        c.set(Calendar.MONTH, selectedMonth);
+        c.set(Calendar.DAY_OF_MONTH, selectedDayOfMonth);
+        String date = dateTimeHelper.getDateString(c);
+
+        if(!isReminder) {
+            calendarStr = date;
+            dateTxt.setText(date);
+        }
+        else {
+            reminderCalendarStr = date;
+            reminderDateTxt.setText(date);
         }
     }
 }

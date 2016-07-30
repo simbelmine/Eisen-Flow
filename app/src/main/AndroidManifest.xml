@@ -52,10 +52,6 @@
             android:theme="@android:style/Theme.Holo.Light.Dialog.NoActionBar"
             android:screenOrientation="portrait"
             />
-        <activity
-            android:name="com.app.eisenflow.CalendarDialogActivity"
-            android:theme="@style/NoActionBarDialogTheme"
-            android:screenOrientation="portrait"/>
 
 
         <receiver android:name="com.app.eisenflow.reminders.OnAlarmReceiver"/>

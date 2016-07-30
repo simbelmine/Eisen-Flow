@@ -372,8 +372,6 @@ public class DateTimeHelper {
             Pattern pattern = Pattern.compile(TIME24HOURS_PATTERN);
             Matcher matcher = pattern.matcher(time);
 
-            Log.v("eisen", "TIME == *" + time + "*      " + time.length());
-
             if (isSystem24hFormat()) {
                 if (!matcher.matches()) {
                     // 12 to 24
