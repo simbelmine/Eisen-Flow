@@ -15,6 +15,7 @@ import android.util.Log;
 import com.app.eisenflow.AddTaskDB;
 import com.app.eisenflow.DateTimeHelper;
 import com.app.eisenflow.LocalDataBaseHelper;
+import com.app.eisenflow.MainActivityDB;
 
 import java.util.Calendar;
 import java.util.Random;
@@ -198,6 +199,7 @@ public class ReminderService extends WakeReminderIntentService {
                 .setSound(getNotificationSoundUri())
                 .setAutoCancel(true)
                 .setLights(Color.CYAN, 500, 500)
+                .setContentIntent(getOpenAppPendingIntent())
                 ;
 
         if(Build.VERSION.SDK_INT >= NEEDED_API_LEVEL) {
@@ -223,6 +225,7 @@ public class ReminderService extends WakeReminderIntentService {
                 .setSound(getNotificationSoundUri())
                 .setAutoCancel(true)
                 .setLights(Color.CYAN, 500, 500)
+                .setContentIntent(getOpenAppPendingIntent())
                 ;
 
         if(Build.VERSION.SDK_INT >= NEEDED_API_LEVEL) {
@@ -232,5 +235,12 @@ public class ReminderService extends WakeReminderIntentService {
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         notificationManager.notify(generateRandomId(), notificationBuilder.build());
+    }
+
+    private PendingIntent getOpenAppPendingIntent() {
+        Intent appIntent = new Intent(this, MainActivityDB.class);
+        appIntent.putExtra(LocalDataBaseHelper.KEY_ROW_ID, rowId);
+
+        return PendingIntent.getActivity(this, 0, appIntent, PendingIntent.FLAG_ONE_SHOT);
     }
 }
