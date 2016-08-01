@@ -50,6 +50,8 @@ public class EditTaskPreview extends AppCompatActivity implements View.OnClickLi
     private LinearLayout closeBtn;
     private LinearLayout menuBtn;
     private int priorityGlobal;
+    private int progressGlobal;
+    private String reminderOccurrenceGlobal;
     private int position;
     int[] flags = new int[] {Intent.FLAG_ACTIVITY_NEW_TASK};
 
@@ -173,6 +175,10 @@ public class EditTaskPreview extends AppCompatActivity implements View.OnClickLi
                 else {
                     noteTxt.setText(getResources().getString(R.string.edit_preview_none_txt));
                 }
+
+                // ***  Progress  ***
+                progressGlobal = cursor.getInt(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_PROGRESS));
+                reminderOccurrenceGlobal = cursor.getString(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_REMINDER_OCCURRENCE));
             }
         }
 
@@ -308,7 +314,9 @@ public class EditTaskPreview extends AppCompatActivity implements View.OnClickLi
                 popup.getMenu().add(Menu.NONE, MENU_TIMER_ID, 0, "Start timer");
                 break;
             case 1:
-                popup.getMenu().add(Menu.NONE, MENU_PROGRESS_ID, 0, "Add progress");
+                if(reminderOccurrenceGlobal.length() > 0) {
+                    popup.getMenu().add(Menu.NONE, MENU_PROGRESS_ID, 0, "Add progress");
+                }
                 break;
             case 2:
                 popup.getMenu().add(Menu.NONE, MENU_SHARE_ID, 0, "Share");
