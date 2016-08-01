@@ -111,6 +111,14 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
                 upX = event.getX();
                 float deltaX = upX - downX;
 
+                if (priority == 1) {
+                    if (Math.abs(deltaX) > DISTANCE) {
+                        holder.task_p1_progress.setVisibility(View.INVISIBLE);
+                    } else {
+                        holder.task_p1_progress.setVisibility(View.VISIBLE);
+                    }
+                }
+
                 if (upX == downX) {
                     performClick(v);
                 } else {
@@ -124,7 +132,6 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
                 }
 
                 holder.delete_action_layout.setPressed(false);
-                if (priority == 1) holder.task_p1_progress.setVisibility(View.VISIBLE);
 
                 return true;
             }
@@ -205,6 +212,7 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
             @Override
             public void run() {
                 if(holder.delete_action_layout.getVisibility() == View.VISIBLE) {
+                    holder.task_p1_progress.setVisibility(View.INVISIBLE);
                     holder.delete_action_layout.setVisibility(View.INVISIBLE);
                     holder.undo_layout.setVisibility(View.VISIBLE);
                     holder.action_undo_btn.setVisibility(View.INVISIBLE);
@@ -216,6 +224,7 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
         holder.undo_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                holder.task_p1_progress.setVisibility(View.VISIBLE);
                 holder.undo_btn.setVisibility(View.INVISIBLE);
                 holder.undo_layout.setVisibility(View.INVISIBLE);
                 holder.delete_action_layout.setVisibility(View.VISIBLE);
@@ -262,6 +271,7 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
                     holder.undo_layout.setVisibility(View.INVISIBLE);
                     holder.delete_action_layout.setVisibility(View.VISIBLE);
                     holder.mainLayout.setVisibility(View.VISIBLE);
+                    holder.task_p1_progress.setVisibility(View.VISIBLE);
                     swipe(null, 0);
                 }
             });

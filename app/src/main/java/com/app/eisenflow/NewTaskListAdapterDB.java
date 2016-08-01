@@ -127,7 +127,7 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
     private void setTaskCardInfo(TasksListHolder holder, Task taskRow, int position) {
         int priority = taskRow.getPriority();
         setValueToField(holder, taskRow);
-        setPriorityActionIcon(holder, priority);
+        setPriorityActionIcon(holder, taskRow, priority);
 
         holder.cardView.setOnTouchListener(new RecyclerItemSwipeDetector(context, holder, recyclerView, taskRow.getId(), position, priority));
 
@@ -250,15 +250,17 @@ public class NewTaskListAdapterDB extends RecyclerView.Adapter<TasksListHolder> 
         }
     }
 
-    private void setPriorityActionIcon(TasksListHolder holder, int priority) {
+    private void setPriorityActionIcon(TasksListHolder holder, Task taskRow, int priority) {
         switch (priority) {
             case 0:
                 holder.right_action_icon.setImageDrawable(context.getResources().getDrawable(R.drawable.timer));
                 holder.right_action_icon.setTag(priority);
                 break;
             case 1:
-                holder.right_action_icon.setImageDrawable(context.getResources().getDrawable(R.drawable.calendar_plus));
-                holder.right_action_icon.setTag(priority);
+                if(taskRow.getReminderOccurrence().length() > 0) {
+                    holder.right_action_icon.setImageDrawable(context.getResources().getDrawable(R.drawable.calendar_plus));
+                    holder.right_action_icon.setTag(priority);
+                }
                 break;
             case 2:
                 holder.right_action_icon.setImageDrawable(context.getResources().getDrawable(R.drawable.share));

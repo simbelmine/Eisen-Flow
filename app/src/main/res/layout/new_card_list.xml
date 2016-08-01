@@ -151,7 +151,7 @@
                     android:layout_marginRight="@dimen/card_padding"
                     android:layout_marginLeft="@dimen/card_padding"
                     android:textColor="@color/white"
-                    android:text="12%"
+                    android:text=""
                     android:visibility="invisible"
                     />
 
