@@ -524,7 +524,7 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
 
     private void showAlertDialog(String messageToShow, int colorMsg) {
         int theme;
-        if(colorMsg == R.color.date) {
+        if(colorMsg == R.color.date || colorMsg == R.color.white) {
             theme = R.style.MyTipDialogStyle;
         }
         else {
@@ -533,7 +533,9 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
 
         AlertDialog.Builder builder =
                 new AlertDialog.Builder(AddTaskDB.this, theme);
-        builder.setTitle(getResources().getString(R.string.add_task_alert_title));
+        if(colorMsg != R.color.date && colorMsg != R.color.white) {
+            builder.setTitle(getResources().getString(R.string.add_task_alert_title));
+        }
         builder.setMessage(messageToShow);
         builder.setPositiveButton(getResources().getString(R.string.ok_btn), null);
         builder.show();
