@@ -34,6 +34,7 @@ public class LocalDataBaseHelper {
     public static final String KEY_PROGRESS = "progress";
     public static final String KEY_DONE = "done";
     public static final String KEY_TOTAL_DAYS_PERIOD = "total";
+    public static final String KEY_IS_VIBRATION_CHECKED = "isVibrationChecked";
 
     private static final String TAG = "eisen";
     private DatabaseHelper dbHelper;
@@ -57,7 +58,8 @@ public class LocalDataBaseHelper {
                     + KEY_REMINDER_TIME + " text not null, "
                     + KEY_NOTE + " text not null, "
                     + KEY_PROGRESS + " integer default 0, "
-                    + KEY_DONE + " integer default 0);"
+                    + KEY_DONE + " integer default 0, "
+                    + KEY_IS_VIBRATION_CHECKED + " integer default 1);"
 
             ;
 
@@ -140,7 +142,7 @@ public class LocalDataBaseHelper {
      */
     public long createTask(int priority, String title, String taskDate, String taskTime, long taskDateMillis,
                            String taskReminderOccurrence, String taskReminderWhen, String taskReminderDate, String taskReminderTime,
-                           String note, int progress) {
+                           String note, int progress, int isVibrationChecked) {
 //        Log.d(TAG, "---Creating Task.");
 
 //        Log.v("eisen", "" +priority );
@@ -169,6 +171,8 @@ public class LocalDataBaseHelper {
         initialValues.put(KEY_NOTE, note);
         initialValues.put(KEY_PROGRESS, progress);
         initialValues.put(KEY_TOTAL_DAYS_PERIOD, -1);
+        initialValues.put(KEY_TOTAL_DAYS_PERIOD, -1);
+        initialValues.put(KEY_IS_VIBRATION_CHECKED, isVibrationChecked);
 
 //        Log.v(TAG, "DB = " + eisenDb);
 
@@ -195,7 +199,7 @@ public class LocalDataBaseHelper {
 
         return eisenDb.query(DATABASE_TABLE, new String[] {KEY_ROW_ID, KEY_PRIORITY, KEY_TITLE,
                 KEY_DATE, KEY_TIME, KEY_DATE_MILLIS, KEY_REMINDER_OCCURRENCE, KEY_REMINDER_WHEN, KEY_REMINDER_DATE, KEY_REMINDER_TIME,
-                KEY_NOTE, KEY_PROGRESS, KEY_DONE}, null, null, null, null, ORDER_BY);
+                KEY_NOTE, KEY_PROGRESS, KEY_DONE, KEY_IS_VIBRATION_CHECKED}, null, null, null, null, ORDER_BY);
     }
 
     /**
@@ -209,7 +213,7 @@ public class LocalDataBaseHelper {
         Cursor mCursor =
                 eisenDb.query(true, DATABASE_TABLE, new String[] {KEY_ROW_ID,
                                 KEY_PRIORITY, KEY_TITLE, KEY_DATE, KEY_TIME, KEY_DATE_MILLIS, KEY_TOTAL_DAYS_PERIOD, KEY_REMINDER_OCCURRENCE, KEY_REMINDER_WHEN,
-                        KEY_REMINDER_DATE, KEY_REMINDER_TIME, KEY_NOTE, KEY_PROGRESS, KEY_DONE},
+                        KEY_REMINDER_DATE, KEY_REMINDER_TIME, KEY_NOTE, KEY_PROGRESS, KEY_DONE, KEY_IS_VIBRATION_CHECKED},
                         KEY_ROW_ID + "=" + rowId, null,
                         null, null, null, null);
         if (mCursor != null) {
@@ -237,7 +241,7 @@ public class LocalDataBaseHelper {
      */
     public boolean updateTask(long rowId, int priority, String title, String taskDate, String taskTime, long taskDateMillis,
                               String taskReminderOccurrence, String taskReminderWhen, String taskReminderDate, String taskReminderTime,
-                              String note, int progress, int isDone) {
+                              String note, int progress, int isDone, int isVibrationChecked) {
         ContentValues args = new ContentValues();
         args.put(KEY_PRIORITY, priority);
         args.put(KEY_TITLE, title);
@@ -251,6 +255,7 @@ public class LocalDataBaseHelper {
         args.put(KEY_NOTE, note);
         args.put(KEY_PROGRESS, progress);
         args.put(KEY_DONE, isDone);
+        args.put(KEY_IS_VIBRATION_CHECKED, isVibrationChecked);
 
         return eisenDb.update(DATABASE_TABLE, args, KEY_ROW_ID + "=" + rowId, null) > 0;
     }

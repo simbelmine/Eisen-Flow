@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:layout_below="@+id/reminder_divider"
+    android:layout_below="@+id/vibration_layout"
     android:layout_marginLeft="@dimen/task_standard_margin"
     android:layout_marginRight="@dimen/task_standard_margin"
     android:gravity="center_vertical"

@@ -29,6 +29,7 @@ import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -36,6 +37,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -50,7 +52,7 @@ import java.util.Date;
  * Created by Sve on 6/9/16.
  */
 public class AddTaskDB extends AppCompatActivity implements View.OnClickListener,
-        RadioGroup.OnCheckedChangeListener {
+        RadioGroup.OnCheckedChangeListener, CompoundButton.OnCheckedChangeListener {
     private LinearLayout closeBtn;
     private TextView saveBtn;
     private LinearLayout priorityLayout;
@@ -103,6 +105,8 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
     private String reminderTimeStr;
     private int TIP_MESSAGE_MAX_COUNT = 3;
     private SharedPreferences mainSharedPrefs;
+    private Switch vibrationSwitch;
+    private boolean isVibrationCheked;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -187,6 +191,9 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
 
         dummyKbdView = findViewById(R.id.dummy_kbd_view);
         imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        vibrationSwitch = (Switch) findViewById(R.id.switch_vibration);
+        vibrationSwitch.setOnCheckedChangeListener(this);
     }
 
     private void populateLayout() {
@@ -261,6 +268,7 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        clearVibrationSettingsPrefs();
 //        overridePendingTransition(R.anim.slide_in_back, R.anim.slide_out_back);
         overridePendingTransition(0, 0);
     }
@@ -269,6 +277,7 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.task_add_close_btn:
+                clearVibrationSettingsPrefs();
                 finish();
 //                overridePendingTransition(R.anim.slide_in_back, R.anim.slide_out_back);
                 overridePendingTransition(0, 0);
@@ -378,6 +387,13 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
 
                 break;
         }
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+        Log.e("eisen", " STATE = " + isChecked);
+        hideSoftKbd();
+        mainSharedPrefs.edit().putBoolean("isVibrationChecked", isChecked).apply();
     }
 
     private void showMonthlyTipMessage() {
@@ -854,12 +870,13 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
         String reminderDate = getReminderDate(radioChoiceId);
         String reminderTime = getReminderTime();
 
-
+        int vibration_state = getVibrationState(); Log.e("eisen", "Vibration STATE = " + vibration_state);
+        clearVibrationSettingsPrefs();
         String note = noteTxt.getText().toString();
 
         if(rowId == null) {
             long id = dbHelper.createTask(priorityInt, title, date, time, dateMillis,
-                    reminderOccurrence, reminderWhen, reminderDate, reminderTime, note, progress);
+                    reminderOccurrence, reminderWhen, reminderDate, reminderTime, note, progress, vibration_state);
 
 
             if (id > 0) {
@@ -874,7 +891,7 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
         }
         else {
             if (dbHelper.updateTask(rowId, priorityInt, title, date, time, dateMillis,
-                    reminderOccurrence, reminderWhen, reminderDate, reminderTime, note, progress, isDone)) {
+                    reminderOccurrence, reminderWhen, reminderDate, reminderTime, note, progress, isDone, vibration_state)) {
                 dbHelper.updateTaskIntColumn(rowId, LocalDataBaseHelper.KEY_TOTAL_DAYS_PERIOD, dbHelper.getTotalDays(this, date));
                 setTaskAlarms(-1, date, time, reminderOccurrence, reminderWhen, reminderDate, reminderTime);
                 closeActivityWithResult(Activity.RESULT_OK);
@@ -882,6 +899,20 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
             else {
                 closeActivityWithResult(Activity.RESULT_CANCELED);
             }
+        }
+    }
+
+    private int getVibrationState() {
+        Log.e("eisen", " - contains ?  " + mainSharedPrefs.contains("isVibrationChecked"));
+        if(!mainSharedPrefs.getBoolean("isVibrationChecked", true)) return 0;
+        return 1;
+    }
+
+    private boolean getVibrationStateDB(int vibrationState) {
+        switch (vibrationState) {
+            case 0: return false;
+            case 1: return true;
+            default: return true;
         }
     }
 
@@ -999,6 +1030,10 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
 
                 // #isDone
                 isDone = cursor.getInt(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_DONE));
+
+                // # isVibrationChecked
+                isVibrationCheked = getVibrationStateDB(cursor.getInt(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_IS_VIBRATION_CHECKED)));
+                vibrationSwitch.setChecked(isVibrationCheked);
             }
         }
     }
@@ -1140,6 +1175,10 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
             reminderCalendarStr = date;
             reminderDateTxt.setText(date);
         }
+    }
+
+    private void clearVibrationSettingsPrefs() {
+        mainSharedPrefs.edit().remove("isVibrationChecked").apply();
     }
 }
 

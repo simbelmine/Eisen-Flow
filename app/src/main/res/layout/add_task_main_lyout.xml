@@ -53,10 +53,48 @@
                     android:layout_height="0.9dp"
                     android:layout_below="@+id/reminder_layout"
                     android:background="@color/transparent"
-                    android:layout_marginTop="@dimen/task_standard_margin"
+                    android:layout_marginLeft="@dimen/task_standard_margin"
+                    android:layout_marginRight="@dimen/task_standard_margin"
                     />
 
+                <RelativeLayout
+                    android:id="@+id/vibration_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/reminder_divider"
+                    android:layout_margin="@dimen/task_standard_margin"
+                    android:gravity="center_vertical"
+                    >
+                    <ImageView
+                        android:id="@+id/img_vibrate"
+                        android:layout_width="@dimen/task_icon_size"
+                        android:layout_height="@dimen/task_icon_size"
+                        android:src="@mipmap/ic_vibration_black_48dp"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="Vibration"
+                        android:gravity="center_vertical"
+                        android:textSize="@dimen/task_font_size"
+                        android:layout_marginLeft="@dimen/task_standard_margin"
+                        android:layout_toRightOf="@+id/img_vibrate"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        />
+
+                    <Switch
+                        android:id="@+id/switch_vibration"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="@dimen/task_standard_margin"
+                        android:checked="true"
+                         />
+
+                </RelativeLayout>
+
                 <include layout="@layout/add_task_note_layout"/>
+
                 <ImageView
                     android:id="@+id/note_divider"
                     android:layout_width="match_parent"

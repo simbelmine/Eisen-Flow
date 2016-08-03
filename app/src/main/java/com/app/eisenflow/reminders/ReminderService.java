@@ -104,6 +104,7 @@ public class ReminderService extends WakeReminderIntentService {
                 String title = cursor.getString(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_TITLE));
                 String date = cursor.getString(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_DATE));
                 String time = cursor.getString(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_TIME));
+                int isVibrationChecked = cursor.getInt(cursor.getColumnIndexOrThrow(LocalDataBaseHelper.KEY_IS_VIBRATION_CHECKED));
 
                 Log.v("eisen", "*** NOTIFICATION rowId = " + rowId);
                 NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(ReminderService.this)
@@ -122,6 +123,10 @@ public class ReminderService extends WakeReminderIntentService {
                 }
                 else {
                     notificationBuilder.addAction(com.app.eisenflow.R.drawable.check_done, getString(com.app.eisenflow.R.string.notification_done), pendingIntentDoneTask);
+                }
+
+                if(isVibrationChecked == 1) {
+                    notificationBuilder.setVibrate(new long[] { 1000, 1000, 1000, 1000, 1000 });
                 }
 
                 if(Build.VERSION.SDK_INT >= NEEDED_API_LEVEL) {
