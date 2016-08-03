@@ -76,7 +76,7 @@ public class MainActivityDB extends AppCompatActivity
     private static final int ACTIVITY_CREATE = 0;
     public static final int ACTIVITY_EDIT = 1;
     private static final String DATE_FORMAT = "EEE, MMM dd, yyyy";
-    private static final String APP_EMAIL = "simbelmine.sve@gmail.com";
+    private static final String APP_EMAIL = "eisenflow.app@gmail.com";
 
     private Toolbar toolbar;
     private FloatingActionButton fab;
