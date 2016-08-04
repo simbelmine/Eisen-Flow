@@ -58,5 +58,6 @@
         android:layout_marginLeft="@dimen/task_standard_margin"
         android:layout_marginBottom="@dimen/task_standard_margin"
         android:background="@color/transparent"
+        android:inputType="textCapSentences|textAutoCorrect"
         />
 </RelativeLayout>

@@ -18,6 +18,7 @@
         >
         <include layout="@layout/add_task_bg_layout"/>
         <ScrollView
+            android:id="@+id/scV"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="2.3"

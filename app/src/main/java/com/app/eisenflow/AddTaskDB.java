@@ -8,6 +8,7 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Rect;
@@ -22,7 +23,9 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -37,6 +40,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -108,6 +112,8 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
     private Switch vibrationSwitch;
     private boolean isVibrationCheked;
 
+    private ScrollView scrollView;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -121,7 +127,6 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
                 : null;
 
         initLayout();
-        showHideDummyKbdView();
     }
 
     private void initLayout() {
@@ -155,6 +160,18 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
 
         taskName = (TextView) findViewById(R.id.task_name);
         noteTxt = (EditText) findViewById(R.id.note_txt);
+
+        scrollView = (ScrollView) findViewById(R.id.scV);
+        noteTxt.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                    showHideNotes();
+                return false;
+            }
+        });
+
+
+
         snakbarLayout = (CoordinatorLayout) findViewById(R.id.snackbarCoordinatorLayout);
 
         reminderLayout = (LinearLayout) findViewById(R.id.reminder_layout);
@@ -192,8 +209,16 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
         dummyKbdView = findViewById(R.id.dummy_kbd_view);
         imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
-        vibrationSwitch = (Switch) findViewById(R.id.switch_vibration);
-        vibrationSwitch.setOnCheckedChangeListener(this);
+//        vibrationSwitch = (Switch) findViewById(R.id.switch_vibration);
+//        vibrationSwitch.setOnCheckedChangeListener(this);
+    }
+
+
+    public static int convertPixelsToDp(float px, Context context){
+        Resources resources = context.getResources();
+        DisplayMetrics metrics = resources.getDisplayMetrics();
+        int dp = (int)(px / (metrics.densityDpi / 160f));
+        return dp;
     }
 
     private void populateLayout() {
@@ -289,7 +314,6 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
                 }
                 break;
             case R.id.task_name:
-                showHideDummyKbdView();
                 break;
             case R.id.do_it_l:
                 hideSoftKbd();
@@ -327,9 +351,6 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
                 hideSoftKbd();
                 openTimePickerDialog(false);
 
-                break;
-            case R.id.note_layout:
-                showHideDummyKbdView();
                 break;
 
             case R.id.reminder_cal_txt_layout:
@@ -1049,8 +1070,8 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
         new ReminderManager(this).setRepeatingReminder(rowId, reminderOccurrence, weekDayInt, reminderDate, reminderTime);
     }
 
-    private void showHideDummyKbdView() {
-        final ViewGroup rootView = (ViewGroup) ((ViewGroup) this.findViewById(android.R.id.content)).getChildAt(0);
+    private void showHideNotes() {
+        final ViewGroup rootView = (ViewGroup) ((ViewGroup) findViewById(android.R.id.content)).getChildAt(0);
         rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
@@ -1074,13 +1095,28 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
                 // ******************************************** //
                 if(isOpen && (isKbdOpen != isOpen)) {
                     isKbdOpen = isOpen;
-                    dummyKbdView.getLayoutParams().height = keypadHeight;
-                    dummyKbdView.setVisibility(View.VISIBLE);
-                    dummyKbdView.requestLayout();
+
+                    if(noteTxt.isFocused()) {
+                        dummyKbdView.getLayoutParams().height = keypadHeight;
+                        dummyKbdView.setVisibility(View.VISIBLE);
+                        dummyKbdView.requestLayout();
+
+
+                        scrollView.post(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                scrollView.smoothScrollTo(0, noteLayout.getTop());
+                                            }
+                                        }
+                        );
+                    }
                 }
                 else if(!isOpen && (isKbdOpen != isOpen)){
                     isKbdOpen = isOpen;
                     dummyKbdView.setVisibility(View.GONE);
+                    noteTxt.clearFocus();
+                    dummyKbdView.clearFocus();
+                    taskName.clearFocus();
                 }
             }
         });

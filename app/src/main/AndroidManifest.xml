@@ -44,7 +44,7 @@
                 <data android:mimeType="text/plain"/>
             </intent-filter>
         </activity>
-        <activity android:name="com.app.eisenflow.AddTaskDB" android:screenOrientation="portrait"/>
+        <activity android:name="com.app.eisenflow.AddTaskDB" android:screenOrientation="portrait" />
         <activity android:name="com.app.eisenflow.TimerActivity" android:screenOrientation="portrait"/>
         <activity android:name="com.app.eisenflow.EditTaskPreview" android:screenOrientation="portrait"/>
         <activity

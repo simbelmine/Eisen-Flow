@@ -40,7 +40,10 @@
         android:lines="10"
         android:gravity="top"
         android:padding="10dp"
-        android:inputType="textCapSentences|textMultiLine"
+        android:inputType="textCapSentences|textMultiLine|textAutoCorrect"
         android:textColor="@color/date"
+        android:scrollbars="vertical"
+        android:overScrollMode="always"
+        android:scrollbarStyle="insideInset"
         />
 </LinearLayout>
