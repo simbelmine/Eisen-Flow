@@ -18,7 +18,7 @@ import java.util.Calendar;
 public class LocalDataBaseHelper {
     private static final String DATABASE_NAME = "eisendata";
     private static final String DATABASE_TABLE = "tasks";
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 4;
 
     public static final String KEY_ROW_ID = "_id";
     public static final String KEY_PRIORITY = "priority";
@@ -83,8 +83,17 @@ public class LocalDataBaseHelper {
 //            Log.w(TAG, "Upgrading database from version " + oldVersion + " to "
 //                    + newVersion + ", which will destroy all old data");
 
-            db.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE);
-            onCreate(db);
+
+            if (newVersion > oldVersion) {
+                if(oldVersion == 3 && newVersion == 4) {
+                    String alterTable = "ALTER TABLE " + DATABASE_TABLE + " ADD COLUMN " + KEY_IS_VIBRATION_CHECKED + " INTEGER DEFAULT 1";
+                    db.execSQL(alterTable);
+                }
+                else {
+                    db.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE);
+                    onCreate(db);
+                }
+            }
         }
     }
 
@@ -213,7 +222,7 @@ public class LocalDataBaseHelper {
         Cursor mCursor =
                 eisenDb.query(true, DATABASE_TABLE, new String[] {KEY_ROW_ID,
                                 KEY_PRIORITY, KEY_TITLE, KEY_DATE, KEY_TIME, KEY_DATE_MILLIS, KEY_TOTAL_DAYS_PERIOD, KEY_REMINDER_OCCURRENCE, KEY_REMINDER_WHEN,
-                        KEY_REMINDER_DATE, KEY_REMINDER_TIME, KEY_NOTE, KEY_PROGRESS, KEY_DONE, KEY_IS_VIBRATION_CHECKED},
+                                KEY_REMINDER_DATE, KEY_REMINDER_TIME, KEY_NOTE, KEY_PROGRESS, KEY_DONE, KEY_IS_VIBRATION_CHECKED},
                         KEY_ROW_ID + "=" + rowId, null,
                         null, null, null, null);
         if (mCursor != null) {
