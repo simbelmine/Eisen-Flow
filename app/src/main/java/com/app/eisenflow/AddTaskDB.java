@@ -209,8 +209,8 @@ public class AddTaskDB extends AppCompatActivity implements View.OnClickListener
         dummyKbdView = findViewById(R.id.dummy_kbd_view);
         imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
-//        vibrationSwitch = (Switch) findViewById(R.id.switch_vibration);
-//        vibrationSwitch.setOnCheckedChangeListener(this);
+        vibrationSwitch = (Switch) findViewById(R.id.switch_vibration);
+        vibrationSwitch.setOnCheckedChangeListener(this);
     }
 
 
